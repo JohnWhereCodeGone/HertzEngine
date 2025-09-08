@@ -11,6 +11,7 @@
 #include "./Dependencies/glm/gtc/type_ptr.hpp"
 
 #include "Camera.h"
+#include <thread>
 
 #include "Shaders/HertzShader.h"
 #include <filesystem>
@@ -24,7 +25,6 @@
 #include "Meshmanager.h"
 #include "HertzEngine.h"
 #include "Objects/VirtualObject.h"
-
 
 
 std::string crate = ".\\Dependencies\\Crate.obj";
@@ -58,10 +58,11 @@ int main()
 	VirtualObject obj;
 	VirtualObject obj2;
 
-	while (!glfwWindowShouldClose(win))
+	std::thread objThread;
+	while (!engine.bShouldClose)
 	{
 		
-
+		std::cout << engine.bShouldClose << std::endl;
 		engine.Update();
 	}
 }

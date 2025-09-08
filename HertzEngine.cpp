@@ -188,3 +188,28 @@ void HertzEngine::Update()
 	ImGui::DestroyContext();*/
 }
 
+void HertzEngine::MessageHandling()
+{
+	while (!bShouldClose)
+	{
+		std::shared_ptr<Message> msg = messagequeue.Pop();
+		switch (msg->type)
+		{
+			case MessageType::LoadOBJ:
+			{
+				std::shared_ptr<ObjMessage> objMsg = std::dynamic_pointer_cast<ObjMessage>(msg);
+				
+				std::cout << "Threading: Loading .obj: " << objMsg->tPath << " ..." << std::endl;
+
+				//MeshManager->AddMesh(this->DefaultShader, objMsg->tPath); continue here
+
+
+			}
+
+		}
+
+	}
+}
+
+
+

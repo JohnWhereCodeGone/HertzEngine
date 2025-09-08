@@ -28,7 +28,7 @@ public:
 	void SetTextures(const std::vector<HertzTexture*>& textures);
 	
 
-	std::vector<HertzTexture*> GetTextures();
+	std::vector<HertzTexture*> &GetTextures();
 	Transform* GetTransform();
 	Shader* GetShader();
 	Mesh* GetMesh();

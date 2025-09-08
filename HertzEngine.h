@@ -9,7 +9,7 @@
 #include "../Dependencies/glm/glm.hpp"
 #include "./Dependencies/glm/gtc/matrix_transform.hpp"
 #include "./Dependencies/glm/gtc/type_ptr.hpp"
-
+#include "./Threading/MessagingQueue.h"
 
 #include "MyDebug/Debugger.h"
 //input
@@ -68,9 +68,11 @@ public:
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	void Shutdown();
 	void Update();
+	void MessageHandling();
 
 
-
+	bool bShouldClose;
+	MessagingQueue messagequeue;
 private:
 	Meshmanager* MeshManager;
 	glm::mat4 projection;
@@ -83,7 +85,6 @@ private:
 
 	//todo -- fix function pointers for glCallbacks. think it's okay?	
 protected:
-	bool bShouldClose;
 	static float fDeltaTime;
 	float fPrevFrame = 0.0f;
 

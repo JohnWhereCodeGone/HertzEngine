@@ -74,7 +74,7 @@ void VirtualObject::SetTextures(const std::vector<HertzTexture*>& newtextures)
 
 
 
-std::vector<HertzTexture*> VirtualObject::GetTextures()
+std::vector<HertzTexture*> &VirtualObject::GetTextures()
 {
 	if (!m_textures.empty())
 	{

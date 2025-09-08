@@ -26,7 +26,7 @@ void Meshmanager::AddMesh(const char* tPath)
 	 
 }
 
-Mesh* Meshmanager::AddMesh(const char* tPath, Shader* shader)
+Mesh* Meshmanager::AddMesh(const char* tPath, Shader* shader) //this is the real one, delete the others.
 {
 	std::cout << tPath << std::endl;
 
