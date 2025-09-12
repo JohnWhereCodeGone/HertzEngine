@@ -24,12 +24,9 @@ ObjLoader::ObjLoader()
 	}
 }
 
-Mesh* ObjLoader::LoadObj(const char* aPath)
-{
-	return nullptr;
-}
 
-Mesh* ObjLoader::LoadObjData(const char* aPath)
+
+std::shared_ptr<Mesh> ObjLoader::LoadObjData(const char* aPath)
 {
 	ObjData data;
 
@@ -106,7 +103,7 @@ Mesh* ObjLoader::LoadObjData(const char* aPath)
 
 	file.close();
 	std::cout << "Loaded Mesh from path: " << aPath << std::endl;
-	return new Mesh(data, GetDefaultTextures(), aPath);
+	return std::shared_ptr<Mesh>(new Mesh(Mesh(data, GetDefaultTextures(), aPath)));
 	
 }
 

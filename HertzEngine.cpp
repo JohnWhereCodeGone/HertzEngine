@@ -190,26 +190,32 @@ void HertzEngine::Update()
 
 void HertzEngine::MessageHandling()
 {
-	while (!bShouldClose)
+	while (auto msg = messagequeue.PopTest())
 	{
-		std::shared_ptr<Message> msg = messagequeue.Pop();
-		switch (msg->type)
+		switch (msg->m_type)
 		{
-			case MessageType::LoadOBJ:
+			case MessageType::LoadedResource:
 			{
-				std::shared_ptr<ObjMessage> objMsg = std::dynamic_pointer_cast<ObjMessage>(msg);
-				
-				std::cout << "Threading: Loading .obj: " << objMsg->tPath << " ..." << std::endl;
+				ObjLoadedMessage* resourcesMsg = dynamic_cast<ObjLoadedMessage*>(msg.get());
+				if (resourcesMsg)
+				{
+					Mesh* mesh = resourcesMsg->GetLoadedMesh();
+					Meshmanager* mngr = HertzEngine::GetMeshMangr();
 
-				//MeshManager->AddMesh(this->DefaultShader, objMsg->tPath); continue here
-
-
+					/*
+					if (!mngr->AddMesh(mesh))
+					{
+						std::cout << "HertzEngine::MessageHandling - Failed to add mesh" << std::endl;
+					}
+					*/
+					
+				}
 			}
-
 		}
-
 	}
+	
 }
+
 
 
 

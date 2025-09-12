@@ -58,10 +58,9 @@ int main()
 	VirtualObject obj;
 	VirtualObject obj2;
 
-	std::thread objThread;
+	
 	while (!engine.bShouldClose)
 	{
-		
 		std::cout << engine.bShouldClose << std::endl;
 		engine.Update();
 	}

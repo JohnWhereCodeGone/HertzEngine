@@ -69,6 +69,7 @@ public:
 	void Shutdown();
 	void Update();
 	void MessageHandling();
+	void AsyncObjThread();
 
 
 	bool bShouldClose;

@@ -36,14 +36,15 @@ public:
 	Meshmanager();
 
 	void AddMesh(const char* tPath);
-	Mesh* AddMesh(const char* tPath, Shader* shader = nullptr);
-	void RemoveMesh(Mesh* mDelete);
+	std::shared_ptr<Mesh> AddMesh(const char* tPath, Shader* shader = nullptr);
+	bool AddMesh(std::shared_ptr<Mesh> meshToAdd);
+	void RemoveMesh(std::shared_ptr<Mesh> mDelete);
 	void Render();
-	Mesh* GetMesh(const char* tPath);
+	std::shared_ptr<Mesh> GetMesh(const char* tPath);
 	int MeshCount;
 
 protected:
-	std::vector<Mesh*> MeshList;
+	std::vector<std::shared_ptr<Mesh>> MeshList;
 	std::unordered_map<MeshKey, Mesh*, MeshKeyHash> meshMap;
 
 };

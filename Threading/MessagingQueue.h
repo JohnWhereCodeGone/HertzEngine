@@ -14,7 +14,7 @@ public:
 	void Push(std::shared_ptr<Message> msg);
 
 
-	std::shared_ptr<Message> Pop();
+	std::shared_ptr<Message> PopTest();
 	
 
 private:
