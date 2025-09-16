@@ -16,27 +16,21 @@ void ObjMessage::QueuePop()
 
 // ---------------------
 
-ObjLoadedMessage::ObjLoadedMessage(Mesh* mesh)
+ObjLoadedMessage::ObjLoadedMessage(std::shared_ptr<ObjData> data)
 {
 	this->m_type = MessageType::LoadedResource;
-	
-	if (mesh)
-	{
-		this->m_loadedMesh = mesh;
-	}
-	else
-	{
-		this->m_loadedMesh = nullptr;
-		std::cout << "ObjLoadedMessage::Constructor - Mesh was nullptr, I am a danger!" << std::endl;
-	}
+	this->m_data = data;
+
 }
 
-void ObjLoadedMessage::SetLoadedMesh(Mesh* meshToAdd)
+
+
+void ObjLoadedMessage::SetLoadedMesh(std::shared_ptr<Mesh> meshToAdd)
 {
 	this->m_loadedMesh = meshToAdd;
 }
 
-Mesh* ObjLoadedMessage::GetLoadedMesh()
+std::shared_ptr<Mesh> ObjLoadedMessage::GetLoadedMesh()
 {
 	if (m_loadedMesh)
 	{
@@ -46,6 +40,11 @@ Mesh* ObjLoadedMessage::GetLoadedMesh()
 	{
 		return nullptr;
 	}
+}
+
+std::shared_ptr<ObjData> ObjLoadedMessage::GetObjData()
+{
+	return m_data;
 }
 
 //Loaded

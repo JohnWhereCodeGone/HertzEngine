@@ -12,11 +12,25 @@ void MessagingQueue::Push(std::shared_ptr<Message> msg)
 }
 
 
-std::shared_ptr<Message> MessagingQueue::PopTest()
+std::shared_ptr<Message> MessagingQueue::PopBlock()
+{
+    std::unique_lock<std::mutex> lock(m_mutex);
+    m_cond.wait(lock, [&] {return !queue.empty();}); //thread sleeps until the queue has a message.
+    
+    if (queue.empty())
+    {
+        return nullptr;
+    }
+    auto msg = queue.front();
+    queue.pop();
+    return msg;
+}
+
+std::shared_ptr<Message> MessagingQueue::Pop()
 {
     //m_cond.wait(lock, [&] {return !queue.empty();}); //thread sleeps until the queue has a message.
-    
     std::unique_lock<std::mutex> lock(m_mutex);
+
     if (queue.empty())
     {
         return nullptr;

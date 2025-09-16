@@ -69,7 +69,8 @@ public:
 	void Shutdown();
 	void Update();
 	void MessageHandling();
-	void AsyncObjThread();
+	void ProcessMessages(); //Spawns the worker thread - REAL FUNCTION
+	void WorkerThreadOBJ();
 
 
 	bool bShouldClose;

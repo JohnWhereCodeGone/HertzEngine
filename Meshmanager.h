@@ -34,7 +34,8 @@ class Meshmanager
 public:
 
 	Meshmanager();
-
+	static std::vector<HertzTexture*> GetDefaultTextures();
+	std::shared_ptr<Mesh> AddMeshByData(std::shared_ptr<ObjData> data, Shader* shader = nullptr);
 	void AddMesh(const char* tPath);
 	std::shared_ptr<Mesh> AddMesh(const char* tPath, Shader* shader = nullptr);
 	bool AddMesh(std::shared_ptr<Mesh> meshToAdd);

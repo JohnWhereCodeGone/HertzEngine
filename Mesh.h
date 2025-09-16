@@ -57,14 +57,14 @@ public:
 	std::vector<unsigned int> indicies;
 	std::vector<HertzTexture*> textures;
 
-
 	~Mesh();
-	Mesh(const ObjData& data, std::vector<HertzTexture*> textures, const char* tPath);
+	Mesh(const ObjData &data, std::vector<HertzTexture*> textures, const char* tPath = " "); //real
+
+	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<HertzTexture*> textures);
 
 	void setShader(Shader* shader);
 	Shader* getShader();
 
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<HertzTexture*> textures);
 	void Draw(Shader& shader);
 	void Render();
 	//void Draw();

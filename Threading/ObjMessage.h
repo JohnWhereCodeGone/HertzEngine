@@ -1,10 +1,10 @@
 #pragma once
-
+#include "../ObjLoader.h"
 #include "Messaging.h"
 
 class Mesh;
 
-class ObjMessage : public Message //loads mesh in new thread
+class ObjMessage : public Message // loads mesh in new thread
 {
 public:
 
@@ -15,18 +15,23 @@ public:
 
 };
 
-class ObjLoadedMessage : public Message //reference to loaded mesh for main thread
+class ObjLoadedMessage : public Message // finished loading/reference to loaded mesh for main thread
 {
 public:
 
-	ObjLoadedMessage(Mesh* mesh);
+	ObjLoadedMessage(std::shared_ptr<ObjData> data);
 	
-	void SetLoadedMesh(Mesh* meshToAdd);
-	Mesh* GetLoadedMesh();
+	void SetLoadedMesh(std::shared_ptr<Mesh> meshToAdd);
+	std::shared_ptr<Mesh> GetLoadedMesh();
+
+	std::shared_ptr<ObjData> GetObjData();
+
+	
 
 private:
 
-	Mesh* m_loadedMesh;
+	std::shared_ptr<ObjData> m_data;
+	std::shared_ptr<Mesh> m_loadedMesh;
 	void QueuePop() override;
 
 };

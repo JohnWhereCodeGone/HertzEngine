@@ -51,8 +51,10 @@ int main()
 	HertzEngine engine;
 	GLFWwindow* win = engine.GetWindow();
 	
+	std::shared_ptr<ObjMessage> msgtest = std::make_shared<ObjMessage>(crate);
+	engine.messagequeue.Push(msgtest);
 
-	engine.GetMeshMangr()->AddMesh(crate.c_str(), HertzEngine::DefaultShader);
+	//engine.GetMeshMangr()->AddMesh(crate.c_str(), HertzEngine::DefaultShader);
 	engine.GetMeshMangr()->AddMesh(monky.c_str(), HertzEngine::DefaultShader);
 	
 	VirtualObject obj;
@@ -61,7 +63,7 @@ int main()
 	
 	while (!engine.bShouldClose)
 	{
-		std::cout << engine.bShouldClose << std::endl;
+		//std::cout << engine.bShouldClose << std::endl;
 		engine.Update();
 	}
 }

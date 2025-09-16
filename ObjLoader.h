@@ -36,6 +36,7 @@ public:
 	std::vector<HertzTexture*> defaultTextures;
 
 	static std::shared_ptr<Mesh> LoadObjData(const char* aPath);
+	static std::shared_ptr<ObjData> GetObjData(const char* aPath);
 
 	static std::vector<HertzTexture*> GetDefaultTextures();
 
@@ -47,7 +48,7 @@ public:
 	);
 
 	ObjLoader();
-	std::shared_ptr<Mesh> LoadObj(const char* aPath);
+	//static std::shared_ptr<Mesh> LoadObj(const char* aPath);
 		
 
 };

@@ -1,6 +1,7 @@
 #include "HertzEngine.h"
 #include "input/hertzinputs.h" 
 #include "../UI/HertzEditor.h"
+#include <thread>
 
 
 Shader* HertzEngine::DefaultShader = nullptr;
@@ -88,6 +89,7 @@ GLFWwindow* HertzEngine::GameInit()
 	ImGui_ImplOpenGL3_Init();
 
 
+	//threading
 
 
 
@@ -136,7 +138,7 @@ Meshmanager* HertzEngine::GetMeshMangr()
 	}
 	else
 	{
-		std::cerr << "Fatal error: Mesh Manager was nullptr!" << std::endl;
+		std::cerr << "Fatal error HertzEngine::GetMeshMangr: Mesh Manager was nullptr!" << std::endl;
 	}
 }
 
@@ -150,6 +152,9 @@ void HertzEngine::Update()
 		float currentFrame = static_cast<float>(glfwGetTime()); //get curent time
 		fDeltaTime = currentFrame - fPrevFrame;//get time difference
 		fPrevFrame = currentFrame; //set last frame as current time for next iteration
+
+		//messaging
+		ProcessMessages();
 
 		// UI
 		ImGui_ImplOpenGL3_NewFrame();
@@ -190,30 +195,115 @@ void HertzEngine::Update()
 
 void HertzEngine::MessageHandling()
 {
-	while (auto msg = messagequeue.PopTest())
+	/*
+	while (auto msg = messagequeue.Pop())
 	{
 		switch (msg->m_type)
 		{
-			case MessageType::LoadedResource:
+		case MessageType::LoadOBJ:
+		{
+			ObjLoadedMessage* resourcesMsg = dynamic_cast<ObjLoadedMessage*>(msg.get());
+			if (resourcesMsg)
 			{
-				ObjLoadedMessage* resourcesMsg = dynamic_cast<ObjLoadedMessage*>(msg.get());
-				if (resourcesMsg)
-				{
-					Mesh* mesh = resourcesMsg->GetLoadedMesh();
-					Meshmanager* mngr = HertzEngine::GetMeshMangr();
+				std::shared_ptr<Mesh> mesh = resourcesMsg->GetLoadedMesh();
+				Meshmanager* mngr = HertzEngine::GetMeshMangr();
+				mngr->AddMesh(mesh);
 
-					/*
-					if (!mngr->AddMesh(mesh))
-					{
-						std::cout << "HertzEngine::MessageHandling - Failed to add mesh" << std::endl;
-					}
-					*/
+				
+
+			}
+		}
+		}
+	}
+	*/
+	
+}
+
+void HertzEngine::ProcessMessages()
+{
+
+	while (auto msg = messagequeue.Pop())
+	{
+		switch (msg->m_type)
+		{
+		case MessageType::LoadOBJ:
+		{
+
+			std::shared_ptr<ObjMessage> objmsg = std::dynamic_pointer_cast<ObjMessage>(msg);
+
+
+			if (objmsg)
+			{
+				std::string path = objmsg->m_tPath;
+				std::cout << "[HertzEngine::ProcessMessages] LoadObj Request Found... " << path << std::endl;
+
+				std::thread([this, path]()
+				{
+						std::cout << "[HertzEingine::ProcessMessages] Worker thread loading obj..." << std::endl;
+						std::shared_ptr<ObjData> data = ObjLoader::GetObjData(path.c_str());
+						if (data)
+						{
+							messagequeue.Push(std::make_shared<ObjLoadedMessage>(data));
+							std::cout << "[HertzEngine::ProcessMessages] Worker thread success!!" << std::endl;
+						}
+
+
+				}).detach();
+				
+			}
+			break;
+		}
+
+		case MessageType::LoadedResource:
+		{
+			std::shared_ptr<ObjLoadedMessage> loadedMsg = std::dynamic_pointer_cast<ObjLoadedMessage>(msg);
+
+			if (loadedMsg && loadedMsg->GetObjData())
+			{
+				if (HertzEngine::GetMeshMangr())
+				{
+					Meshmanager* Manager = HertzEngine::GetMeshMangr();
+					manager->AddMeshByData(loadedMsg->GetObjData());
+
+					std::cout << "[HertzEngine::ProcessMessages] Added Mesh to manager! :)" << std::endl;
+				}
+
+			}
+
+			break;
+		}
+
+
+		}
+	}
+}
+
+void HertzEngine::WorkerThreadOBJ()
+{
+	/*
+	while (auto msg = messagequeue.PopBlock())
+	{
+		switch (msg->m_type)
+		{
+			case MessageType::LoadOBJ:
+			{
+				std::shared_ptr<ObjMessage> objMsg = std::dynamic_pointer_cast<ObjMessage>(msg); //continue here
+				if (objMsg)
+				{
+					std::cout << "Thread Processing mesh... " << std::endl;
+					std::shared_ptr<Mesh> mesh = ObjLoader::LoadObjData(objMsg->m_tPath.c_str());
+
+					std::shared_ptr<ObjLoadedMessage> hasLoadedmsg = std::make_shared<ObjLoadedMessage>(mesh);
+					messagequeue.Push(hasLoadedmsg);
+					
+					
+					
 					
 				}
 			}
 		}
 	}
-	
+	*/
 }
 
 

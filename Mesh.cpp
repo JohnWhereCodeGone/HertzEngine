@@ -43,7 +43,11 @@ Mesh::Mesh(const ObjData &data, std::vector<HertzTexture*> textures, const char*
 
 	indiciesSize = indicies.size();
 	this->textures = textures;
-	path = tPath;
+	if (tPath)
+	{
+
+		path = tPath;
+	}
 
 	// The data is almsot right, but the faces reference the wrong vt, vn and vpos due to indice issue!!!
 
@@ -92,27 +96,7 @@ Mesh::Mesh(const ObjData &data, std::vector<HertzTexture*> textures, const char*
 		std::cout << "Mesh: VAO Creation Failure" << std::endl;
 	}
 
-	//pos
-	//make sure there's a case for handling lack of texcoords
-
-	//std::cout << std::endl;
-	//for (const auto& e : indicies)
-	//{
-	//	std::cout << e;
-	//}
-	//std::cout << std::endl;
-	//std::cout << "VAO: " << VAO << ", VBO: " << VBO << ", EBO: " << EBO << std::endl;
-	//std::cout << "Vertex count: " << verticesold.size() << ", Index count: " << data.indicies.size() << std::endl;
-	//if (!verticesold.empty())
-	//{
-	//	for (size_t i = 0; i < verticesold.size(); ++i)
-	//	{
-	//		std::cout << verticesold[i].vPos.x << " " << verticesold[i].vPos.y << " " << verticesold[i].vPos.z << " " << verticesold[i].vTexCoords.x << " " << verticesold[i].vTexCoords.y << " " << verticesold[i].vNormal.x << " " << verticesold[i].vNormal.y << " " << verticesold[i].vNormal.z;
-	//		if ((i + 1) % 8 == 0) { 
-	//			std::cout << std::endl;
-	//		}
-	//	}
-	//}
+	
 
 
 	indiciesSize = indicies.size();

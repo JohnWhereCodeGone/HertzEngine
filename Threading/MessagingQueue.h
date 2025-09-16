@@ -5,6 +5,10 @@
 #include <memory>
 #include <mutex>
 
+
+//use pop-block for worker thread, as it'll sleep in the background.
+// use pop to cehc
+
 class MessagingQueue
 {
 public:
@@ -14,7 +18,8 @@ public:
 	void Push(std::shared_ptr<Message> msg);
 
 
-	std::shared_ptr<Message> PopTest();
+	std::shared_ptr<Message> PopBlock();
+	std::shared_ptr<Message> Pop();
 	
 
 private:

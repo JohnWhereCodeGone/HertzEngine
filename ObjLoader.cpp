@@ -25,6 +25,9 @@ ObjLoader::ObjLoader()
 }
 
 
+//create new loadobjdata that returns ObjData.
+
+
 
 std::shared_ptr<Mesh> ObjLoader::LoadObjData(const char* aPath)
 {
@@ -103,8 +106,80 @@ std::shared_ptr<Mesh> ObjLoader::LoadObjData(const char* aPath)
 
 	file.close();
 	std::cout << "Loaded Mesh from path: " << aPath << std::endl;
-	return std::shared_ptr<Mesh>(new Mesh(Mesh(data, GetDefaultTextures(), aPath)));
+
+
+	return std::make_shared<Mesh>(data, GetDefaultTextures(), aPath);
 	
+}
+
+std::shared_ptr<ObjData> ObjLoader::GetObjData(const char* aPath)
+{
+	ObjData data;
+
+	std::ifstream file(aPath);
+	if (!file.is_open()) {
+		std::cerr << "Failed to open OBJ file: " << aPath << std::endl;
+		return nullptr;
+	}
+
+	std::string line, prefix;
+
+
+	while (std::getline(file, line))
+	{
+		std::istringstream iss(line);
+		iss >> prefix;
+
+		if (prefix == "v")
+		{
+			glm::vec3 pos;
+			iss >> pos.x >> pos.y >> pos.z;
+			data.vPos.push_back(pos);
+		}
+		else if (prefix == "vn")
+		{
+			glm::vec3 norm;
+			iss >> norm.x >> norm.y >> norm.z;
+			data.vNormal.push_back(norm);
+		}
+		else if (prefix == "vt")
+		{
+			glm::vec2 texcoords;
+			iss >> texcoords.x >> texcoords.y;
+			data.vTexCoords.push_back(texcoords);
+			
+			std::cout << "hey" << std::endl;
+		}
+		else if (prefix == "f")
+		{
+			std::string vertexData;
+			for (int i = 0; i < 3; i++)
+			{
+				iss >> vertexData;
+				std::replace(vertexData.begin(), vertexData.end(), '/', ' ');
+				std::istringstream viss(vertexData);
+				int vIndex = 0, tIndex = 0, nIndex = 0;
+				viss >> vIndex;
+				if (viss.peek() == ' ') viss >> tIndex;
+				if (viss.peek() == ' ') viss >> nIndex;
+				data.vPosIndices.push_back(vIndex - 1);
+				if (tIndex > 0) data.vTexCoordIndices.push_back(tIndex - 1);
+				if (nIndex > 0) data.vNormalIndices.push_back(nIndex - 1);
+			}
+		}
+	}
+
+
+	if (data.vPos.size() <= 0)
+	{
+		std::cerr << "ERROR FAILED TO READ VERTICES: " << aPath << std::endl;
+		return nullptr;
+	}
+
+	file.close();
+	std::cout << "Loaded Mesh from path: " << aPath << std::endl;
+	std::shared_ptr<ObjData> returnData = std::make_shared<ObjData>(data);
+	return returnData;
 }
 
 std::vector<HertzTexture*> ObjLoader::GetDefaultTextures()

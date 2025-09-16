@@ -37,7 +37,7 @@ void HertzInput::iprocessInput(GLFWwindow* window)
 	if (glfwGetKey(eng->GetWindow(), GLFW_KEY_UP) == GLFW_PRESS)
 	{
 		float apple4 = 0.f;
-		std::cout << apple4 << std::endl;
+		//std::cout << apple4 << std::endl;
 		if (apple4 <= 1.f)
 			apple4 += 0.001f;
 	}
@@ -45,7 +45,7 @@ void HertzInput::iprocessInput(GLFWwindow* window)
 	if (glfwGetKey(eng->GetWindow(), GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
 		float apple4 = 0.f;
-		std::cout << apple4 << std::endl;
+		//std::cout << apple4 << std::endl;
 		if (apple4 >= 0)
 			apple4 -= 0.001f;
 
@@ -125,10 +125,10 @@ void HertzInput::imouse_callback(GLFWwindow* window, double xposin, double yposi
 void HertzInput::imouse_scroll_callback(GLFWwindow* window, double xOffset, double yOffset)
 {
 	HertzEngine* eng = reinterpret_cast<HertzEngine*>(glfwGetWindowUserPointer(window));
-	std::cout << eng->GetCam()->fCamSpeed << std::endl;
+	//std::cout << eng->GetCam()->fCamSpeed << std::endl;
 	float delta = static_cast<float>(yOffset);
 	eng->GetCam()->CameraScroll(delta);
-	std::cout << yOffset << std::endl;
+	//std::cout << yOffset << std::endl;
 }
 
 

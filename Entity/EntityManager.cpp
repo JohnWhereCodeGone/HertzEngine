@@ -29,6 +29,7 @@ void EntityManager::DeleteEntity(Entity* to_delete)
 {
 	if (!to_delete)
 	{
+		
 		std::cout << "Entity manager: Error! to_delete was nullptr." << std::endl;
 		return;
 	}
