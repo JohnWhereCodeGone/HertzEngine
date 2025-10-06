@@ -54,8 +54,11 @@ int main()
 	std::shared_ptr<ObjMessage> msgtest = std::make_shared<ObjMessage>(crate);
 	engine.messagequeue.Push(msgtest);
 
+	std::shared_ptr<ObjMessage> msgMonkey = std::make_shared<ObjMessage>(monky);
+	engine.messagequeue.Push(msgMonkey);
+
 	//engine.GetMeshMangr()->AddMesh(crate.c_str(), HertzEngine::DefaultShader);
-	engine.GetMeshMangr()->AddMesh(monky.c_str(), HertzEngine::DefaultShader);
+	//engine.GetMeshMangr()->AddMesh(monky.c_str(), HertzEngine::DefaultShader);
 	
 	VirtualObject obj;
 	VirtualObject obj2;

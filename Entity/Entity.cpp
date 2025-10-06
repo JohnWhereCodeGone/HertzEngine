@@ -17,10 +17,13 @@ void Entity::Update()
 
 	if (shad)
 	{
+
 		trans->UpdateModel(shad);
+
 
 	}
 
 
 
 }
+ 

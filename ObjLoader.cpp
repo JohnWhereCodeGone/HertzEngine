@@ -182,19 +182,19 @@ std::shared_ptr<ObjData> ObjLoader::GetObjData(const char* aPath)
 	return returnData;
 }
 
-std::vector<HertzTexture*> ObjLoader::GetDefaultTextures()
+std::vector<std::shared_ptr<HertzTexture>> ObjLoader::GetDefaultTextures()
 {
 
-	std::vector<HertzTexture*> textures;
-	HertzTexture* diffuse = new HertzTexture("./texture/container2.png", true);
-	HertzTexture* specular = new HertzTexture("./texture/container2_specular.png", true);
+	std::vector<std::shared_ptr<HertzTexture>> textures;
+	std::shared_ptr<HertzTexture> diffuse = std::make_shared<HertzTexture>("./texture/container2.png", true);
+	std::shared_ptr<HertzTexture> specular = std::make_shared<HertzTexture>("./texture/container2_specular.png", true);
 
 
-	diffuse->type = "texture_diffuse";
-	specular->type = "texture_specular";
+	diffuse->m_type = "texture_diffuse";
+	specular->m_type = "texture_specular";
 
-	diffuse->texturetype = TextureType::Diffuse;
-	specular->texturetype = TextureType::Specular;
+	diffuse->m_texturetype = TextureType::Diffuse;
+	specular->m_texturetype = TextureType::Specular;
 
 	textures.push_back(diffuse);
 	textures.push_back(specular);

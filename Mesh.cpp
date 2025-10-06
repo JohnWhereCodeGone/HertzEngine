@@ -35,7 +35,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &EBO);
 }
 
-Mesh::Mesh(const ObjData &data, std::vector<HertzTexture*> textures, const char* tPath)
+Mesh::Mesh(const ObjData &data, std::vector<std::shared_ptr<HertzTexture>> textures, const char* tPath)
 {
 
 	//REMOVE ME
@@ -131,7 +131,7 @@ void Mesh::Draw(Shader& shader)
 		}
 
 		std::string number;
-		std::string name = textures[i]->type;
+		std::string name = textures[i]->m_type;
 
 		if (name == "texture_diffuse")
 		{
@@ -189,8 +189,8 @@ void Mesh::Render()
 		}
 
 		std::string number;
-		TextureType type = textures[i]->texturetype;
-		std::string name = textures[i]->type;
+		TextureType type = textures[i]->m_texturetype;
+		std::string name = textures[i]->m_type;
 
 		/*
 		switch (type)
@@ -246,7 +246,7 @@ void Mesh::Render()
 	glBindVertexArray(0);
 }
 
-void Mesh::SetTextures(std::vector<HertzTexture*> texin)
+void Mesh::SetTextures(std::vector<std::shared_ptr<HertzTexture>> texin)
 {
 	this->textures = texin;
 }
@@ -270,7 +270,7 @@ Shader* Mesh::getShader()
 
 
 
-Mesh::Mesh(std::vector<Vertex> verticies, std::vector<unsigned int> indicies, std::vector<HertzTexture*> textures)
+Mesh::Mesh(std::vector<Vertex> verticies, std::vector<unsigned int> indicies, std::vector<std::shared_ptr<HertzTexture>> textures)
 {
 
 	

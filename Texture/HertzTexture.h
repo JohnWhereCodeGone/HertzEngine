@@ -28,7 +28,7 @@ enum MipMapSettings
 	LINEAR_LINEAR //Trilinear filtering.
 };
 
-struct TextureSettings
+struct TextureSettings //old, delete me
 {
 	MipMapSettings MipMap;
 	bool flip_on_load = true;
@@ -40,18 +40,19 @@ class HertzTexture
 {
 public:
 
-	std::string type;
-	HertzTexture(const char* tPath = nullptr, bool isPng = false, TextureType type = TextureType::Diffuse);
+	std::string m_type;
+	std::string m_path;
+	HertzTexture(const char* tPath = nullptr, bool isPng = false, const TextureType &type = TextureType::Diffuse);
 	void Use(); //not working
 	void Use(unsigned int data); //not working
-	TextureType texturetype;
+	TextureType m_texturetype;
 	
 	unsigned int& GetTexture();
-	static TextureSettings* textureSettings;
+	static TextureSettings* textureSettings; //old
+	void SetMipMap(const MipMapSettings& setting);
 
 private:
-	void SetupMipMap(const MipMapSettings& setting);
-	void UpdateMipMap(HertzTexture* text);
+	static void UpdateMipMap(HertzTexture* text, const MipMapSettings& setting);
 	unsigned int texture;
 	
 

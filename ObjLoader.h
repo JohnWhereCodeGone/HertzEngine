@@ -33,12 +33,12 @@ class ObjLoader
 private:
 	
 public:
-	std::vector<HertzTexture*> defaultTextures;
+	std::vector<std::shared_ptr<HertzTexture>> defaultTextures;
 
 	static std::shared_ptr<Mesh> LoadObjData(const char* aPath);
 	static std::shared_ptr<ObjData> GetObjData(const char* aPath);
 
-	static std::vector<HertzTexture*> GetDefaultTextures();
+	static std::vector<std::shared_ptr<HertzTexture>> GetDefaultTextures();
 
 	bool LoadOBJ(
 		const char* aPath,

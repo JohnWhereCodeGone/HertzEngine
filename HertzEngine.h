@@ -13,7 +13,7 @@
 
 #include "MyDebug/Debugger.h"
 //input
-
+#include "TextureManager.h"
 
 
 #define SCR_WIDTH 1920.0
@@ -60,6 +60,7 @@ public:
 
 	Camera* GetCam();
 	static Shader* GetDefaultShader();
+	static std::vector<std::shared_ptr<HertzTexture>> GetDefaultTexture(); //herlper
 	//input function holder
 	Meshmanager* GetMeshMangr();
 	
@@ -68,9 +69,10 @@ public:
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	void Shutdown();
 	void Update();
-	void MessageHandling();
+	void MessageHandling(); //delete
 	void ProcessMessages(); //Spawns the worker thread - REAL FUNCTION
-	void WorkerThreadOBJ();
+	void WorkerThreadOBJ(); //delete
+
 
 
 	bool bShouldClose;
@@ -79,7 +81,7 @@ private:
 	Meshmanager* MeshManager;
 	glm::mat4 projection;
 	glm::mat4 view;
-
+	TextureManager man;
 
 	GameState state;
 	GLFWwindow* GameWindow;

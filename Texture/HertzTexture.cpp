@@ -8,7 +8,7 @@
 TextureSettings* HertzTexture::textureSettings = nullptr;
 
 
-HertzTexture::HertzTexture(const char* tPath, bool isPng, TextureType type)
+HertzTexture::HertzTexture(const char* tPath, bool isPng, const TextureType &type)
 {
 	if (!textureSettings)
 	{
@@ -24,7 +24,7 @@ HertzTexture::HertzTexture(const char* tPath, bool isPng, TextureType type)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	SetupMipMap(textureSettings->MipMap);
+	SetMipMap(textureSettings->MipMap);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	
@@ -55,7 +55,8 @@ HertzTexture::HertzTexture(const char* tPath, bool isPng, TextureType type)
 		std::cerr << "TEXTURE ERROR: DATA WAS NULL" << std::endl;
 	}
 	texture = tTexture;
-	this->texturetype = type;
+	this->m_texturetype = type;
+	this->m_path = tPath;
 	stbi_image_free(data);
 
 
@@ -95,29 +96,32 @@ unsigned int& HertzTexture::GetTexture()
 
 
 //ToDO: Update me to work in runtime.
-void HertzTexture::SetupMipMap(const MipMapSettings& setting)
+void HertzTexture::SetMipMap(const MipMapSettings& setting)
 {
 	switch (setting)
 	{
 	case MipMapSettings::NEAREST_NEAREST:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glGenerateMipmap(GL_TEXTURE_2D);
 		break;
 	case MipMapSettings::LINEAR_NEAREST:
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+		glGenerateMipmap(GL_TEXTURE_2D);
 		break;
 	case MipMapSettings::NEAREST_LINEAR:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		glGenerateMipmap(GL_TEXTURE_2D);
 		break;
 	case MipMapSettings::LINEAR_LINEAR: //Trifiltering
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glGenerateMipmap(GL_TEXTURE_2D);
 		break;
 	
 	}
 }
 
-void HertzTexture::UpdateMipMap(HertzTexture* text)
+void HertzTexture::UpdateMipMap(HertzTexture* text, const MipMapSettings& setting)
 {
-	unsigned int tData = text->GetTexture();
-
+	text->SetMipMap(setting);
 }
 

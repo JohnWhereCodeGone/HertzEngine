@@ -3,7 +3,7 @@
 #include <vector>
 #include "Mesh.h"
 #include <unordered_map>
-
+#include <TextureManager.h>
 
 class HertzEngine;
 
@@ -34,7 +34,7 @@ class Meshmanager
 public:
 
 	Meshmanager();
-	static std::vector<HertzTexture*> GetDefaultTextures();
+	static std::vector<std::shared_ptr<HertzTexture>> GetDefaultTextures();
 	std::shared_ptr<Mesh> AddMeshByData(std::shared_ptr<ObjData> data, Shader* shader = nullptr);
 	void AddMesh(const char* tPath);
 	std::shared_ptr<Mesh> AddMesh(const char* tPath, Shader* shader = nullptr);
@@ -45,8 +45,9 @@ public:
 	int MeshCount;
 
 protected:
+
 	std::vector<std::shared_ptr<Mesh>> MeshList;
 	std::unordered_map<MeshKey, Mesh*, MeshKeyHash> meshMap;
-
+	TextureManager m_texman;
 };
 

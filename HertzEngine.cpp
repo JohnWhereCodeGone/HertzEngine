@@ -2,6 +2,8 @@
 #include "input/hertzinputs.h" 
 #include "../UI/HertzEditor.h"
 #include <thread>
+#include "../Threading/MipMapMessage.h"
+
 
 
 Shader* HertzEngine::DefaultShader = nullptr;
@@ -129,6 +131,26 @@ Shader* HertzEngine::GetDefaultShader()
 	}
 }
 
+std::vector<std::shared_ptr<HertzTexture>> HertzEngine::GetDefaultTexture()
+{
+	std::vector<std::shared_ptr<HertzTexture>> textures;
+
+	std::shared_ptr<HertzTexture> diffuse = TextureManager::LoadTexture("./texture./container2.png", TextureType::Diffuse, true);
+	std::shared_ptr<HertzTexture> specular = TextureManager::LoadTexture("./texture./container2_specular.png", TextureType::Specular, true);
+
+
+	diffuse->m_type = "texture_diffuse";
+	specular->m_type = "texture_specular";
+
+	diffuse->m_texturetype = TextureType::Diffuse;
+	specular->m_texturetype = TextureType::Specular;
+
+	textures.push_back(diffuse);
+	textures.push_back(specular);
+
+	return textures;
+}
+
 Meshmanager* HertzEngine::GetMeshMangr()
 {
 	if (manager)
@@ -229,7 +251,7 @@ void HertzEngine::ProcessMessages()
 		case MessageType::LoadOBJ:
 		{
 
-			std::shared_ptr<ObjMessage> objmsg = std::dynamic_pointer_cast<ObjMessage>(msg);
+			std::shared_ptr<ObjMessage> objmsg = std::static_pointer_cast<ObjMessage>(msg);
 
 
 			if (objmsg)
@@ -256,7 +278,7 @@ void HertzEngine::ProcessMessages()
 
 		case MessageType::LoadedResource:
 		{
-			std::shared_ptr<ObjLoadedMessage> loadedMsg = std::dynamic_pointer_cast<ObjLoadedMessage>(msg);
+			std::shared_ptr<ObjLoadedMessage> loadedMsg = std::static_pointer_cast<ObjLoadedMessage>(msg);
 
 			if (loadedMsg && loadedMsg->GetObjData())
 			{
@@ -270,6 +292,17 @@ void HertzEngine::ProcessMessages()
 
 			}
 
+			break;
+		}
+		case MessageType::MipMap:
+		{
+			
+			std::shared_ptr<MipMapMessage> mip = std::static_pointer_cast<MipMapMessage>(msg);
+
+			if (mip)
+			{
+				TextureManager::UpdateMipMap(mip->GetSetting());
+			}
 			break;
 		}
 

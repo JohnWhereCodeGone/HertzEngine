@@ -6,7 +6,8 @@ enum MessageType
 {
 	Default,
 	LoadOBJ,
-	LoadedResource
+	LoadedResource,
+	MipMap
 };
 
 class Message

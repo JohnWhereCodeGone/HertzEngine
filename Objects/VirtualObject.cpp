@@ -61,25 +61,22 @@ bool VirtualObject::SetShader(Shader* shader)
 
 void VirtualObject::SetName(const std::string& newname)
 {
-	if (newname.size() > 0)
-		this->m_name = new std::string(newname);
+	if ( newname.size() > 0 )
+		this->m_name = new std::string( newname );
 	else
 		return;
 }
 
-void VirtualObject::SetTextures(const std::vector<HertzTexture*>& newtextures)
+void VirtualObject::SetTextures(const std::vector<std::shared_ptr<HertzTexture>>& newtextures)
 {
 	this->m_textures = newtextures;
 }
 
 
 
-std::vector<HertzTexture*> &VirtualObject::GetTextures()
+const std::vector<std::shared_ptr<HertzTexture>> &VirtualObject::GetTextures()
 {
-	if (!m_textures.empty())
-	{
 		return this->m_textures;
-	}
 }
 
 Transform* VirtualObject::GetTransform()

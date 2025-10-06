@@ -61,26 +61,19 @@ void Transform::UpdateModel(Shader* shader)
 {
 	if (!shader)
 		return;
-	auto model = glm::mat4(1.0f);
+	
+	
 
+	// use quaternions here to avoid 'gimbal lock' - lest you be branded a heretic.
+	
+	model = glm::translate(model, vPos);
+	model = glm::rotate(model, glm::radians(vRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(vRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(vRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::scale(model, vScale);
 
-	if (shader)
-	{
-		model = glm::translate(model, vPos);
-		model = glm::rotate(model, glm::radians(vRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(vRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(vRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, vScale);
-
-		shader->Use();
-		shader->setMat4("model", model);
-
-	}
-	else
-	{
-		std::cerr << "Transform: Error! Shader was nullptr" << std::endl;
-	}
-
+	shader->Use();
+	shader->setMat4("model", model);
 
 
 }

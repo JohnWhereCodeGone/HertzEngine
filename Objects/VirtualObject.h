@@ -25,10 +25,10 @@ public:
 	bool SetMesh(Mesh* mesh);
 	bool SetShader(Shader* shader);
 	void SetName(const std::string& newname);
-	void SetTextures(const std::vector<HertzTexture*>& textures);
+	void SetTextures(const std::vector<std::shared_ptr<HertzTexture>>& textures);
 	
 
-	std::vector<HertzTexture*> &GetTextures();
+	const std::vector<std::shared_ptr<HertzTexture>> &GetTextures();
 	Transform* GetTransform();
 	Shader* GetShader();
 	Mesh* GetMesh();
@@ -44,7 +44,7 @@ private:
 	Shader* m_shader;
 
 	
-	std::vector<HertzTexture*> m_textures;
+	std::vector<std::shared_ptr<HertzTexture>> m_textures;
 	std::string* m_name;
 
 	static int ID;
