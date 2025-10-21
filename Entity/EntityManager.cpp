@@ -6,26 +6,31 @@
 
 unsigned int EntityManager::count = 0;
 
-Entity* EntityManager::CreateEntity()
+
+
+std::shared_ptr<Entity> EntityManager::CreateEntity()
 {
-	Entity* en = new Entity;
+	EntityPtr en = std::make_shared<Entity>();
 	en->SetShader(HertzEngine::GetDefaultShader());
 
 
 	if (en)
 	{
+		std::string name = std::to_string(count);
+		en->SetName(name);
+		count++;
 		m_entityList.push_back(en);
 		return en;
 	}
 	else
 	{
-		std::cerr << "Failed to add entity!" << std::endl;
+		std::cerr << "EntityManager::CreateEntity - Failed to add entity!" << std::endl;
 		return nullptr;
 	}
 
 }
 
-void EntityManager::DeleteEntity(Entity* to_delete)
+void EntityManager::DeleteEntity(EntityPtr to_delete)
 {
 	if (!to_delete)
 	{
@@ -40,11 +45,11 @@ void EntityManager::DeleteEntity(Entity* to_delete)
 	{
 		if (*it == to_delete)
 		{
-			delete* it;
+			//this should be the only observer.
 			m_entityList.erase(it);
 
 			std::cout << "Entity manager: Removed entity " << name << std::endl;
-			count--;
+			//count--;
 			return;
 		}
 	}
@@ -52,20 +57,11 @@ void EntityManager::DeleteEntity(Entity* to_delete)
 	std::cout << "Entity manager: Error! Failed to delete entity." << std::endl;
 }
 
-bool EntityManager::AddComponent(Component* to_add, Entity* add_to)
+bool EntityManager::AddComponent(Component* to_add, EntityPtr add_to)
 {
 
 	
-	if (to_add && add_to)
-	{
-		Mesh* temp = dynamic_cast<Mesh*>(to_add);
-		temp->Attach(*add_to);
-		return true;
-	}
-	else
-	{
-		std::cerr << "Entity manager: Error! Adding component failed" << std::endl;
-	}
+	return true;
 
 }
 
@@ -74,11 +70,14 @@ bool EntityManager::RemoveComponent(Component* to_remove)
 	return false;
 }
 
-void EntityManager::Update()
+void EntityManager::Update(float DeltaTime)
 {
-	for (Entity* em : m_entityList)
+	for (EntityPtr en : m_entityList)
 	{
-		em->Update();
-	}
 
+		en->Update(HertzEngine::DeltaTime());
+		//std::cout << en->GetTransform()->GetPos().x << " " << en->GetTransform()->GetPos().y << " " << en->GetTransform()->GetPos().z << std::endl;
+	}
 }
+
+

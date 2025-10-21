@@ -2,7 +2,9 @@
 
 
 
-ObjMessage::ObjMessage(const std::string &tPath)
+
+
+ObjMessage::ObjMessage(const std::string& tPath)
 {
 	this->m_type = MessageType::LoadOBJ;
 	this->m_tPath = tPath;
@@ -16,10 +18,11 @@ void ObjMessage::QueuePop()
 
 // ---------------------
 
-ObjLoadedMessage::ObjLoadedMessage(std::shared_ptr<ObjData> data)
+ObjLoadedMessage::ObjLoadedMessage(std::shared_ptr<ObjData> data, const char* tPath)
 {
 	this->m_type = MessageType::LoadedResource;
 	this->m_data = data;
+	this->m_sPath = tPath;
 
 }
 

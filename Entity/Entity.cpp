@@ -1,6 +1,7 @@
 #include "Entity.h"
 #include "../Transform.h"
 
+
 Entity::Entity() : VirtualObject()
 {
 	
@@ -9,15 +10,15 @@ Entity::Entity() : VirtualObject()
 
 
 
-void Entity::Update()
+void Entity::Update(float Deltatime)
 {
 	//update model with pos.
-	Shader* shad = GetShader();
-	Transform* trans = GetTransform();
-
+	ShaderPtr shad = GetShader();
+	TransformPtr trans = GetTransform();
+	
 	if (shad)
 	{
-
+		trans->Move(Deltatime);
 		trans->UpdateModel(shad);
 
 
@@ -26,4 +27,6 @@ void Entity::Update()
 
 
 }
+
+
  

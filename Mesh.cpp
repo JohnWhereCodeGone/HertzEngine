@@ -10,8 +10,8 @@ void Mesh::Attach(VirtualObject& obj)
 {
 	int error = 0;
 
-	Shader* shad = obj.GetShader();
-	Transform* trans = obj.GetTransform();
+	ShaderPtr shad = obj.GetShader();
+	std::shared_ptr<Transform> trans = obj.GetTransform();
 	textures = obj.GetTextures();
 
 	if (shad && trans)
@@ -39,7 +39,7 @@ Mesh::Mesh(const ObjData &data, std::vector<std::shared_ptr<HertzTexture>> textu
 {
 
 	//REMOVE ME
-	transform = new Transform();
+	transform = std::make_shared<Transform>();
 
 	indiciesSize = indicies.size();
 	this->textures = textures;
@@ -172,7 +172,10 @@ void Mesh::Draw(Shader& shader)
 
 void Mesh::Render()
 {
-	
+	if (!shader)
+	{
+		std::cout << "Shader is still nullptr!" << std::endl;
+	}
 	GLenum error;
 	while ((error = glGetError()) != GL_NO_ERROR) {}
 
@@ -250,11 +253,11 @@ void Mesh::SetTextures(std::vector<std::shared_ptr<HertzTexture>> texin)
 {
 	this->textures = texin;
 }
-void Mesh::setShader(Shader* nShader)
+void Mesh::setShader(ShaderPtr nShader)
 {
 	this->shader = nShader;
 }
-Shader* Mesh::getShader()
+std::shared_ptr<Shader> Mesh::getShader()
 {
 	if (shader)
 	{

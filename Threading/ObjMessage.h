@@ -8,7 +8,7 @@ class ObjMessage : public Message // loads mesh in new thread
 {
 public:
 
-	ObjMessage(const std::string &tPath);
+	ObjMessage(const std::string& tPath);
 
 	std::string m_tPath;
 	void QueuePop() override;
@@ -19,13 +19,14 @@ class ObjLoadedMessage : public Message // finished loading/reference to loaded 
 {
 public:
 
-	ObjLoadedMessage(std::shared_ptr<ObjData> data);
+	ObjLoadedMessage(std::shared_ptr<ObjData> data, const char* tPath = nullptr);
 	
 	void SetLoadedMesh(std::shared_ptr<Mesh> meshToAdd);
 	std::shared_ptr<Mesh> GetLoadedMesh();
 
 	std::shared_ptr<ObjData> GetObjData();
 
+	std::string m_sPath;
 	
 
 private:

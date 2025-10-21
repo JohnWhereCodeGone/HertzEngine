@@ -5,6 +5,11 @@ void Shader::Use()
 	glUseProgram(ID);
 }
 
+const char* Shader::GetFragmentPath() const
+{
+	return this->m_fragmentPath;
+}
+
 void Shader::setBool(const std::string& name, bool value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
@@ -89,7 +94,8 @@ unsigned int Shader::getShader()
 Shader::Shader(const char* fragmentPath, const char* vertexPath)
 {
 	float offset = 0.5f;
-
+	m_fragmentPath = fragmentPath;
+	m_vertexPath = vertexPath;
 	std::string vertexCode;
 	std::string fragmentCode;
 	std::ifstream vShaderFile;
@@ -169,6 +175,11 @@ Shader::Shader(const char* fragmentPath, const char* vertexPath)
 	glDeleteShader(fragment);
 
 
+}
+
+Shader::~Shader()
+{
+	std::cout << "I am being deleted!" << std::endl;
 }
 
 

@@ -6,7 +6,8 @@
 
 
 
-Shader* HertzEngine::DefaultShader = nullptr;
+std::shared_ptr<Shader> HertzEngine::DefaultShader = nullptr;
+
 float HertzEngine::fDeltaTime = 0.0f;
 
 void HertzEngine::framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -28,7 +29,10 @@ HertzEngine::HertzEngine()
 	bShouldClose = false;
 	state = GameState::RUNNING;
 	manager = new Meshmanager();
+	m_EntityManager = std::make_shared<EntityManager>();
 	
+	
+
 
 	//Cam Setup
 	cam = new Camera();
@@ -38,7 +42,7 @@ HertzEngine::HertzEngine()
 	
 	// Shader Setup:
 	GameWindow = GameInit();
-	DefaultShader = new Shader();
+	DefaultShader = ShaderManager::MakeShader();
 	DefaultShader->setFloat("material.shine", 264.f);
 	
 	//initialize view
@@ -117,8 +121,18 @@ Camera* HertzEngine::GetCam()
 		
 }
 
-Shader* HertzEngine::GetDefaultShader()
+std::shared_ptr<Shader> HertzEngine::GetDefaultShader()
 {
+	
+	std::shared_ptr<Shader> ShaderInstance = ShaderManager::MakeShader(nullptr);
+	if (!ShaderInstance)
+	{
+		return nullptr;
+	}
+	ShaderInstance->setFloat("material.shine", 264.f);
+	DefaultShader = ShaderInstance;
+	return ShaderInstance;
+	/*
 	if (DefaultShader)
 	{
 		return DefaultShader;
@@ -127,6 +141,26 @@ Shader* HertzEngine::GetDefaultShader()
 	else
 	{
 		std::cerr << "Default shader was nullptr" << std::endl;
+		return nullptr;
+	}
+	*/
+	
+}
+
+std::shared_ptr<Shader> HertzEngine::MakeDefaultShader()
+{
+	using ShaderPtr = std::shared_ptr<Shader>;
+
+	ShaderPtr shad = std::make_shared<Shader>();
+
+	if (shad)
+	{
+		shad->setFloat("material.shine", 264.f);
+		return shad;
+
+	}
+	else
+	{
 		return nullptr;
 	}
 }
@@ -183,22 +217,27 @@ void HertzEngine::Update()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		ImGui::ShowDemoWindow();
+		HertzEditor::EditorUI(GameWindow);
 
 		HertzInput::iprocessInput(GameWindow);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+		m_EntityManager->Update(HertzEngine::DeltaTime());
 		//Render
 
 		glm::mat4 view = cam->GetViewMat4();
 		
-		HertzEditor::EditorUI(GameWindow);
-
+		m_shaderManager->UpdateShaders(projection, view, cam->vPos);
+		
+		/*
 		DefaultShader->Use();
 		DefaultShader->setMat4("projection", projection);
 		DefaultShader->setMat4("view", view);
 		DefaultShader->setVec3("viewPos", cam->vPos);
+		*/
 
 
 		manager->Render();
@@ -206,6 +245,7 @@ void HertzEngine::Update()
 		//End Render
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		
 		glfwSwapBuffers(GameWindow);
 		glfwPollEvents();
 	}
@@ -265,7 +305,8 @@ void HertzEngine::ProcessMessages()
 						std::shared_ptr<ObjData> data = ObjLoader::GetObjData(path.c_str());
 						if (data)
 						{
-							messagequeue.Push(std::make_shared<ObjLoadedMessage>(data));
+
+							messagequeue.Push(std::make_shared<ObjLoadedMessage>(data, path.c_str()));
 							std::cout << "[HertzEngine::ProcessMessages] Worker thread success!!" << std::endl;
 						}
 
@@ -285,7 +326,8 @@ void HertzEngine::ProcessMessages()
 				if (HertzEngine::GetMeshMangr())
 				{
 					Meshmanager* Manager = HertzEngine::GetMeshMangr();
-					manager->AddMeshByData(loadedMsg->GetObjData());
+					manager->AddMeshByData(loadedMsg->GetObjData(), loadedMsg->m_sPath.c_str());
+
 
 					std::cout << "[HertzEngine::ProcessMessages] Added Mesh to manager! :)" << std::endl;
 				}
@@ -337,6 +379,11 @@ void HertzEngine::WorkerThreadOBJ()
 		}
 	}
 	*/
+}
+
+std::shared_ptr<EntityManager> HertzEngine::GetEntityManager()
+{
+	return this->m_EntityManager;
 }
 
 

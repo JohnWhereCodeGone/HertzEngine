@@ -7,7 +7,9 @@ public:
 
 	Entity();
 
-	void Update();
+	void Update(float DeltaTime);
+	float GetVelocity();
+
 
 };
 

@@ -43,16 +43,17 @@ class Mesh : public Component
 
 private:
 	
+	using ShaderPtr = std::shared_ptr<Shader>;
 	unsigned int VAO;
 	unsigned int EBO;
 	unsigned int VBO;
-	Shader* shader;
+	ShaderPtr shader;
 	int indiciesSize;
 
 	
 public:
 	void Attach(VirtualObject& obj) override;
-	Transform* transform;
+	std::shared_ptr<Transform> transform;
 	std::vector<Vertex>	vertices;
 	std::vector<unsigned int> indicies;
 	std::vector<std::shared_ptr<HertzTexture>> textures;
@@ -62,8 +63,8 @@ public:
 
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<std::shared_ptr<HertzTexture>> textures);
 
-	void setShader(Shader* shader);
-	Shader* getShader();
+	void setShader(ShaderPtr shader);
+	ShaderPtr getShader();
 
 	void Draw(Shader& shader);
 	void Render();

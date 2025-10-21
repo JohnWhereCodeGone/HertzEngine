@@ -148,6 +148,7 @@
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="Input\hertzinputs.cpp" />
+    <ClCompile Include="Shaders\ShaderManager.cpp" />
     <ClCompile Include="Texture\TextureManager.cpp" />
     <ClCompile Include="Threading\MipMapMessage.cpp" />
     <ClCompile Include="Threading\MessagingQueue.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Input\hertzinputs.h" />
+    <ClInclude Include="Shaders\ShaderManager.h" />
     <ClInclude Include="Texture\TextureManager.h" />
     <ClInclude Include="Threading\MipMapMessage.h" />
     <ClInclude Include="Threading\MessagingQueue.h" />

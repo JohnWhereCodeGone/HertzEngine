@@ -11,7 +11,7 @@ Meshmanager::Meshmanager()
 	this->MeshCount = 0;
 }
 
-
+unsigned int id = 0;
 void Meshmanager::AddMesh(const char* tPath)
 {
 	for (std::shared_ptr<Mesh> m : MeshList)
@@ -29,7 +29,7 @@ void Meshmanager::AddMesh(const char* tPath)
 	 
 }
 
-std::shared_ptr<Mesh> Meshmanager::AddMesh(const char* tPath, Shader* shader) //this is the real one, delete the others.
+std::shared_ptr<Mesh> Meshmanager::AddMesh(const char* tPath, ShaderPtr shader) //this is the real one, delete the others.
 {
 	std::cout << tPath << std::endl;
 
@@ -67,7 +67,7 @@ std::shared_ptr<Mesh> Meshmanager::AddMesh(const char* tPath, Shader* shader) //
 
 }
 
-std::shared_ptr<Mesh> Meshmanager::AddMeshByData(std::shared_ptr<ObjData> data, Shader* shader)
+std::shared_ptr<Mesh> Meshmanager::AddMeshByData(std::shared_ptr<ObjData> data, const char* name, ShaderPtr shader)
 {
 	
 	if (!data)
@@ -79,16 +79,18 @@ std::shared_ptr<Mesh> Meshmanager::AddMeshByData(std::shared_ptr<ObjData> data, 
 
 	if (!shader)
 	{
-		shader = HertzEngine::GetDefaultShader();
+		
 	}
+	std::shared_ptr<Shader> newShad = HertzEngine::GetDefaultShader();
 
-	newMesh->setShader(shader);
+	newMesh->setShader(newShad);
 	MeshList.push_back(newMesh);
 	MeshCount++;
 
 	if (newMesh)
 	{
-		newMesh->path = "undefined";
+		newMesh->path = name;
+		id++;
 		return newMesh;
 
 	}
@@ -157,7 +159,7 @@ void Meshmanager::Render()
 	for (std::shared_ptr<Mesh> mesh : MeshList)
 	{
 
-		Shader* temp = mesh->getShader();
+		ShaderPtr temp = mesh->getShader();
 		mesh->transform->UpdateModel(temp);
 		mesh->Render();
 

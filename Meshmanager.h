@@ -32,12 +32,13 @@ class Meshmanager
 {
 	
 public:
+	using ShaderPtr = std::shared_ptr<Shader>;
 
 	Meshmanager();
 	static std::vector<std::shared_ptr<HertzTexture>> GetDefaultTextures();
-	std::shared_ptr<Mesh> AddMeshByData(std::shared_ptr<ObjData> data, Shader* shader = nullptr);
+	std::shared_ptr<Mesh> AddMeshByData(std::shared_ptr<ObjData> data, const char* name = nullptr, ShaderPtr shader = nullptr);
 	void AddMesh(const char* tPath);
-	std::shared_ptr<Mesh> AddMesh(const char* tPath, Shader* shader = nullptr);
+	std::shared_ptr<Mesh> AddMesh(const char* tPath, ShaderPtr shader = nullptr);
 	bool AddMesh(std::shared_ptr<Mesh> meshToAdd);
 	void RemoveMesh(std::shared_ptr<Mesh> mDelete);
 	void Render();

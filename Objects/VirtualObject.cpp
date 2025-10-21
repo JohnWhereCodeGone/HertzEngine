@@ -2,6 +2,7 @@
 #include "../Mesh.h"
 #include "../Transform.h"
 #include <HertzShader.h>
+
 int VirtualObject::ID = 0;
 
 
@@ -10,7 +11,7 @@ int VirtualObject::ID = 0;
 VirtualObject::VirtualObject()
 {
 
-	this->m_transform = new Transform;
+	this->m_transform = std::make_shared<Transform>();
 
 	this->m_name = nullptr;
 	this->m_shader = nullptr;
@@ -22,7 +23,7 @@ VirtualObject::VirtualObject()
 
 
 
-bool VirtualObject::SetTransform(Transform* trans)
+bool VirtualObject::SetTransform(TransformPtr trans)
 {
 	if (trans)
 	{
@@ -34,11 +35,13 @@ bool VirtualObject::SetTransform(Transform* trans)
 	}
 }
 
-bool VirtualObject::SetMesh(Mesh* mesh)
+bool VirtualObject::SetMesh(MeshPtr mesh)
 {
 	if (mesh)
 	{
-
+		mesh->transform = this->GetTransform();
+		mesh->parent = this;
+		this->m_shader = mesh->getShader();
 		this->m_mesh = mesh;
 	}
 	else
@@ -47,7 +50,7 @@ bool VirtualObject::SetMesh(Mesh* mesh)
 	}
 }
 
-bool VirtualObject::SetShader(Shader* shader)
+bool VirtualObject::SetShader(ShaderPtr shader)
 {
 	if (shader)
 	{
@@ -79,15 +82,15 @@ const std::vector<std::shared_ptr<HertzTexture>> &VirtualObject::GetTextures()
 		return this->m_textures;
 }
 
-Transform* VirtualObject::GetTransform()
+std::shared_ptr<Transform> VirtualObject::GetTransform()
 {
 	if (m_transform)
-		return m_transform;
+		return this->m_transform;
 	else
 		return nullptr;
 }
 
-Shader* VirtualObject::GetShader()
+std::shared_ptr<Shader> VirtualObject::GetShader()
 {
 	if (m_shader)
 		return m_shader;
@@ -95,7 +98,7 @@ Shader* VirtualObject::GetShader()
 		return nullptr;
 }
 
-Mesh* VirtualObject::GetMesh()
+std::shared_ptr<Mesh> VirtualObject::GetMesh()
 {
 	if (m_mesh)
 		return m_mesh;
@@ -110,6 +113,8 @@ std::string* VirtualObject::GetName()
 	else
 		return nullptr;
 }
+
+
 
 void VirtualObject::GenID()
 {

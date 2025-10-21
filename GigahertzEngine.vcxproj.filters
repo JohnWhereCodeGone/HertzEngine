@@ -129,6 +129,9 @@
     <ClCompile Include="Texture\TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shaders\ShaderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hertzrender.h">
@@ -243,6 +246,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Texture\TextureManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\ShaderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,6 +13,9 @@
 
 #include "MyDebug/Debugger.h"
 //input
+
+#include "Shaders/ShaderManager.h"
+#include "Entity/EntityManager.h"
 #include "TextureManager.h"
 
 
@@ -39,9 +42,9 @@ public:
 	//defaults & managers;
 	Meshmanager* manager;
 	Camera* cam;
-	static Shader* DefaultShader;
+	static std::shared_ptr<Shader> DefaultShader;
 
-	//returns Hertz deltatime.
+	//returns Hertz::deltatime.
 	static const float DeltaTime();
 	GLFWwindow* GetWindow() //must be inline or there'll be a linker error.
 	{
@@ -59,7 +62,8 @@ public:
 	};
 
 	Camera* GetCam();
-	static Shader* GetDefaultShader();
+	static std::shared_ptr<Shader> GetDefaultShader();
+	std::shared_ptr<Shader> MakeDefaultShader();
 	static std::vector<std::shared_ptr<HertzTexture>> GetDefaultTexture(); //herlper
 	//input function holder
 	Meshmanager* GetMeshMangr();
@@ -72,13 +76,15 @@ public:
 	void MessageHandling(); //delete
 	void ProcessMessages(); //Spawns the worker thread - REAL FUNCTION
 	void WorkerThreadOBJ(); //delete
-
+	std::shared_ptr<EntityManager> GetEntityManager();
 
 
 	bool bShouldClose;
 	MessagingQueue messagequeue;
 private:
 	Meshmanager* MeshManager;
+	std::shared_ptr<EntityManager> m_EntityManager;
+	std::shared_ptr<ShaderManager> m_shaderManager;
 	glm::mat4 projection;
 	glm::mat4 view;
 	TextureManager man;

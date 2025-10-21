@@ -18,17 +18,20 @@ class Shader
 private:
 	unsigned int ID;
 	std::string vertex;
-	const char* cVertexPath;
-	const char* cfragmentPath;
+	const char* m_vertexPath;
+	const char* m_fragmentPath;
 public:
 	
 	unsigned int getShader();
 
 	Shader(const char* fragmentPath = ".\\Shaders\\fragmentShader.glsl",
 		const char* vertexPath = ".\\Shaders\\vertexShader.glsl");
-
+	~Shader();
 	void Use();
 	
+
+	const char* GetFragmentPath() const;
+
 	void setBool(const std::string& name, bool value) const;
 	void setInt(const std::string& name, int value) const;
 	void setFloat(const std::string& name, float value) const;

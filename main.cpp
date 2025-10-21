@@ -25,7 +25,7 @@
 #include "Meshmanager.h"
 #include "HertzEngine.h"
 #include "Objects/VirtualObject.h"
-
+#include "Entity/Entity.h"
 
 std::string crate = ".\\Dependencies\\Crate.obj";
 std::string monky = ".\\Dependencies\\monkey.obj";
@@ -48,26 +48,45 @@ std::string monky = ".\\Dependencies\\monkey.obj";
 
 int main()
 {
+	using EntityPtr = std::shared_ptr<Entity>;
 	HertzEngine engine;
 	GLFWwindow* win = engine.GetWindow();
 	
+	auto EntityManager = engine.GetEntityManager();
+	std::shared_ptr<Entity> test = EntityManager->CreateEntity();
+
 	std::shared_ptr<ObjMessage> msgtest = std::make_shared<ObjMessage>(crate);
 	engine.messagequeue.Push(msgtest);
 
 	std::shared_ptr<ObjMessage> msgMonkey = std::make_shared<ObjMessage>(monky);
 	engine.messagequeue.Push(msgMonkey);
 
+
+	std::shared_ptr<Mesh> meshref = engine.manager->GetMesh(crate.c_str());
+
+	
+	test->GetTransform()->AddVelocity(glm::vec3(1.0f, 0.f, 0.f));
+
+
+	std::cout << "aaa" << std::endl;
 	//engine.GetMeshMangr()->AddMesh(crate.c_str(), HertzEngine::DefaultShader);
 	//engine.GetMeshMangr()->AddMesh(monky.c_str(), HertzEngine::DefaultShader);
 	
-	VirtualObject obj;
-	VirtualObject obj2;
+	
 
+	float time = 0;
 	
 	while (!engine.bShouldClose)
 	{
 		//std::cout << engine.bShouldClose << std::endl;
 		engine.Update();
+
+		time += HertzEngine::DeltaTime();
+
+		if (time >= 2.0f && time <= 2.5f)
+		{
+			test->SetMesh(engine.manager->GetMesh(crate.c_str()));
+		}
 	}
 }
 
