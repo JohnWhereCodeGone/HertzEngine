@@ -2,6 +2,8 @@
 #include "ObjLoader.h"
 #include "Objects/VirtualObject.h"
 #include <unordered_map>
+#include "ShaderManager.h"
+#include "TextureManager.h"
 
 
 
@@ -268,6 +270,15 @@ std::shared_ptr<Shader> Mesh::getShader()
 		return nullptr;
 	}
 }
+std::string& Mesh::GetName()
+{
+	return this->m_NameM;
+	// TODO: insert return statement here
+}
+void Mesh::SetName(const std::string& newName)
+{
+	this->m_NameM = newName;
+}
 	// TODO: insert return statement here
 
 
@@ -275,13 +286,15 @@ std::shared_ptr<Shader> Mesh::getShader()
 
 Mesh::Mesh(std::vector<Vertex> verticies, std::vector<unsigned int> indicies, std::vector<std::shared_ptr<HertzTexture>> textures)
 {
-
+	//used for loading from .mesh file
 	
 
 	this->indicies = indicies;
-	this->textures = textures;
-
-	//shader = new Shader();
+	this->vertices = verticies;
+	
+	this->shader = ShaderManager::MakeShader();
+	transform = std::make_shared<Transform>();
+	this->indiciesSize = sizeof(indicies);
 
 	InitMesh();
 }

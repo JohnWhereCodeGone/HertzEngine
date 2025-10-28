@@ -22,10 +22,11 @@
 //objects
 #include "Mesh.h"
 #include "ObjLoader.h"
-#include "Meshmanager.h"
+#include "../Mesh/Meshmanager.h"
 #include "HertzEngine.h"
 #include "Objects/VirtualObject.h"
 #include "Entity/Entity.h"
+#include "Serializer/Serializer.h"
 
 std::string crate = ".\\Dependencies\\Crate.obj";
 std::string monky = ".\\Dependencies\\monkey.obj";
@@ -56,26 +57,27 @@ int main()
 	std::shared_ptr<Entity> test = EntityManager->CreateEntity();
 
 	std::shared_ptr<ObjMessage> msgtest = std::make_shared<ObjMessage>(crate);
-	engine.messagequeue.Push(msgtest);
+	//engine.messagequeue.Push(msgtest);
 
 	std::shared_ptr<ObjMessage> msgMonkey = std::make_shared<ObjMessage>(monky);
-	engine.messagequeue.Push(msgMonkey);
+	//engine.messagequeue.Push(msgMonkey);
 
 
-	std::shared_ptr<Mesh> meshref = engine.manager->GetMesh(crate.c_str());
+	//std::shared_ptr<Mesh> meshref = engine.manager->GetMesh(crate.c_str());
 
 	
-	test->GetTransform()->AddVelocity(glm::vec3(1.0f, 0.f, 0.f));
+	test->GetTransform()->AddVelocity(glm::vec3(4.0f, 0.f, 0.f));
 
 
-	std::cout << "aaa" << std::endl;
 	//engine.GetMeshMangr()->AddMesh(crate.c_str(), HertzEngine::DefaultShader);
 	//engine.GetMeshMangr()->AddMesh(monky.c_str(), HertzEngine::DefaultShader);
 	
-	
 
 	float time = 0;
-	
+
+
+	engine.GetMeshMangr()->LoadDataMesh();
+
 	while (!engine.bShouldClose)
 	{
 		//std::cout << engine.bShouldClose << std::endl;
@@ -85,9 +87,11 @@ int main()
 
 		if (time >= 2.0f && time <= 2.5f)
 		{
-			test->SetMesh(engine.manager->GetMesh(crate.c_str()));
+			//test->SetMesh(engine.manager->GetMesh(crate.c_str()));
+			
 		}
 	}
+	engine.GetMeshMangr()->SaveDataMesh(nullptr);
 }
 
 

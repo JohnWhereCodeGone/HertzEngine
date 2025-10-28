@@ -1,6 +1,5 @@
 #pragma once
 #include "Camera.h"
-#include "Meshmanager.h"
 #include <iostream>
 
 
@@ -23,6 +22,7 @@
 #define SCR_HEIGHT 1080.0
 
 
+class Meshmanager;
 
 enum GameState
 {

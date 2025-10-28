@@ -49,6 +49,7 @@ private:
 	unsigned int VBO;
 	ShaderPtr shader;
 	int indiciesSize;
+	std::string m_NameM;
 
 	
 public:
@@ -65,6 +66,9 @@ public:
 
 	void setShader(ShaderPtr shader);
 	ShaderPtr getShader();
+
+	std::string& GetName();
+	void SetName(const std::string& newName);
 
 	void Draw(Shader& shader);
 	void Render();

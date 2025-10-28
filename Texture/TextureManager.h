@@ -16,6 +16,8 @@ public:
 	void RemoveTexture(std::shared_ptr<HertzTexture> textureToRemove);
 	static std::shared_ptr<HertzTexture> LoadTexture(const char* tPath, const TextureType& type = Diffuse, bool isPng = false);
 
+	static std::vector<std::shared_ptr<HertzTexture>> MakeDefaultTextures();
+
 private:
 	
 	bool m_HasTextureList;

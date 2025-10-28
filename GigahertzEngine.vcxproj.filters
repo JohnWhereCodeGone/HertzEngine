@@ -66,7 +66,7 @@
     <ClCompile Include="Physics\Collider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Meshmanager.cpp">
+    <ClCompile Include="Mesh\Meshmanager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UI\HertzEditor.cpp">
@@ -132,6 +132,9 @@
     <ClCompile Include="Shaders\ShaderManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Serializer\Serializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hertzrender.h">
@@ -179,7 +182,7 @@
     <ClInclude Include="Physics\Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Meshmanager.h">
+    <ClInclude Include="Mesh\Meshmanager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UI\HertzEditor.h">
@@ -249,6 +252,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Shaders\ShaderManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Serializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

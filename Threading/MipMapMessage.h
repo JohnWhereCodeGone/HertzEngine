@@ -5,7 +5,7 @@
 class MipMapMessage : public Message
 {
 public:
-
+	//currently not in use, consider for a ui queue/event system
 	MipMapMessage(const MipMapSettings& setting);
 	
 

@@ -3,6 +3,7 @@
 #include "../UI/HertzEditor.h"
 #include <thread>
 #include "../Threading/MipMapMessage.h"
+#include "../Mesh/Meshmanager.h"
 
 
 
@@ -149,40 +150,12 @@ std::shared_ptr<Shader> HertzEngine::GetDefaultShader()
 
 std::shared_ptr<Shader> HertzEngine::MakeDefaultShader()
 {
-	using ShaderPtr = std::shared_ptr<Shader>;
-
-	ShaderPtr shad = std::make_shared<Shader>();
-
-	if (shad)
-	{
-		shad->setFloat("material.shine", 264.f);
-		return shad;
-
-	}
-	else
-	{
-		return nullptr;
-	}
+	return ShaderManager::MakeShader();
 }
 
 std::vector<std::shared_ptr<HertzTexture>> HertzEngine::GetDefaultTexture()
 {
-	std::vector<std::shared_ptr<HertzTexture>> textures;
-
-	std::shared_ptr<HertzTexture> diffuse = TextureManager::LoadTexture("./texture./container2.png", TextureType::Diffuse, true);
-	std::shared_ptr<HertzTexture> specular = TextureManager::LoadTexture("./texture./container2_specular.png", TextureType::Specular, true);
-
-
-	diffuse->m_type = "texture_diffuse";
-	specular->m_type = "texture_specular";
-
-	diffuse->m_texturetype = TextureType::Diffuse;
-	specular->m_texturetype = TextureType::Specular;
-
-	textures.push_back(diffuse);
-	textures.push_back(specular);
-
-	return textures;
+	return TextureManager::MakeDefaultTextures();
 }
 
 Meshmanager* HertzEngine::GetMeshMangr()
@@ -195,6 +168,7 @@ Meshmanager* HertzEngine::GetMeshMangr()
 	else
 	{
 		std::cerr << "Fatal error HertzEngine::GetMeshMangr: Mesh Manager was nullptr!" << std::endl;
+		return nullptr;
 	}
 }
 

@@ -72,10 +72,30 @@ std::shared_ptr<HertzTexture> TextureManager::LoadTexture(const char* tPath, con
         return nullptr;
     }
 
-
+    texload->m_path = tPath;
     m_LoadedTexturesList.push_back(texload);
     return texload;
 
 
 
+}
+
+std::vector<std::shared_ptr<HertzTexture>> TextureManager::MakeDefaultTextures()
+{
+    std::vector<std::shared_ptr<HertzTexture>> textures;
+
+    std::shared_ptr<HertzTexture> diffuse = TextureManager::LoadTexture("./texture./container2.png", TextureType::Diffuse, true);
+    std::shared_ptr<HertzTexture> specular = TextureManager::LoadTexture("./texture./container2_specular.png", TextureType::Specular, true);
+
+
+    diffuse->m_type = "texture_diffuse";
+    specular->m_type = "texture_specular";
+
+    diffuse->m_texturetype = TextureType::Diffuse;
+    specular->m_texturetype = TextureType::Specular;
+
+    textures.push_back(diffuse);
+    textures.push_back(specular);
+
+    return textures;
 }

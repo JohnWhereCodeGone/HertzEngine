@@ -77,6 +77,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\imgui;$(SolutionDir)Shaders;$(SolutionDir)Texture;$(SolutionDir)Dependencies\stb_image\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -93,6 +94,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\imgui;$(SolutionDir)Shaders;$(SolutionDir)Texture;$(SolutionDir)Dependencies\stb_image\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,6 +111,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\imgui;$(SolutionDir)Shaders;$(SolutionDir)Texture;$(SolutionDir)Dependencies\stb_image\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,6 +128,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\imgui;$(SolutionDir)Shaders;$(SolutionDir)Texture;$(SolutionDir)Dependencies\stb_image\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,6 +152,7 @@
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="Input\hertzinputs.cpp" />
+    <ClCompile Include="Serializer\Serializer.cpp" />
     <ClCompile Include="Shaders\ShaderManager.cpp" />
     <ClCompile Include="Texture\TextureManager.cpp" />
     <ClCompile Include="Threading\MipMapMessage.cpp" />
@@ -156,7 +161,7 @@
     <ClCompile Include="Threading\Messaging.cpp" />
     <ClCompile Include="MyDebug\Debugger.cpp" />
     <ClCompile Include="UI\HertzEditor.cpp" />
-    <ClCompile Include="Meshmanager.cpp" />
+    <ClCompile Include="Mesh\Meshmanager.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
     <ClCompile Include="Dependencies\stb_image\stb.cpp" />
     <ClCompile Include="glad.c" />
@@ -201,6 +206,7 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Input\hertzinputs.h" />
+    <ClInclude Include="Serializer\Serializer.h" />
     <ClInclude Include="Shaders\ShaderManager.h" />
     <ClInclude Include="Texture\TextureManager.h" />
     <ClInclude Include="Threading\MipMapMessage.h" />
@@ -209,7 +215,7 @@
     <ClInclude Include="Threading\Messaging.h" />
     <ClInclude Include="MyDebug\Debugger.h" />
     <ClInclude Include="UI\HertzEditor.h" />
-    <ClInclude Include="Meshmanager.h" />
+    <ClInclude Include="Mesh\Meshmanager.h" />
     <ClInclude Include="Physics\Collider.h" />
     <ClInclude Include="Dependencies\stb_image\stb_image.h" />
     <ClInclude Include="HertzEngine.h">
