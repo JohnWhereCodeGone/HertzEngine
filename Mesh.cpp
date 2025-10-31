@@ -295,6 +295,7 @@ Mesh::Mesh(std::vector<Vertex> verticies, std::vector<unsigned int> indicies, st
 	this->shader = ShaderManager::MakeShader();
 	transform = std::make_shared<Transform>();
 	this->indiciesSize = sizeof(indicies);
+	this->textures = textures;
 
 	InitMesh();
 }

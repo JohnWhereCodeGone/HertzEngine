@@ -5,6 +5,8 @@ std::vector<std::shared_ptr<HertzTexture>> TextureManager::m_LoadedTexturesList;
 TextureManager::TextureManager()
 {
 
+
+
 }
 
 std::shared_ptr<HertzTexture> TextureManager::GetTexture()

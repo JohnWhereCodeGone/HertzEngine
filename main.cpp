@@ -62,8 +62,9 @@ int main()
 	std::shared_ptr<ObjMessage> msgMonkey = std::make_shared<ObjMessage>(monky);
 	//engine.messagequeue.Push(msgMonkey);
 
+	
 
-	//std::shared_ptr<Mesh> meshref = engine.manager->GetMesh(crate.c_str());
+	std::shared_ptr<Mesh> meshref = engine.manager->GetMesh(crate.c_str());
 
 	
 	test->GetTransform()->AddVelocity(glm::vec3(4.0f, 0.f, 0.f));

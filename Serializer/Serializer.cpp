@@ -6,10 +6,8 @@ std::string Serializer::PathToName(std::string path)
 {
 	
 	std::filesystem::path temp(path);
-
 	std::string name = temp.stem().string();
-
-	std::cout << "file name is " << name << std::endl;
+	//std::cout << "file name is " << name << std::endl;
 
 	return name;
 

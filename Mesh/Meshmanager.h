@@ -53,6 +53,8 @@ public:
 
 protected:
 
+	const char* m_meshFilePath;
+
 	std::vector<std::shared_ptr<Mesh>> MeshList;
 	std::unordered_map<MeshKey, Mesh*, MeshKeyHash> meshMap;
 	TextureManager m_texman;
