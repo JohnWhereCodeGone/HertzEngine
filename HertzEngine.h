@@ -81,7 +81,7 @@ public:
 
 
 	bool bShouldClose;
-	MessagingQueue m_messagequeue;
+	MessagingQueue messagequeue;
 private:
 
 	//UI

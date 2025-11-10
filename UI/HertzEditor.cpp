@@ -69,13 +69,18 @@ void HertzEditor::EditorUI(GLFWwindow* window)
 
     ImGui::Text("This is some useful text.");               
     ImGui::Checkbox("checkbox", &show_demo_window);      
-    ImGui::Checkbox("checkbox", &show_another_window);
 
 
     
     ImGui::InputFloat("Camera X", &camRef->vPos.x);
     ImGui::InputFloat("Camera Y", &camRef->vPos.y);
     ImGui::InputFloat("Camera Z", &camRef->vPos.z);
+
+    ImGui::Spacing();
+
+    ImGui::InputFloat("Camera Speed", &camRef->fCamSpeed);
+    ImGui::InputFloat("Camera Zoom", &camRef->fZoom);
+    ImGui::InputFloat("Camera Mouse Sensitivity", &camRef->fMouseSensitivity);
 
 
     ImGui::ColorEdit3("clear color", (float*)&clear_color); 

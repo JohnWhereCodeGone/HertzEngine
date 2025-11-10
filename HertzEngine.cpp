@@ -223,7 +223,7 @@ void HertzEngine::Update()
 
 		glm::mat4 view = cam->GetViewMat4();
 		
-		m_shaderManager->UpdateShaders(projection, view, cam->vPos);
+		m_shaderManager->UpdateShaders(cam->GetProjection(), view, cam->vPos);
 		
 		/*
 		DefaultShader->Use();
@@ -277,7 +277,7 @@ void HertzEngine::MessageHandling()
 void HertzEngine::ProcessMessages()
 {
 
-	while (auto msg = m_messagequeue.Pop())
+	while (auto msg = messagequeue.Pop())
 	{
 		switch (msg->m_type)
 		{
@@ -299,7 +299,7 @@ void HertzEngine::ProcessMessages()
 						if (data)
 						{
 
-							m_messagequeue.Push(std::make_shared<ObjLoadedMessage>(data, path.c_str()));
+							messagequeue.Push(std::make_shared<ObjLoadedMessage>(data, path.c_str()));
 							std::cout << "[HertzEngine::ProcessMessages] Worker thread success!!" << std::endl;
 						}
 

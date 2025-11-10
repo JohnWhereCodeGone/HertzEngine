@@ -19,6 +19,8 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : vFron
 	fYaw = yaw;
 	fPitch = pitch;
 
+
+
 	projection = glm::mat4(1.0f);
 	CameraUpdate();
 }
@@ -30,8 +32,8 @@ void Camera::CameraScroll(float value)
 
 glm::mat4 Camera::GetProjection() const
 {
-
-	return this->projection;
+	return glm::perspective(glm::radians(fZoom), 1920.f / 1080.f, 0.1f, 100.f);
+	//return this->projection;
 }
 
 void Camera::CameraInput(CameraMove dir, float deltaTime)
@@ -91,3 +93,4 @@ glm::mat4 Camera::GetViewMat4()
 {
 	return glm::lookAt(vPos, vPos + vFront, vUp);
 }
+

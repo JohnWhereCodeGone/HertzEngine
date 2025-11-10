@@ -56,5 +56,10 @@ public:
 	void CameraScroll(float value);
 	glm::mat4 GetProjection() const;
 	glm::mat4 GetViewMat4();
+
+
+	
+
+	
 };
 
