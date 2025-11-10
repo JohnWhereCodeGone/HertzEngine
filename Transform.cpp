@@ -68,9 +68,11 @@ void Transform::AddVelocity(const glm::vec3& addedVelocity)
 
 void Transform::AddVelocity(float x, float y, float z)
 {
+
 	this->m_vVelocity.x += x;
 	this->m_vVelocity.y += y;
 	this->m_vVelocity.z += z;
+
 }
 
 void Transform::UpdateModel(std::shared_ptr<Shader> shader)
@@ -84,9 +86,13 @@ void Transform::UpdateModel(std::shared_ptr<Shader> shader)
 	// use quaternions for rotation to avoid 'gimbal lock' - lest you be branded a heretic.
 	transmat = glm::translate(transmat, m_vPos);
 	transmat = glm::rotate(transmat, glm::radians(m_vRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+
 	transmat = glm::rotate(transmat, glm::radians(m_vRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+
 	transmat = glm::rotate(transmat, glm::radians(m_vRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	transmat = glm::scale(transmat, m_vScale);
+
+
 
 	shader->Use();
 	shader->setMat4("model", transmat);

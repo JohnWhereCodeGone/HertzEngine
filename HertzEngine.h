@@ -23,6 +23,7 @@
 
 
 class Meshmanager;
+class HertzEditor;
 
 enum GameState
 {
@@ -41,7 +42,7 @@ public:
 
 	//defaults & managers;
 	Meshmanager* manager;
-	Camera* cam;
+	std::shared_ptr<Camera> cam;
 	static std::shared_ptr<Shader> DefaultShader;
 
 	//returns Hertz::deltatime.
@@ -61,12 +62,12 @@ public:
 		}
 	};
 
-	Camera* GetCam();
+	std::shared_ptr<Camera> GetCam() const;
 	static std::shared_ptr<Shader> GetDefaultShader();
 	std::shared_ptr<Shader> MakeDefaultShader();
 	static std::vector<std::shared_ptr<HertzTexture>> GetDefaultTexture(); //herlper
 	//input function holder
-	Meshmanager* GetMeshMangr();
+	Meshmanager* GetMeshMangr(); // depricated
 	
 
 
@@ -80,8 +81,12 @@ public:
 
 
 	bool bShouldClose;
-	MessagingQueue messagequeue;
+	MessagingQueue m_messagequeue;
 private:
+
+	//UI
+	std::shared_ptr<HertzEditor> m_editor;
+
 	Meshmanager* MeshManager;
 	std::shared_ptr<EntityManager> m_EntityManager;
 	std::shared_ptr<ShaderManager> m_shaderManager;

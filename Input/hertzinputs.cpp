@@ -7,6 +7,9 @@
 #include "glfw3.h"
 #include "../Dependencies/glm/glm.hpp"
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 
 
@@ -29,27 +32,8 @@ void HertzInput::iprocessInput(GLFWwindow* window)
 
 
 	
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-	{
-		eng->Shutdown();
-	}
 
-	if (glfwGetKey(eng->GetWindow(), GLFW_KEY_UP) == GLFW_PRESS)
-	{
-		float apple4 = 0.f;
-		//std::cout << apple4 << std::endl;
-		if (apple4 <= 1.f)
-			apple4 += 0.001f;
-	}
-
-	if (glfwGetKey(eng->GetWindow(), GLFW_KEY_DOWN) == GLFW_PRESS)
-	{
-		float apple4 = 0.f;
-		//std::cout << apple4 << std::endl;
-		if (apple4 >= 0)
-			apple4 -= 0.001f;
-
-	}
+	
 
 	//Camera
 
@@ -65,6 +49,8 @@ void HertzInput::iprocessInput(GLFWwindow* window)
 	{
 		eng->GetCam()->CameraInput(DOWN, deltaTime);
 	}
+
+	/*
 	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -73,6 +59,7 @@ void HertzInput::iprocessInput(GLFWwindow* window)
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
 	}
+	*/
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
@@ -88,7 +75,7 @@ void HertzInput::iprocessInput(GLFWwindow* window)
 	}
 }
 
-void HertzInput::imouse_callback(GLFWwindow* window, double xposin, double yposin)
+void HertzInput::imouse_callback(GLFWwindow* window)
 {
 	HertzEngine *eng = reinterpret_cast<HertzEngine*>(glfwGetWindowUserPointer(window));
 	//find way to make interpret not necessary.
@@ -96,6 +83,9 @@ void HertzInput::imouse_callback(GLFWwindow* window, double xposin, double yposi
 
 	//MyWindowHandler* handler = reinterpret_cast<MyWindowHandler*>(glfwGetWindowUserPointer(window));
 	
+	double xposin, yposin;
+	glfwGetCursorPos(window, &xposin, &yposin);
+
 
 	float xpos = static_cast<float>(xposin);
 	float ypos = static_cast<float>(yposin);
@@ -124,11 +114,85 @@ void HertzInput::imouse_callback(GLFWwindow* window, double xposin, double yposi
 
 void HertzInput::imouse_scroll_callback(GLFWwindow* window, double xOffset, double yOffset)
 {
+	//this is really cursed. and doesn't work for anything except imgui -- find a fucking fix.
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	xOffset = io.MouseWheel;
+	yOffset = io.MouseWheelH;
+
 	HertzEngine* eng = reinterpret_cast<HertzEngine*>(glfwGetWindowUserPointer(window));
 	//std::cout << eng->GetCam()->fCamSpeed << std::endl;
 	float delta = static_cast<float>(yOffset);
 	eng->GetCam()->CameraScroll(delta);
+
 	//std::cout << yOffset << std::endl;
+}
+
+void HertzInput::iKeyCallbackImproved(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	HertzEngine* eng = reinterpret_cast<HertzEngine*>(glfwGetWindowUserPointer(window));
+	float deltaTime = HertzEngine::DeltaTime();
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	if (action == GLFW_PRESS)
+	{
+		if (key == GLFW_KEY_9)
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+			
+		}
+		if (key == GLFW_KEY_8)
+		{
+			glfwFocusWindow(window);
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			int i = glfwGetInputMode(window, GLFW_CURSOR);
+			if (i == GLFW_CURSOR_DISABLED)
+			{
+				std::cout << "it's capturin" << std::endl;
+			}
+			
+			io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
+		}
+		if (key == GLFW_KEY_ESCAPE)
+		{
+			eng->Shutdown();
+		}
+	}
+
+	/*
+	if (action == GLFW_REPEAT)
+	{
+		if (key == GLFW_KEY_W)
+		{
+			eng->GetCam()->CameraInput(FORWARD, deltaTime);
+		}
+		if (key == GLFW_KEY_SPACE)
+		{
+			eng->GetCam()->CameraInput(UP, deltaTime);
+		}
+		if (key == GLFW_KEY_LEFT_CONTROL)
+		{
+			eng->GetCam()->CameraInput(DOWN, deltaTime);
+		}
+		if (key == GLFW_KEY_A)
+		{
+			eng->GetCam()->CameraInput(LEFT, deltaTime);
+		}
+		if (key == GLFW_KEY_S)
+		{
+			eng->GetCam()->CameraInput(BACK, deltaTime);
+		}
+		if (key == GLFW_KEY_D)
+		{
+			eng->GetCam()->CameraInput(RIGHT, deltaTime);
+		}
+	}
+	*/
+
+
 }
 
 

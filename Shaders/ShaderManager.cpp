@@ -57,7 +57,7 @@ void ShaderManager::UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::
     {
         ShaderPtr shad = *it;
         if (!shad)
-            return;
+            continue;
 
         shad->Use();
 

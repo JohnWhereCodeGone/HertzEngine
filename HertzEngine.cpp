@@ -6,7 +6,6 @@
 #include "../Mesh/Meshmanager.h"
 
 
-
 std::shared_ptr<Shader> HertzEngine::DefaultShader = nullptr;
 
 float HertzEngine::fDeltaTime = 0.0f;
@@ -36,16 +35,26 @@ HertzEngine::HertzEngine()
 
 
 	//Cam Setup
-	cam = new Camera();
+	cam = std::make_shared<Camera>();
 	projection = glm::perspective(glm::radians(cam->fZoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	
 	fDeltaTime = 0.0f;
 	
+	m_editor = std::make_shared<HertzEditor>();
+	m_editor->InitUI(cam);
 	// Shader Setup:
+
+	
+
 	GameWindow = GameInit();
 	DefaultShader = ShaderManager::MakeShader();
 	DefaultShader->setFloat("material.shine", 264.f);
+
 	
+	
+	
+
+
 	//initialize view
 	
 }
@@ -53,8 +62,10 @@ HertzEngine::HertzEngine()
 GLFWwindow* HertzEngine::GameInit()
 {
 	// Window Setup
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) //getproc = current function pointers for OS.
-		glfwInit();
+	if (!glfwInit())
+	{
+		std::cout << "Fatal Error, GLFW failed init" << std::endl;
+	}
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); //used to give the GUI system some ideas of how this window wants to be treated. shuts down if opengl v3 ain't on pc.
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -72,15 +83,20 @@ GLFWwindow* HertzEngine::GameInit()
 		return nullptr;
 	}
 	glfwMakeContextCurrent(GameWindow);
-	gladLoadGL();
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		return nullptr;
+	}//getproc = current function pointers for OS.
+	//gladLoadGL();
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	glfwSetWindowUserPointer(GameWindow, this);
 
 	glfwSetFramebufferSizeCallback(GameWindow, framebuffer_size_callback);
-	glfwSetScrollCallback(GameWindow, HertzInput::imouse_scroll_callback);
-	glfwSetCursorPosCallback(GameWindow, HertzInput::imouse_callback);
+	//glfwSetScrollCallback(GameWindow, HertzInput::imouse_scroll_callback);
+	//glfwSetCursorPosCallback(GameWindow, HertzInput::imouse_callback);
 
 	glfwSetInputMode(GameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetKeyCallback(GameWindow, HertzInput::iKeyCallbackImproved);
 	glfwSetWindowOpacity(GameWindow, 0.8f);
 
 	glEnable(GL_DEPTH_TEST);
@@ -112,12 +128,12 @@ const float HertzEngine::DeltaTime()
 
 
 
-Camera* HertzEngine::GetCam()
+std::shared_ptr<Camera> HertzEngine::GetCam() const
 {
 	if (cam)
 		return cam;
 	else
-		std::cerr << "GetCam: Camera was null " << std::endl;
+		std::cerr << "[HertzEngine] Camera was nullptr" << std::endl;
 	return nullptr;
 		
 }
@@ -183,17 +199,20 @@ void HertzEngine::Update()
 		fDeltaTime = currentFrame - fPrevFrame;//get time difference
 		fPrevFrame = currentFrame; //set last frame as current time for next iteration
 
-		//messaging
-		ProcessMessages();
-
 		// UI
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		ImGui::ShowDemoWindow();
-		HertzEditor::EditorUI(GameWindow);
-
+		//messaging
+		ProcessMessages();
+		
+		HertzInput::imouse_scroll_callback(GameWindow, 0, 0);
+		HertzInput::imouse_callback(GameWindow);
 		HertzInput::iprocessInput(GameWindow);
+
+		//ImGui::ShowDemoWindow();
+
+		m_editor->EditorUI(GameWindow);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -258,7 +277,7 @@ void HertzEngine::MessageHandling()
 void HertzEngine::ProcessMessages()
 {
 
-	while (auto msg = messagequeue.Pop())
+	while (auto msg = m_messagequeue.Pop())
 	{
 		switch (msg->m_type)
 		{
@@ -280,7 +299,7 @@ void HertzEngine::ProcessMessages()
 						if (data)
 						{
 
-							messagequeue.Push(std::make_shared<ObjLoadedMessage>(data, path.c_str()));
+							m_messagequeue.Push(std::make_shared<ObjLoadedMessage>(data, path.c_str()));
 							std::cout << "[HertzEngine::ProcessMessages] Worker thread success!!" << std::endl;
 						}
 

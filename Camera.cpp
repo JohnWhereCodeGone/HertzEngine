@@ -28,8 +28,9 @@ void Camera::CameraScroll(float value)
 	
 }
 
-glm::mat4 Camera::GetProjection()
+glm::mat4 Camera::GetProjection() const
 {
+
 	return this->projection;
 }
 

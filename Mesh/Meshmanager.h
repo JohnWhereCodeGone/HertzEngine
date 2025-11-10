@@ -45,6 +45,10 @@ public:
 	void RemoveMesh(std::shared_ptr<Mesh> mDelete);
 	void Render();
 
+
+	void SetFilePath(const char* newPath);
+	const char* GetFilePath();
+
 	void SaveDataMesh(std::shared_ptr<Mesh> meshToSave);
 	void LoadDataMesh();
 

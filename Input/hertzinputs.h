@@ -19,8 +19,9 @@ public:
 
 	//HertzInput();
 	static void iprocessInput(GLFWwindow* window);
-	static void imouse_callback(GLFWwindow* window, double xposin, double yposin);
+	static void imouse_callback(GLFWwindow* window);
 	static void imouse_scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
+	static void iKeyCallbackImproved(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 	//void (*ptr1)(HertzEngine&); test for input function callback.
 	

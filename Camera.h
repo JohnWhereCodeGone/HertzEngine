@@ -54,7 +54,7 @@ public:
 	void CameraUpdate();
 	void MouseMovement(float xOffset, float yOffset);
 	void CameraScroll(float value);
-	glm::mat4 GetProjection();
+	glm::mat4 GetProjection() const;
 	glm::mat4 GetViewMat4();
 };
 

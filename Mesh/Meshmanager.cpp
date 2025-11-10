@@ -11,6 +11,8 @@ Meshmanager::Meshmanager()
 {
 	this->MeshList = {};
 	this->MeshCount = 0;
+
+	this->m_meshFilePath = "./Resources/";
 }
 
 unsigned int id = 0;
@@ -176,9 +178,19 @@ void Meshmanager::Render()
 	}
 }
 
+void Meshmanager::SetFilePath(const char* newPath)
+{
+	this->m_meshFilePath = newPath;
+}
+
+const char* Meshmanager::GetFilePath()
+{
+	return this->m_meshFilePath;
+}
+
 void Meshmanager::SaveDataMesh(std::shared_ptr<Mesh> meshToSave)
 {
-	std::string filePath = "./Resources/";
+	std::string filePath = m_meshFilePath;
 	
 	for (auto it = MeshList.begin(); it != MeshList.end(); it++)
 	{
@@ -292,6 +304,11 @@ std::shared_ptr<Mesh> Meshmanager::GetMesh(const char* tPath)
 	for (std::shared_ptr<Mesh> m : MeshList)
 	{
 		if (m->path == tPath)
+		{
+			return m;
+		}
+
+		if (m->GetName() == Serializer::PathToName(m->path))
 		{
 			return m;
 		}
