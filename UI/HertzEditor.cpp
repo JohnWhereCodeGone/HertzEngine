@@ -20,7 +20,7 @@ float f;
 glm::vec3 postest;
 
 
-
+static std::shared_ptr<Entity> entityToRename;
 
 
 void HertzEditor::EditorUI(GLFWwindow* window)
@@ -106,7 +106,7 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen))
     {
             std::shared_ptr<Entity> entityToDelete;
-            std::shared_ptr<Entity> entityToRename;
+            
             std::shared_ptr<Shader> selectedShad;
 
             using EntityPtr = std::shared_ptr<Entity>;
@@ -161,14 +161,39 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                 ImGui::InputFloat("Scale Z", &en->GetTransform()->GetScale().z, 1.f);
 
                 
+                if (ImGui::BeginPopup("Rename Entry"))
+                {
+                    static char newName[256] = "";
 
+                    ImGui::Text("Enter New Name:");
+                    ImGui::InputText("newname...", newName, IM_ARRAYSIZE(newName));
+
+                    if (ImGui::Button("Confirm"))
+                    {
+                        if (entityToRename)
+                        {
+                            entityToRename->SetName(std::string(newName));
+
+                        }
+
+                    }
+
+                    ImGui::SameLine();
+
+                    if (ImGui::Button("Cancel"))
+                    {
+                        ImGui::CloseCurrentPopup();
+                    }
+
+                    ImGui::EndPopup();
+
+                }
                 ImGui::TreePop();
             }
 
             
         }
 
-        ImGui::TreePop();
         if (entityToDelete)
         {
             m_EntityManager->DeleteEntity(entityToDelete);
@@ -176,33 +201,8 @@ void HertzEditor::EditorUI(GLFWwindow* window)
         }
 
         //Rename Entity
-        if (ImGui::BeginPopup("Rename Entry"))
-        {
-            static char newName[256] = "";
 
-            ImGui::Text("Enter New Name:");
-            ImGui::InputText("newname...", newName, IM_ARRAYSIZE(newName));
-
-            if (ImGui::Button("Confirm"))
-            {
-                if (entityToRename)
-                {
-                    entityToRename->SetName(std::string(newName));
-                    
-                }
-                
-            }
-
-            ImGui::SameLine();
-
-            if (ImGui::Button("Cancel"))
-            {
-                ImGui::CloseCurrentPopup();
-            }
-
-            ImGui::EndPopup();
-
-        }
+        ImGui::TreePop();
     }
     
 
