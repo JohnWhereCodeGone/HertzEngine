@@ -40,8 +40,8 @@ HertzEngine::HertzEngine()
 	
 	fDeltaTime = 0.0f;
 	
-	m_editor = std::make_shared<HertzEditor>();
-	m_editor->InitUI(cam);
+	m_editor = std::make_shared<HertzEditor>(this->cam, this->m_EntityManager);
+	
 	// Shader Setup:
 
 	

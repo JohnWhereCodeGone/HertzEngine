@@ -55,6 +55,10 @@ int main()
 	
 	auto EntityManager = engine.GetEntityManager();
 	std::shared_ptr<Entity> test = EntityManager->CreateEntity();
+	std::shared_ptr<Entity> test1 = EntityManager->CreateEntity();
+	std::shared_ptr<Entity> test12 = EntityManager->CreateEntity();
+	std::shared_ptr<Entity> test3 = EntityManager->CreateEntity();
+	std::shared_ptr<Entity> test34 = EntityManager->CreateEntity();
 
 	std::shared_ptr<ObjMessage> msgtest = std::make_shared<ObjMessage>(crate);
 	//engine.messagequeue.Push(msgtest);

@@ -27,6 +27,8 @@ class Camera
 {
 public:
 
+	//Update me for transform
+
 	glm::vec3 vPos;
 	glm::vec3 vFront;
 	glm::vec3 vUp;

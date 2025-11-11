@@ -40,6 +40,7 @@ public:
 	GLFWwindow* GameInit();
 
 
+
 	//defaults & managers;
 	Meshmanager* manager;
 	std::shared_ptr<Camera> cam;

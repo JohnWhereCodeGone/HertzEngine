@@ -1,5 +1,5 @@
 #include "Transform.h"
-
+#include "../glm/glm.hpp"
 
 Transform::Transform()
 {
@@ -41,6 +41,11 @@ glm::vec3& Transform::GetScale()
 
 glm::vec3& Transform::GetRot()
 {
+
+	this->m_vRotation.x = (int)this->m_vRotation.x % 360;
+	this->m_vRotation.y = (int)this->m_vRotation.y % 360;
+	this->m_vRotation.z = (int)this->m_vRotation.z % 360;
+
 	return this->m_vRotation;
 }
 
@@ -53,7 +58,13 @@ void Transform::SetPos(const glm::vec3& newPos)
 
 void Transform::SetRot(const glm::vec3& newRot)
 {
-	this->m_vRotation = newRot;
+	glm::vec3 temp = newRot;
+
+	temp.x = (int)temp.x % 360;
+	temp.y = (int)temp.y % 360;
+	temp.z = (int)temp.z % 360;
+
+	this->m_vRotation = temp;
 }
 
 void Transform::SetScale(const glm::vec3& newScale)

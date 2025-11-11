@@ -16,8 +16,11 @@ std::shared_ptr<Entity> EntityManager::CreateEntity()
 
 	if (en)
 	{
-		std::string name = std::to_string(count);
-		en->SetName(name);
+		
+		std::string title = "Entity ";
+		title.append(std::to_string(count));
+
+		en->SetName(title);
 		count++;
 		m_entityList.push_back(en);
 		return en;
