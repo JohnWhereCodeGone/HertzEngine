@@ -5,11 +5,16 @@
 #include "HertzTexture.h"
 
 #include "TextureManager.h"
+#include "../Mesh/Meshmanager.h"
+#include "../Shaders/ShaderManager.h"
+
+
 #include "../Camera.h"
 #include "../Entity/EntityManager.h"
 #include "../Transform.h"
 #include "../Shaders/HertzShader.h"
 #include "../imgui_stdlib.h"
+#include "../Mesh.h"
 
 bool show_demo_window = true;
 bool show_another_window = false;
@@ -59,7 +64,6 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     }
     
 
-
     ImGui::SetNextWindowPos(ImVec2(0, 20));
     ImGui::SetNextWindowSize(ImVec2(350.f, ImGui::GetIO().DisplaySize.y));
     ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);                          
@@ -101,13 +105,21 @@ void HertzEditor::EditorUI(GLFWwindow* window)
 
         ImGui::TreePop();
     }
-
-    //Create, delete - Name, model, texture, position, rotation, scale.
+    if (!m_MeshManager)
+    {
+        std::cout << "NO MM!!" << std::endl;
+    }
+    if (m_MeshManager->GetCache().empty())
+    {
+        std::cout << "NO MESHES WTF" << std::endl;
+    }
+    //Create, delete - Name, model, texture, position, rotation, scale. ---TODO Model / texture / shader
     if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen))
     {
             std::shared_ptr<Entity> entityToDelete;
-            
             std::shared_ptr<Shader> selectedShad;
+            
+            std::shared_ptr<HertzTexture> selectedTexture;
 
             using EntityPtr = std::shared_ptr<Entity>;
             if (ImGui::Button("Create Entity"))
@@ -120,26 +132,42 @@ void HertzEditor::EditorUI(GLFWwindow* window)
         {
             
             EntityPtr en = *it;
+            if (!en)
+            {
+                continue;
+            }
             std::string* entityName = en->GetName();
-            
-            
-            
+            if (entityName == nullptr || *entityName == "" || *entityName == " ")
+            {
+                __debugbreak;
+            }
+            std::string uniqueIDstring = std::to_string(reinterpret_cast<uintptr_t>(en.get()));
 
-            if (ImGui::TreeNodeEx(entityName->c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+            ImGui::PushID((void*)en.get());
+
+            //std::cout << uniqueIDstring << "MEEMEMEMEMEMEMEMEM" << std::endl;
+
+
+            std::string RenameID = "Renamenr##" + uniqueIDstring;
+            std::string HandleMeshID = "HandleMeshnr##" + uniqueIDstring;
+            std::string TreeLable = *entityName + "##" + uniqueIDstring;
+
+            std::cout << TreeLable << std::endl;
+
+            if (ImGui::TreeNodeEx(TreeLable.c_str()))
             {
                 
                 if (ImGui::Button("Delete Entity"))
                 {
 
                     entityToDelete = en;
-                    std::cout << "EDITOR DELETING ENTITY!";
                     
                 }
+                ImGui::SameLine();
                 if (ImGui::Button("Rename"))
                 {
                     entityToRename = en;
-                    ImGui::OpenPopup("Rename Entry");
-                    std::cout << "Selected Entity to rename is " << *entityName << std::endl;
+                    ImGui::OpenPopup(RenameID.c_str());
                 }
                 ImGui::Text("Transform");
                 ImGui::InputFloat("Pos X", &en->GetTransform()->GetPos().x, 1.f);
@@ -159,20 +187,28 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                 ImGui::InputFloat("Scale X", &en->GetTransform()->GetScale().x, 1.f);
                 ImGui::InputFloat("Scale Y", &en->GetTransform()->GetScale().y, 1.f);
                 ImGui::InputFloat("Scale Z", &en->GetTransform()->GetScale().z, 1.f);
+                
+                ImGui::Separator();
+                
 
                 
-                if (ImGui::BeginPopup("Rename Entry"))
+                if (ImGui::BeginPopup(RenameID.c_str()))
                 {
-                    static char newName[256] = "";
+                    if (en->GetMesh())
+                    {
+                        std::string meshname = en->GetMesh()->GetName();
+                    }
+                    ImGui::Text("Enter new Entity name... ");
+                    
+                    ImGui::InputText("newname...", &m_stringBuffer);
 
-                    ImGui::Text("Enter New Name:");
-                    ImGui::InputText("newname...", newName, IM_ARRAYSIZE(newName));
+                    
 
                     if (ImGui::Button("Confirm"))
                     {
                         if (entityToRename)
                         {
-                            entityToRename->SetName(std::string(newName));
+                            entityToRename->SetName(std::string(m_stringBuffer));
 
                         }
 
@@ -188,10 +224,72 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                     ImGui::EndPopup();
 
                 }
+                
+                if (ImGui::Button("Handle Mesh"))
+                {
+                    ImGui::OpenPopup(HandleMeshID.c_str());
+                }
+
+                ImGui::SameLine();
+                std::string meshnamestring;
+                if (en->GetMesh())
+                {
+                    meshnamestring = en->GetMesh()->GetName();
+                }
+                else
+                {
+                    meshnamestring = "no mesh selected";
+                }
+                ImGui::Text("%s", meshnamestring.c_str());
+
+                if (ImGui::BeginPopup(HandleMeshID.c_str()))
+                {
+                    ImGui::Text("Loaded meshes:");
+                    std::vector<std::shared_ptr<Mesh>> meshes = m_MeshManager->GetCache();
+
+                    if (ImGui::BeginListBox(HandleMeshID.c_str(), ImVec2(100.f, 6 * ImGui::GetTextLineHeightWithSpacing())))
+                    {
+                        for (auto& mesh : meshes)
+                        {
+                            bool isSelected = (en->GetMesh() == mesh);
+
+                            if (ImGui::Selectable(mesh->GetName().c_str(), isSelected))
+                            {
+                                en->SetMesh(mesh);
+                                std::cout << "Trying to set Mesh" << std::endl;
+                            }
+                            if (isSelected)
+                            {
+                                ImGui::SetItemDefaultFocus();
+                            }
+
+                        }
+                        ImGui::EndListBox();
+                    }
+
+                    if (ImGui::Button("Clear Mesh"))
+                    {
+                        en->ClearMesh();
+                        ImGui::CloseCurrentPopup();
+                    }
+
+                    ImGui::SameLine();
+
+                    if (ImGui::Button("Close"))
+                    {
+                        ImGui::CloseCurrentPopup();
+                    }
+                    ImGui::EndPopup();
+                }
+                
+
+                
+                
                 ImGui::TreePop();
             }
 
-            
+           
+            ImGui::PopID();
         }
 
         if (entityToDelete)

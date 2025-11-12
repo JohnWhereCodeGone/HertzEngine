@@ -42,7 +42,7 @@ public:
 
 
 	//defaults & managers;
-	Meshmanager* manager;
+	std::shared_ptr<Meshmanager> manager; //this is the manager actually used.
 	std::shared_ptr<Camera> cam;
 	static std::shared_ptr<Shader> DefaultShader;
 
@@ -68,7 +68,7 @@ public:
 	std::shared_ptr<Shader> MakeDefaultShader();
 	static std::vector<std::shared_ptr<HertzTexture>> GetDefaultTexture(); //herlper
 	//input function holder
-	Meshmanager* GetMeshMangr(); // depricated
+	std::shared_ptr<Meshmanager> GetMeshMangr(); // depricated
 	
 
 
@@ -89,11 +89,13 @@ private:
 	std::shared_ptr<HertzEditor> m_editor;
 
 	Meshmanager* MeshManager;
-	std::shared_ptr<EntityManager> m_EntityManager;
-	std::shared_ptr<ShaderManager> m_shaderManager;
+	std::shared_ptr<EntityManager>	m_EntityManager;
+	std::shared_ptr<ShaderManager>	m_shaderManager;
+	std::shared_ptr<TextureManager> m_textureManager;
+	std::shared_ptr<Meshmanager>	m_meshman;
+	
 	glm::mat4 projection;
 	glm::mat4 view;
-	TextureManager man;
 
 	GameState state;
 	GLFWwindow* GameWindow;

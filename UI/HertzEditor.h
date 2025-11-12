@@ -8,19 +8,38 @@
 
 class EntityManager;
 class Camera;
+class ShaderManager;
+class Meshmanager;
+class TextureManager;
 
 class HertzEditor
 {
 public:
-	HertzEditor(std::shared_ptr<Camera> cam, std::shared_ptr<EntityManager> man) : m_EntityManager(man), m_camRef(cam)  {};
+	HertzEditor(std::shared_ptr<Camera> cam, std::shared_ptr<EntityManager> man, std::shared_ptr<TextureManager> texman, std::shared_ptr <ShaderManager> shadman, std::shared_ptr<Meshmanager> meshman) : m_EntityManager(man), m_camRef(cam), m_TextureManager(texman), m_ShaderManager(shadman), m_MeshManager(meshman), m_charBuffer() {};
 
 	void EditorUI(GLFWwindow* window);
 	void InitUI(std::shared_ptr<Camera> cam);
 
 private:
 
+	char* m_charBuffer[256];
+	std::string m_stringBuffer;
+
 
 	std::shared_ptr<Camera> m_camRef;
-	std::shared_ptr<EntityManager> m_EntityManager;
+
+	std::shared_ptr<EntityManager>	m_EntityManager;
+	std::shared_ptr<TextureManager> m_TextureManager;
+	std::shared_ptr<ShaderManager>	m_ShaderManager;
+	std::shared_ptr<Meshmanager>	m_MeshManager;
+	std::shared_ptr<Mesh>			m_selectedMesh;
+
+
+
+	//Selectables.
+
+	bool m_bIsSelected;
+	int m_selectedIndex;
+
 };
 

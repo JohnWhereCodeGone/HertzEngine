@@ -148,6 +148,10 @@ void Meshmanager::RemoveMesh(std::shared_ptr<Mesh> mDelete)
 {
 	auto end = MeshList.end();
 	std::string path = mDelete->path;
+	if (MeshList.empty())
+	{
+		std::cout << "meshlist empty" << std::endl;
+	}
 
 	for (auto it = MeshList.begin(); it != end; it++)
 	{
@@ -170,7 +174,10 @@ void Meshmanager::Render()
 		return;
 	for (std::shared_ptr<Mesh> mesh : MeshList)
 	{
-
+		if (mesh == nullptr || mesh->parent != nullptr)
+		{
+			return;
+		}
 		ShaderPtr temp = mesh->getShader();
 		mesh->transform->UpdateModel(temp);
 		mesh->Render();
@@ -291,6 +298,7 @@ void Meshmanager::LoadDataMesh()
 
 				if (toAdd)
 				{
+					toAdd->SetName(Serializer::PathToName(entry.path().string()));
 					MeshList.push_back(toAdd);
 				}
 			}

@@ -28,7 +28,8 @@ HertzEngine::HertzEngine()
 {
 	bShouldClose = false;
 	state = GameState::RUNNING;
-	manager = new Meshmanager();
+	manager = std::make_shared<Meshmanager>();
+
 	m_EntityManager = std::make_shared<EntityManager>();
 	
 	
@@ -40,8 +41,9 @@ HertzEngine::HertzEngine()
 	
 	fDeltaTime = 0.0f;
 	
-	m_editor = std::make_shared<HertzEditor>(this->cam, this->m_EntityManager);
+	m_editor = std::make_shared<HertzEditor>(this->cam, m_EntityManager, m_textureManager, m_shaderManager, manager);
 	
+
 	// Shader Setup:
 
 	
@@ -174,7 +176,7 @@ std::vector<std::shared_ptr<HertzTexture>> HertzEngine::GetDefaultTexture()
 	return TextureManager::MakeDefaultTextures();
 }
 
-Meshmanager* HertzEngine::GetMeshMangr()
+std::shared_ptr<Meshmanager> HertzEngine::GetMeshMangr()
 {
 	if (manager)
 	{
@@ -216,7 +218,6 @@ void HertzEngine::Update()
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 		m_EntityManager->Update(HertzEngine::DeltaTime());
 		//Render
@@ -318,7 +319,7 @@ void HertzEngine::ProcessMessages()
 			{
 				if (HertzEngine::GetMeshMangr())
 				{
-					Meshmanager* Manager = HertzEngine::GetMeshMangr();
+					std::shared_ptr<Meshmanager> Manager = HertzEngine::GetMeshMangr();
 					manager->AddMeshByData(loadedMsg->GetObjData(), loadedMsg->m_sPath.c_str());
 
 

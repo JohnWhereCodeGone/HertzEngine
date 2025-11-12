@@ -36,6 +36,7 @@ public:
 	ShaderPtr GetShader();
 	MeshPtr GetMesh();
 	std::string* GetName();
+	void ClearMesh();
 	
 	
 	void GenID();

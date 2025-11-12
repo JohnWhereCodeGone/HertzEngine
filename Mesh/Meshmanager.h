@@ -52,7 +52,11 @@ public:
 	void SaveDataMesh(std::shared_ptr<Mesh> meshToSave);
 	void LoadDataMesh();
 
+	std::vector<std::shared_ptr<Mesh>> GetCache() { return MeshList; };
+
 	std::shared_ptr<Mesh> GetMesh(const char* tPath);
+
+
 	int MeshCount;
 
 protected:
