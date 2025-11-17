@@ -18,6 +18,7 @@ VirtualObject::VirtualObject()
 	this->m_mesh = nullptr;
 
 	
+
 	GenID();
 }
 
@@ -48,7 +49,23 @@ bool VirtualObject::SetMesh(MeshPtr mesh)
 		}
 		else
 		{
+			std::vector<TexturePtr> tex = mesh->textures;
 			this->SetTextures(mesh->textures);
+
+			for (auto& tex : this->GetTextures())
+			{
+				switch (tex->m_texturetype)
+				{
+				case Diffuse:
+					SetDiffuseMap(tex);
+					break;
+
+				case Specular:
+					SetSpecularMap(tex);
+					break;
+				}
+			}
+			
 		}
 
 

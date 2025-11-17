@@ -6,26 +6,36 @@
 #include "TextureManager.h"
 
 
-
-
+//update to add a dedicated render loop to prevent this garbage.
 void Mesh::Attach(VirtualObject& obj)
 {
+
+	//this should be handling the attachment, not the update of entity - fix later.
 	int error = 0;
 
 	ShaderPtr shad = obj.GetShader();
 	std::shared_ptr<Transform> trans = obj.GetTransform();
 	textures = obj.GetTextures();
+	
 
 	if (shad && trans)
 	{
 		this->shader = shad;
 		this->transform = trans;
+		this->parent = &obj;
 	}
 	else
 	{
-		std::cerr << "Mesh: error at " + this->path << " shader/transform was null when trying to attach." << std::endl;
-		return;
+		std::cout << "[Mesh.cpp] error: Parent had no shader/trans" << std::endl;
 	}
+	if (!textures.empty())
+	{
+		this->SetTextures(obj.GetTextures());
+		
+	}
+	
+
+	
 
 
 }

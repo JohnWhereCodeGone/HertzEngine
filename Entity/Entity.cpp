@@ -4,6 +4,7 @@
 
 Entity::Entity() : VirtualObject()
 {
+	std::cout << "constructor entity called" << std::endl;
 	
 
 }
@@ -20,24 +21,35 @@ void Entity::Update(float Deltatime)
 	{
 		trans->Move(Deltatime);
 		trans->UpdateModel(shad);
-		
-		MeshPtr temp = this->GetMesh();
-		if (temp)
-		{
-			temp->transform = this->GetTransform();
-			temp->parent = this;
-
-			
-			temp->Render();
-
-		}
 
 
+	}
+	MeshPtr mesh = this->GetMesh();
+	if (mesh)
+	{
+		mesh->Attach(*this);
+		mesh->Render();
 	}
 
 
 
 }
 
+		/*
+		MeshPtr temp = this->GetMesh();
+		if (temp)
+		{
+			temp->transform = this->GetTransform();
+			temp->parent = this;
+			temp->setShader(this->GetShader());
+			if (!this->GetTextures().empty())
+			{
+				temp->SetTextures(this->GetTextures());
+			}
+			
+			temp->Render();
+
+		}
+		*/
 
 

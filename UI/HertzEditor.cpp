@@ -155,7 +155,6 @@ void HertzEditor::EditorUI(GLFWwindow* window)
             std::string SpecularID = "specular##" + uniqueIDstring;
             
 
-            std::cout << TreeID << std::endl;
 
             if (ImGui::TreeNodeEx(TreeID.c_str()))
             {

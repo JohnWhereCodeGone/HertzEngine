@@ -90,13 +90,14 @@ int main()
 
 		time += HertzEngine::DeltaTime();
 
-
+		/*
 		if (time >= 2.0f && test->GetMesh() == nullptr)
 		{
 			test->SetMesh(engine.manager->GetMesh(crate.c_str()));
 
 			
 		}
+		*/
 	}
 	engine.GetMeshMangr()->SaveDataMesh(nullptr);
 }
