@@ -17,9 +17,10 @@ class VirtualObject
 
 public:
 
-	using MeshPtr = std::shared_ptr<Mesh>;
-	using ShaderPtr = std::shared_ptr<Shader>;
-	using TransformPtr = std::shared_ptr<Transform>;
+	using MeshPtr =			std::shared_ptr<Mesh>;
+	using ShaderPtr =		std::shared_ptr<Shader>;
+	using TransformPtr =	std::shared_ptr<Transform>;
+	using TexturePtr =		std::shared_ptr<HertzTexture>;
 	
 	VirtualObject();
 	virtual ~VirtualObject() = default;
@@ -32,22 +33,29 @@ public:
 	
 
 	const std::vector<std::shared_ptr<HertzTexture>> &GetTextures();
-	TransformPtr GetTransform();
-	ShaderPtr GetShader();
-	MeshPtr GetMesh();
-	std::string* GetName();
-	void ClearMesh();
+	TransformPtr	GetTransform();
+	ShaderPtr		GetShader();
+	MeshPtr			GetMesh();
+	std::string*	GetName();
+	void			ClearMesh();
+
+	void			UpdateTextureTypes();
+	void			SetDiffuseMap(std::shared_ptr<HertzTexture> newmap);
+	void			SetSpecularMap(std::shared_ptr<HertzTexture> newmap);
 	
 	
 	void GenID();
 
 private:
 
-	TransformPtr m_transform;
-	MeshPtr m_mesh;
-	ShaderPtr m_shader;
+	TransformPtr	m_transform;
+	MeshPtr			m_mesh;
+	ShaderPtr		m_shader;
 
-	
+	TexturePtr		m_diffuseMap;
+	TexturePtr		m_SpecularMap;
+
+
 	std::vector<std::shared_ptr<HertzTexture>> m_textures;
 	std::string* m_name;
 

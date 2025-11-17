@@ -17,7 +17,7 @@ VirtualObject::VirtualObject()
 	this->m_shader = nullptr;
 	this->m_mesh = nullptr;
 
-
+	
 	GenID();
 }
 
@@ -41,6 +41,17 @@ bool VirtualObject::SetMesh(MeshPtr mesh)
 	{
 		mesh->transform = this->GetTransform();
 		mesh->parent = this;
+		
+		if (!this->GetTextures().empty())
+		{
+			mesh->SetTextures(this->GetTextures());
+		}
+		else
+		{
+			this->SetTextures(mesh->textures);
+		}
+
+
 		this->m_shader = mesh->getShader();
 		this->m_mesh = mesh;
 	}
@@ -123,6 +134,40 @@ void VirtualObject::ClearMesh()
 		this->m_shader = nullptr;
 		this->m_mesh = nullptr;
 	}
+}
+
+void VirtualObject::UpdateTextureTypes()
+{
+	
+	std::vector<TexturePtr> newTextures;
+
+	if (m_diffuseMap)
+	{
+		newTextures.push_back(this->m_diffuseMap);
+	}
+	if (m_SpecularMap)
+	{
+		newTextures.push_back(this->m_SpecularMap);
+	}
+
+	if (!newTextures.empty())
+	{
+		this->m_textures = newTextures;
+	}
+
+}
+
+void VirtualObject::SetDiffuseMap(std::shared_ptr<HertzTexture> newmap)
+{
+	this->m_diffuseMap = newmap;
+	UpdateTextureTypes();
+
+}
+
+void VirtualObject::SetSpecularMap(std::shared_ptr<HertzTexture> newmap)
+{
+	this->m_SpecularMap = newmap;
+	UpdateTextureTypes();
 }
 
 

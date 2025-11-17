@@ -172,8 +172,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="hertzgui.cpp" />
-    <ClCompile Include="HertzMesh.cpp" />
-    <ClCompile Include="HertzObj.cpp" />
     <ClCompile Include="hertzrender.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
@@ -225,8 +223,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="hertzgui.h" />
-    <ClInclude Include="HertzMesh.h" />
-    <ClInclude Include="HertzObj.h" />
     <ClInclude Include="hertzrender.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ObjLoader.h" />

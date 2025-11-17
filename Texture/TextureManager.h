@@ -18,6 +18,8 @@ public:
 
 	static std::vector<std::shared_ptr<HertzTexture>> MakeDefaultTextures();
 
+	const std::vector<std::shared_ptr<HertzTexture>>& GetTextureList();
+
 private:
 	
 	bool m_HasTextureList;

@@ -42,6 +42,8 @@ public:
 
 	std::string m_type;
 	std::string m_path;
+	
+
 	HertzTexture(const char* tPath = nullptr, bool isPng = false, const TextureType &type = TextureType::Diffuse);
 	void Use(); //not working
 	void Use(unsigned int data); //not working
@@ -50,10 +52,13 @@ public:
 	unsigned int& GetTexture();
 	static TextureSettings* textureSettings; //old
 	void SetMipMap(const MipMapSettings& setting);
+	std::string& GetName();
+
 
 private:
 	static void UpdateMipMap(HertzTexture* text, const MipMapSettings& setting);
 	unsigned int texture;
+	std::string m_name;
 	
 
 	

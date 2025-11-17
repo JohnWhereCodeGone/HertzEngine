@@ -4,6 +4,7 @@
 #include "glad/glad.h"
 #include "../Dependencies/glm/glm.hpp"
 #include <iostream>
+#include "../Serializer/Serializer.h"
 
 TextureSettings* HertzTexture::textureSettings = nullptr;
 
@@ -57,6 +58,7 @@ HertzTexture::HertzTexture(const char* tPath, bool isPng, const TextureType &typ
 	texture = tTexture;
 	this->m_texturetype = type;
 	this->m_path = tPath;
+	this->m_name = Serializer::PathToName(m_path);
 	stbi_image_free(data);
 
 
@@ -118,6 +120,11 @@ void HertzTexture::SetMipMap(const MipMapSettings& setting)
 		break;
 	
 	}
+}
+
+std::string& HertzTexture::GetName()
+{
+	return this->m_name;
 }
 
 void HertzTexture::UpdateMipMap(HertzTexture* text, const MipMapSettings& setting)

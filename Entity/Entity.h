@@ -3,6 +3,8 @@
 
 class Entity : public VirtualObject
 {
+	using TexturePtr = std::shared_ptr<HertzTexture>;
+
 public:
 
 	Entity();
@@ -10,6 +12,7 @@ public:
 	void Update(float DeltaTime);
 	float GetVelocity();
 
+	
 
 };
 

@@ -24,6 +24,8 @@ public:
 
 private:
 
+	
+
 protected:
 	static unsigned int count;
 

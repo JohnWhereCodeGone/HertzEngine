@@ -101,3 +101,8 @@ std::vector<std::shared_ptr<HertzTexture>> TextureManager::MakeDefaultTextures()
 
     return textures;
 }
+
+const std::vector<std::shared_ptr<HertzTexture>>& TextureManager::GetTextureList()
+{
+    return m_LoadedTexturesList;
+}

@@ -214,11 +214,11 @@ void Mesh::Render()
 		}
 		*/
 
-		if (name == "texture_diffuse")
+		if (type == Diffuse)
 		{
 			number = std::to_string(i + 1);
 		}
-		else if (name == "texture_specular")
+		else if (type == Specular)
 		{
 			number = std::to_string(i + 1);
 		}

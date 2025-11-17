@@ -80,9 +80,9 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     if (ImGui::TreeNodeEx("Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
     {
         ImGui::Text("Transform");
-        ImGui::InputFloat("Transform X", &m_camRef->vPos.x);
-        ImGui::InputFloat("Transform Y", &m_camRef->vPos.y);
-        ImGui::InputFloat("Transform Z", &m_camRef->vPos.z);
+        ImGui::InputFloat("Transform X", &m_camRef->vPos.x, 1.f);
+        ImGui::InputFloat("Transform Y", &m_camRef->vPos.y, 1.f);
+        ImGui::InputFloat("Transform Z", &m_camRef->vPos.z, 1.f);
         ImGui::Separator();
 
         ImGui::Spacing();
@@ -150,11 +150,14 @@ void HertzEditor::EditorUI(GLFWwindow* window)
 
             std::string RenameID = "Renamenr##" + uniqueIDstring;
             std::string HandleMeshID = "HandleMeshnr##" + uniqueIDstring;
-            std::string TreeLable = *entityName + "##" + uniqueIDstring;
+            std::string TreeID = *entityName + "##" + uniqueIDstring;
+            std::string DiffuseID = "diffuse##" + uniqueIDstring;
+            std::string SpecularID = "specular##" + uniqueIDstring;
+            
 
-            std::cout << TreeLable << std::endl;
+            std::cout << TreeID << std::endl;
 
-            if (ImGui::TreeNodeEx(TreeLable.c_str()))
+            if (ImGui::TreeNodeEx(TreeID.c_str()))
             {
                 
                 if (ImGui::Button("Delete Entity"))
@@ -224,11 +227,85 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                     ImGui::EndPopup();
 
                 }
+
+
+                if (ImGui::Button("Diffuse Texture"))
+                {
+                    ImGui::OpenPopup(DiffuseID.c_str());
+                }
+
+                if (ImGui::Button("Specular Texture"))
+                {
+                    ImGui::OpenPopup(SpecularID.c_str());
+                }
+
+
+                
                 
                 if (ImGui::Button("Handle Mesh"))
                 {
                     ImGui::OpenPopup(HandleMeshID.c_str());
                 }
+
+                
+                if (ImGui::BeginPopup(DiffuseID.c_str()))
+                {
+                    ImGui::Text("Loaded Textures");
+                    std::vector<std::shared_ptr<HertzTexture>> textures = m_TextureManager->GetTextureList();
+
+                    if (ImGui::BeginListBox(DiffuseID.c_str()))
+                    {
+                        
+                        for (auto& tex : textures)
+                        {
+
+                            if (ImGui::Selectable("name", true))
+                            {
+
+                            }
+                            if (bool isElected = true)
+                            {
+
+                            }
+
+
+                        }
+                        ImGui::EndListBox();
+                    }
+
+                    ImGui::EndPopup();
+                }
+
+                if (ImGui::BeginPopup(SpecularID.c_str()))
+                {
+                    ImGui::Text("Loaded Textures");
+                    std::vector<std::shared_ptr<HertzTexture>> textures = m_TextureManager->GetTextureList();
+
+                    if (ImGui::BeginListBox(DiffuseID.c_str()))
+                    {
+
+                        for (auto& tex : textures)
+                        {
+                            bool isSelected;
+                            
+
+                            if (ImGui::Selectable("name", true))
+                            {
+
+                            }
+                            if (bool isElected = true)
+                            {
+
+                            }
+
+
+                        }
+                        ImGui::EndListBox();
+                    }
+
+                    ImGui::EndPopup();
+                }
+                
 
                 ImGui::SameLine();
                 std::string meshnamestring;
@@ -241,6 +318,8 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                     meshnamestring = "no mesh selected";
                 }
                 ImGui::Text("%s", meshnamestring.c_str());
+
+
 
                 if (ImGui::BeginPopup(HandleMeshID.c_str()))
                 {
