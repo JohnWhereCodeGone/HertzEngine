@@ -52,19 +52,7 @@ bool VirtualObject::SetMesh(MeshPtr mesh)
 			std::vector<TexturePtr> tex = mesh->textures;
 			this->SetTextures(mesh->textures);
 
-			for (auto& tex : this->GetTextures())
-			{
-				switch (tex->m_texturetype)
-				{
-				case Diffuse:
-					SetDiffuseMap(tex);
-					break;
 
-				case Specular:
-					SetSpecularMap(tex);
-					break;
-				}
-			}
 			
 		}
 
@@ -100,6 +88,21 @@ void VirtualObject::SetName(const std::string& newname)
 
 void VirtualObject::SetTextures(const std::vector<std::shared_ptr<HertzTexture>>& newtextures)
 {
+
+	for (auto& tex : newtextures)
+	{
+		switch (tex->m_texturetype)
+		{
+		case Diffuse:
+			SetDiffuseMap(tex);
+			break;
+
+		case Specular:
+			SetSpecularMap(tex);
+			break;
+		}
+	}
+
 	this->m_textures = newtextures;
 }
 
@@ -140,6 +143,30 @@ std::string* VirtualObject::GetName()
 		return m_name;
 	else
 		return nullptr;
+}
+
+std::shared_ptr<HertzTexture> VirtualObject::GetDiffuseMap()
+{
+	if (m_diffuseMap)
+	{
+		return this->m_diffuseMap;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+std::shared_ptr<HertzTexture> VirtualObject::GetSpecularMap()
+{
+	if (m_SpecularMap)
+	{
+		return this->m_SpecularMap;
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 void VirtualObject::ClearMesh()

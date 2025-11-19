@@ -153,6 +153,9 @@ void HertzEditor::EditorUI(GLFWwindow* window)
             std::string TreeID = *entityName + "##" + uniqueIDstring;
             std::string DiffuseID = "diffuse##" + uniqueIDstring;
             std::string SpecularID = "specular##" + uniqueIDstring;
+
+            std::shared_ptr<HertzTexture> texDiffuse = en->GetDiffuseMap();
+            std::shared_ptr<HertzTexture> texSpecular = en->GetSpecularMap();
             
 
 
@@ -233,11 +236,32 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                     ImGui::OpenPopup(DiffuseID.c_str());
                 }
 
+                if (texDiffuse)
+                {
+
+                    ImGui::SameLine();
+                    ImGui::Text("%s", texDiffuse->GetName().c_str());
+                }
+                else
+                {
+                    ImGui::SameLine();
+                    ImGui::Text("No Diffuse Set");
+                }
                 if (ImGui::Button("Specular Texture"))
                 {
                     ImGui::OpenPopup(SpecularID.c_str());
                 }
+                if (texSpecular)
+                {
+                    ImGui::SameLine();
+                    ImGui::Text("%s", texSpecular->GetName().c_str());
 
+                }
+                else
+                {
+                    ImGui::SameLine();
+                    ImGui::Text("No Specular Set");
+                }
 
                 
                 
@@ -334,7 +358,7 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                             if (ImGui::Selectable(mesh->GetName().c_str(), isSelected))
                             {
                                 en->SetMesh(mesh);
-                                std::cout << "Trying to set Mesh" << std::endl;
+                                //std::cout << "Trying to set Mesh" << std::endl;
                             }
                             if (isSelected)
                             {

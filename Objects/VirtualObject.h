@@ -37,8 +37,13 @@ public:
 	ShaderPtr		GetShader();
 	MeshPtr			GetMesh();
 	std::string*	GetName();
-	void			ClearMesh();
 
+	TexturePtr		GetDiffuseMap();
+	TexturePtr		GetSpecularMap();
+	
+
+	
+	void			ClearMesh();
 	void			UpdateTextureTypes();
 	void			SetDiffuseMap(std::shared_ptr<HertzTexture> newmap);
 	void			SetSpecularMap(std::shared_ptr<HertzTexture> newmap);

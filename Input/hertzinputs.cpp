@@ -151,7 +151,7 @@ void HertzInput::iKeyCallbackImproved(GLFWwindow* window, int key, int scancode,
 			int i = glfwGetInputMode(window, GLFW_CURSOR);
 			if (i == GLFW_CURSOR_DISABLED)
 			{
-				std::cout << "it's capturin" << std::endl;
+				//std::cout << "it's capturin" << std::endl;
 			}
 			
 			io.ConfigFlags |= ImGuiConfigFlags_NoMouse;

@@ -176,6 +176,11 @@ std::vector<std::shared_ptr<HertzTexture>> HertzEngine::GetDefaultTexture()
 	return TextureManager::MakeDefaultTextures();
 }
 
+std::shared_ptr<TextureManager> HertzEngine::GetTextureManager()
+{
+	return this->m_textureManager;
+}
+
 std::shared_ptr<Meshmanager> HertzEngine::GetMeshMangr()
 {
 	if (manager)

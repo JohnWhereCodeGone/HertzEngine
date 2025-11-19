@@ -63,10 +63,11 @@ public:
 		}
 	};
 
-	std::shared_ptr<Camera> GetCam() const;
-	static std::shared_ptr<Shader> GetDefaultShader();
-	std::shared_ptr<Shader> MakeDefaultShader();
-	static std::vector<std::shared_ptr<HertzTexture>> GetDefaultTexture(); //herlper
+	std::shared_ptr<Camera>								GetCam() const;
+	static std::shared_ptr<Shader>						GetDefaultShader();
+	std::shared_ptr<Shader>								MakeDefaultShader();
+	static std::vector<std::shared_ptr<HertzTexture>>	GetDefaultTexture(); //herlper
+	std::shared_ptr<TextureManager>						GetTextureManager();
 	//input function holder
 	std::shared_ptr<Meshmanager> GetMeshMangr(); // depricated
 	
@@ -86,9 +87,9 @@ public:
 private:
 
 	//UI
-	std::shared_ptr<HertzEditor> m_editor;
+	std::shared_ptr<HertzEditor>	m_editor;
 
-	Meshmanager* MeshManager;
+	Meshmanager*					MeshManager;
 	std::shared_ptr<EntityManager>	m_EntityManager;
 	std::shared_ptr<ShaderManager>	m_shaderManager;
 	std::shared_ptr<TextureManager> m_textureManager;
