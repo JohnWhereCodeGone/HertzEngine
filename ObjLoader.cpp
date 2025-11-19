@@ -148,7 +148,6 @@ std::shared_ptr<ObjData> ObjLoader::GetObjData(const char* aPath)
 			iss >> texcoords.x >> texcoords.y;
 			data.vTexCoords.push_back(texcoords);
 			
-			std::cout << "hey" << std::endl;
 		}
 		else if (prefix == "f")
 		{

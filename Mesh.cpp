@@ -227,10 +227,12 @@ void Mesh::Render()
 		if (type == Diffuse)
 		{
 			number = std::to_string(i + 1);
+			name = "texture_diffuse";
 		}
 		else if (type == Specular)
 		{
 			number = std::to_string(i + 1);
+			name = "texture_specular";
 		}
 		else if (name == "texture_normal")
 		{
