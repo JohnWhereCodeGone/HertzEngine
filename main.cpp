@@ -64,7 +64,7 @@ int main()
 	//engine.messagequeue.Push(msgtest);
 
 	std::shared_ptr<ObjMessage> msgMonkey = std::make_shared<ObjMessage>(monky);
-	engine.GetTextureManager()->LoadTexture(".\Texture\th.jpg", Diffuse);
+	engine.GetTextureManager()->LoadTexture(".\\Texture\\th.jpg", Diffuse);
 
 	//engine.messagequeue.Push(msgMonkey);
 

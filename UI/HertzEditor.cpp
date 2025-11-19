@@ -281,14 +281,16 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                         
                         for (auto& tex : textures)
                         {
+                            bool isSelected = (tex == texDiffuse);
 
-                            if (ImGui::Selectable("name", true))
+                            if (ImGui::Selectable(tex->GetName().c_str(), isSelected))
                             {
-
+                                en->SetDiffuseMap(tex);
+                                en->UpdateTextureTypes();
                             }
-                            if (bool isElected = true)
+                            if (isSelected)
                             {
-
+                                ImGui::SetItemDefaultFocus();
                             }
 
 
@@ -304,21 +306,22 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                     ImGui::Text("Loaded Textures");
                     std::vector<std::shared_ptr<HertzTexture>> textures = m_TextureManager->GetTextureList();
 
-                    if (ImGui::BeginListBox(DiffuseID.c_str()))
+                    if (ImGui::BeginListBox(SpecularID.c_str()))
                     {
 
                         for (auto& tex : textures)
                         {
-                            bool isSelected;
+                            bool isSelected = (tex == texSpecular);
                             
 
-                            if (ImGui::Selectable("name", true))
+                            if (ImGui::Selectable(tex->GetName().c_str(), isSelected))
                             {
-
+                                en->SetSpecularMap(tex);
+                                en->UpdateTextureTypes();
                             }
-                            if (bool isElected = true)
+                            if (isSelected)
                             {
-
+                                ImGui::SetItemDefaultFocus();
                             }
 
 
