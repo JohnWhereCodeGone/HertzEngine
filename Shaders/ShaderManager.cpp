@@ -77,6 +77,13 @@ void ShaderManager::UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::
         shad->setFloat("material.shine", 32.0f); //specifically, this one needs to be fixed/updated.
 
 
+        shad->setVec3("pointLights[0].position", camPos);
+        shad->setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+        shad->setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+        shad->setVec3("pointLights[0].specular", 0.0f, 1.0f, 0.0f);
+        shad->setFloat("pointLights[0].constant", 1.f);
+        shad->setFloat("pointLights[0].linear", 0.09f);
+        shad->setFloat("pointLights[0].quadratic", 0.032f);
     }
 
 }

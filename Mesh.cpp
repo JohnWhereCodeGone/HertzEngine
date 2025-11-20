@@ -193,6 +193,10 @@ void Mesh::Render()
 
 	shader->Use();
 
+	int diffuseNr = 1;
+	int specularNr = 1;
+	int normalNr = 1;
+
 	for (unsigned int i = 0; i < textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
@@ -206,6 +210,9 @@ void Mesh::Render()
 		std::string number;
 		TextureType type = textures[i]->m_texturetype;
 		std::string name = textures[i]->m_type;
+
+		
+
 
 		/*
 		switch (type)
@@ -226,13 +233,13 @@ void Mesh::Render()
 
 		if (type == Diffuse)
 		{
-			number = std::to_string(i + 1);
-			name = "texture_diffuse";
+			number = std::to_string(diffuseNr++);
+			name = "diffuse";
 		}
 		else if (type == Specular)
 		{
-			number = std::to_string(i + 1);
-			name = "texture_specular";
+			number = std::to_string(specularNr++);
+			name = "specular";
 		}
 		else if (name == "texture_normal")
 		{

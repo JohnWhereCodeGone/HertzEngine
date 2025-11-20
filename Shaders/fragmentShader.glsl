@@ -119,10 +119,10 @@ void main()
 
 
 		
-        //for (int i = 0; i < NR_POINT_LIGHTS; i++)
-        //{
-        //    result += PointLighter(pointLights[i], norm, FragPos, viewDir); //works
-        //}
+        for (int i = 0; i < NR_POINT_LIGHTS; i++)
+        {
+            result += PointLighter(pointLights[i], norm, FragPos, viewDir); //works
+        }
         //for (int i = 0; i < NR_SPOT_LIGHTS; i++)
         //{
         //}
@@ -132,7 +132,9 @@ void main()
 
         vec3 debugtexture = vec3(texture(material.diffuse1, TexCoord));
 		
-		FragColor = vec4(result , 1.0);
+		
+		//FragColor = vec4(texture(material.specular1, TexCoord).rgb, 1.0); //debug for specular map
+		FragColor = vec4(result, 1.0); //REAL ONE TO USE
         // this is the old -- FragColor = vec4(debugtexture, result);
 
         //FragColor = vec4(TexCoord, 0.0, 1.0);
