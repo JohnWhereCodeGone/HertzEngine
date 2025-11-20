@@ -25,11 +25,21 @@ void Entity::Update(float Deltatime)
 
 	}
 	MeshPtr mesh = this->GetMesh();
+
+	if (GetDiffuseMap())
+	{
+		GetDiffuseMap()->m_texturetype = Diffuse;
+	}
+	if (GetSpecularMap())
+	{
+		GetSpecularMap()->m_texturetype = Specular;
+	}
 	if (mesh)
 	{
 		mesh->Attach(*this);
 		mesh->Render();
 	}
+	
 
 
 

@@ -187,11 +187,13 @@ void VirtualObject::UpdateTextureTypes()
 
 	if (m_diffuseMap)
 	{
+		m_diffuseMap->m_type = Diffuse;
 		newTextures.push_back(this->m_diffuseMap);
 	}
 	if (m_SpecularMap)
 	{
 		newTextures.push_back(this->m_SpecularMap);
+		m_SpecularMap->m_texturetype = Specular;
 	}
 
 	if (!newTextures.empty())
