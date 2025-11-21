@@ -94,7 +94,7 @@ struct SpotLight
 
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform PointLight pointLights[NR_POINT_LIGHTS];
-uniform DirLight dirlight;
+uniform DirLight dirlight; //aka diffuse
 
 vec3 DirectionalLighter(DirLight light, vec3 normal, vec3 viewDir);
 vec3 PointLighter(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -123,10 +123,10 @@ void main()
         {
             result += PointLighter(pointLights[i], norm, FragPos, viewDir); //works
         }
-        //for (int i = 0; i < NR_SPOT_LIGHTS; i++)
-        //{
-        //}
-        //result += SpotLighter(spotLights[0], norm, viewDir); // working
+        for (int i = 0; i < NR_SPOT_LIGHTS; i++)
+        {
+			result += SpotLighter(spotLights[i], norm, viewDir); // working
+        }
         
         vec3 debugcolor = vec3(0.0, 1.0, 0.0);
 

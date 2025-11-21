@@ -6,6 +6,8 @@
 #include <vector>
 #include "HertzShader.h"
 
+class Camera;
+
 class ShaderManager
 {
 public:
@@ -15,7 +17,7 @@ public:
 
 	static ShaderPtr MakeShader(const char* tPath = nullptr);
 	void RemoveShader(ShaderPtr shad);
-	void UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::vec3 camPos);
+	void UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::vec3 camPos, std::shared_ptr<Camera> cam);
 
 
 
