@@ -4,6 +4,7 @@
 #include <thread>
 #include "../Threading/MipMapMessage.h"
 #include "../Mesh/Meshmanager.h"
+#include "../Lights/Lightmanager.h"
 
 
 std::shared_ptr<Shader> HertzEngine::DefaultShader = nullptr;
@@ -30,6 +31,7 @@ HertzEngine::HertzEngine()
 	state = GameState::RUNNING;
 	manager = std::make_shared<Meshmanager>();
 
+	m_lightManager = std::make_shared<Lightmanager>();
 	m_EntityManager = std::make_shared<EntityManager>();
 	
 	
@@ -38,10 +40,8 @@ HertzEngine::HertzEngine()
 	//Cam Setup
 	cam = std::make_shared<Camera>();
 	projection = glm::perspective(glm::radians(cam->fZoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	
 	fDeltaTime = 0.0f;
-	
-	m_editor = std::make_shared<HertzEditor>(this->cam, m_EntityManager, m_textureManager, m_shaderManager, manager);
+	m_editor = std::make_shared<HertzEditor>(this->cam, m_EntityManager, m_textureManager, m_shaderManager, manager, m_lightManager);
 	
 
 	// Shader Setup:
@@ -179,6 +179,11 @@ std::vector<std::shared_ptr<HertzTexture>> HertzEngine::GetDefaultTexture()
 std::shared_ptr<TextureManager> HertzEngine::GetTextureManager()
 {
 	return this->m_textureManager;
+}
+
+std::shared_ptr<Lightmanager> HertzEngine::GetLightManager()
+{
+	return this->m_lightManager;
 }
 
 std::shared_ptr<Meshmanager> HertzEngine::GetMeshMangr()

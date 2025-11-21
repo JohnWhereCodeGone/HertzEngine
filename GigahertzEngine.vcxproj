@@ -154,6 +154,7 @@
     <ClCompile Include="Input\hertzinputs.cpp" />
     <ClCompile Include="Lights\DiffuseLight.cpp" />
     <ClCompile Include="Lights\Light.cpp" />
+    <ClCompile Include="Lights\Lightmanager.cpp" />
     <ClCompile Include="Lights\PointLight.cpp" />
     <ClCompile Include="Lights\Spotlight.cpp" />
     <ClCompile Include="Serializer\Serializer.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="Input\hertzinputs.h" />
     <ClInclude Include="Lights\DiffuseLight.h" />
     <ClInclude Include="Lights\Light.h" />
+    <ClInclude Include="Lights\Lightmanager.h" />
     <ClInclude Include="Lights\PointLight.h" />
     <ClInclude Include="Lights\Spotlight.h" />
     <ClInclude Include="Serializer\Serializer.h" />

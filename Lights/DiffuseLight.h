@@ -18,7 +18,7 @@ public:
 
 	DiffuseLight();
 
-    void UpdateTargetShader(std::shared_ptr<Shader> shad) override;
+    void UpdateTargetShader(std::shared_ptr<Shader> shad, int index) override;
     
     DiffuseProperties& GetProperties();
 

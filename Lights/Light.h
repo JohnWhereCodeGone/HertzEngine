@@ -6,25 +6,27 @@
 
 enum LightType
 {
-	Default,
-	Diffuse,
-	Specular,
-	Spot
+	DefaultLight,
+	DiffuseLighter,
+	Spotlighter,
+	Pointlighter
 };
 
 class Light
 {
 	
 public:
-	Light(const LightType& type = Default);
+	Light(const LightType& type = LightType::DefaultLight);
 
-	virtual ~Light() = default;
+	virtual		~Light() = default;
 
 	void			SetLightType(const LightType& type);
 	LightType&		GetLightType();
 
-	virtual void	UpdateTargetShader(std::shared_ptr<Shader> shad);
+	virtual void	UpdateTargetShader(std::shared_ptr<Shader> shad, int index);
 
+	//for ui, defined in manager
+	const char*			m_ID;
 
 protected:
 

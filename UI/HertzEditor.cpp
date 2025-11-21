@@ -15,6 +15,7 @@
 #include "../Shaders/HertzShader.h"
 #include "../imgui_stdlib.h"
 #include "../Mesh.h"
+#include "../Lights/Lightmanager.h"
 
 bool show_demo_window = true;
 bool show_another_window = false;
@@ -113,6 +114,14 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     {
         std::cout << "NO MESHES WTF" << std::endl;
     }
+
+    if (ImGui::TreeNodeEx("Lights"))
+    {
+
+
+        ImGui::TreePop();
+    }
+
     //Create, delete - Name, model, texture, position, rotation, scale. ---TODO Model / texture / shader
     if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen))
     {

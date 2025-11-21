@@ -24,6 +24,7 @@
 
 class Meshmanager;
 class HertzEditor;
+class Lightmanager;
 
 enum GameState
 {
@@ -68,6 +69,7 @@ public:
 	std::shared_ptr<Shader>								MakeDefaultShader();
 	static std::vector<std::shared_ptr<HertzTexture>>	GetDefaultTexture(); //herlper
 	std::shared_ptr<TextureManager>						GetTextureManager();
+	std::shared_ptr<Lightmanager>						GetLightManager();
 	//input function holder
 	std::shared_ptr<Meshmanager> GetMeshMangr(); // depricated
 	
@@ -94,6 +96,7 @@ private:
 	std::shared_ptr<ShaderManager>	m_shaderManager;
 	std::shared_ptr<TextureManager> m_textureManager;
 	std::shared_ptr<Meshmanager>	m_meshman;
+	std::shared_ptr<Lightmanager>	m_lightManager;
 	
 	glm::mat4 projection;
 	glm::mat4 view;
