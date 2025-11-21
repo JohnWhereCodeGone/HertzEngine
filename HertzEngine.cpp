@@ -234,7 +234,7 @@ void HertzEngine::Update()
 
 		glm::mat4 view = cam->GetViewMat4();
 		
-		m_shaderManager->UpdateShaders(cam->GetProjection(), view, cam->vPos, cam);
+		m_shaderManager->UpdateShaders(cam->GetProjection(), view, cam->vPos, cam, m_lightManager);
 		
 		/*
 		DefaultShader->Use();

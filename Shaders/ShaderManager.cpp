@@ -1,6 +1,7 @@
 #include "ShaderManager.h"
 #include "../Camera.h"
 #include "../Lights/PointLight.h"
+#include "../Lights/Lightmanager.h"
 
 std::vector<std::shared_ptr<Shader>> ShaderManager::m_shaderList;
 
@@ -52,7 +53,7 @@ void ShaderManager::RemoveShader(ShaderPtr shadToRemove)
 }
 
 
-void ShaderManager::UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::vec3 camPos, std::shared_ptr<Camera> cam)
+void ShaderManager::UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::vec3 camPos, std::shared_ptr<Camera> cam , std::shared_ptr<Lightmanager> lightman)
 {
 
     for (auto it = m_shaderList.begin(); it != m_shaderList.end(); it++)
@@ -61,9 +62,13 @@ void ShaderManager::UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::
         if (!shad)
             continue;
 
-        
+            
 
         shad->Use();
+        if (lightman)
+        {
+            lightman->ApplyLights(shad);
+        }
         shad->setFloat("material.shine", 32.0f); //specifically, this one needs to be fixed/updated.
         shad->setMat4("projection", projectionMat);
         shad->setMat4("view", view);
