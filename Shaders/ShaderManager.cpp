@@ -85,6 +85,7 @@ void ShaderManager::UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::
         shad->setFloat("pointLights[0].constant", 1.f);
         shad->setFloat("pointLights[0].linear", 0.09f);
         shad->setFloat("pointLights[0].quadratic", 0.032f);
+        shad->setBool("pointLights[0].shouldLight", true);
         
 
         
@@ -99,6 +100,7 @@ void ShaderManager::UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::
         shad->setFloat("spotLights[0].linear", 0.09f);
         shad->setFloat("spotLights[0].quadratic", 0.032f);
         shad->setFloat("spotLights[0].cutOff", glm::cos(glm::radians(12.5f)));
+        shad->setBool("spotLights[0].shouldLight", true);
         
 
 

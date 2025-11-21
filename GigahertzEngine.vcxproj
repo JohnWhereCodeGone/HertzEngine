@@ -152,7 +152,10 @@
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="Input\hertzinputs.cpp" />
+    <ClCompile Include="Lights\DiffuseLight.cpp" />
     <ClCompile Include="Lights\Light.cpp" />
+    <ClCompile Include="Lights\PointLight.cpp" />
+    <ClCompile Include="Lights\Spotlight.cpp" />
     <ClCompile Include="Serializer\Serializer.cpp" />
     <ClCompile Include="Shaders\ShaderManager.cpp" />
     <ClCompile Include="Texture\TextureManager.cpp" />
@@ -205,7 +208,10 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Input\hertzinputs.h" />
+    <ClInclude Include="Lights\DiffuseLight.h" />
     <ClInclude Include="Lights\Light.h" />
+    <ClInclude Include="Lights\PointLight.h" />
+    <ClInclude Include="Lights\Spotlight.h" />
     <ClInclude Include="Serializer\Serializer.h" />
     <ClInclude Include="Shaders\ShaderManager.h" />
     <ClInclude Include="Texture\TextureManager.h" />

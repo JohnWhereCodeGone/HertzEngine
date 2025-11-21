@@ -70,6 +70,7 @@ struct PointLight
     float constant;
     float linear;
     float quadratic;
+	bool shouldLight;
 };
 
 
@@ -87,10 +88,11 @@ struct SpotLight
     float constant;
     float linear;
     float quadratic;
+	bool shouldLight;
 };
 
 #define NR_SPOT_LIGHTS 8
-#define NR_POINT_LIGHTS 1
+#define NR_POINT_LIGHTS 25
 
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform PointLight pointLights[NR_POINT_LIGHTS];
@@ -121,11 +123,21 @@ void main()
 		
         for (int i = 0; i < NR_POINT_LIGHTS; i++)
         {
-            result += PointLighter(pointLights[i], norm, FragPos, viewDir); //works
+			if(pointLights[i].shouldLight == true)
+			{
+				result += PointLighter(pointLights[i], norm, FragPos, viewDir); //works
+			}
+			
+            
         }
         for (int i = 0; i < NR_SPOT_LIGHTS; i++)
         {
-			result += SpotLighter(spotLights[i], norm, viewDir); // working
+			if(spotLights[i].shouldLight == true)
+			{
+				result += SpotLighter(spotLights[i], norm, viewDir); // working
+			}
+			
+			
         }
         
         vec3 debugcolor = vec3(0.0, 1.0, 0.0);
@@ -133,10 +145,10 @@ void main()
         vec3 debugtexture = vec3(texture(material.diffuse1, TexCoord));
 		
 		
-		//FragColor = vec4(texture(material.specular1, TexCoord).rgb, 1.0); //debug for specular map
+		
 		FragColor = vec4(result, 1.0); //REAL ONE TO USE
         // this is the old -- FragColor = vec4(debugtexture, result);
-
+		//FragColor = vec4(texture(material.specular1, TexCoord).rgb, 1.0); //debug for specular map
         //FragColor = vec4(TexCoord, 0.0, 1.0);
     }
 }

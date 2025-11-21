@@ -1,6 +1,6 @@
 #pragma once
 #include "../glm/glm.hpp"
-
+#include "../Shaders/HertzShader.h"
 
 
 
@@ -14,17 +14,19 @@ enum LightType
 
 class Light
 {
-	Light(const LightType& type);
 	
-	
-	void		SetLightType(const LightType& type);
-	
-	
-	LightType&	GetLightType();
+public:
+	Light(const LightType& type = Default);
+
+	virtual ~Light() = default;
+
+	void			SetLightType(const LightType& type);
+	LightType&		GetLightType();
+
+	virtual void	UpdateTargetShader(std::shared_ptr<Shader> shad);
 
 
-private:
-
+protected:
 
 	LightType	m_lightType;
 
