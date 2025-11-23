@@ -28,6 +28,8 @@
 #include "Entity/Entity.h"
 #include "Serializer/Serializer.h"
 
+#include "../Lights/Lightmanager.h"
+
 std::string crate = ".\\Dependencies\\Crate.obj";
 std::string monky = ".\\Dependencies\\monkey.obj";
 
@@ -52,13 +54,23 @@ int main()
 	using EntityPtr = std::shared_ptr<Entity>;
 	HertzEngine engine;
 	GLFWwindow* win = engine.GetWindow();
+
+	std::shared_ptr<Lightmanager> lightman = engine.GetLightManager();
+	
+	
+	lightman->CreateLight(Pointlighter);
+	lightman->CreateLight(Spotlighter);
+	lightman->CreateLight(DiffuseLighter);
 	
 	auto EntityManager = engine.GetEntityManager();
 	std::shared_ptr<Entity> test = EntityManager->CreateEntity();
+
+	/*
 	std::shared_ptr<Entity> test1 = EntityManager->CreateEntity();
 	std::shared_ptr<Entity> test12 = EntityManager->CreateEntity();
 	std::shared_ptr<Entity> test3 = EntityManager->CreateEntity();
 	std::shared_ptr<Entity> test34 = EntityManager->CreateEntity();
+	*/
 
 	std::shared_ptr<ObjMessage> msgtest = std::make_shared<ObjMessage>(crate);
 	//engine.messagequeue.Push(msgtest);

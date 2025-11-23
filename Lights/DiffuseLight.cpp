@@ -21,8 +21,8 @@ void DiffuseLight::UpdateTargetShader(std::shared_ptr<Shader> shad, int index)
 {
 	shad->setVec3("dirlight.direction", m_properties.Direction);
 	shad->setVec3("dirlight.ambient",	m_properties.Ambient);
-	shad->setVec3("dirlight.diffuse",	m_properties.Specular);
-	shad->setVec3("dirlight.specular",	m_properties.Diffuse);
+	shad->setVec3("dirlight.diffuse",	m_properties.Diffuse);
+	shad->setVec3("dirlight.specular",	m_properties.Specular);
 }
 
 DiffuseProperties& DiffuseLight::GetProperties()

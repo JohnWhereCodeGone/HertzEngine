@@ -78,7 +78,7 @@ struct SpotLight
 {
     vec3 pos;
     vec3 lightDir;
-    vec3 spotDir;
+    vec3 spotDir;		//not being used
     float cutOff;
     
     vec3 ambient;

@@ -38,7 +38,7 @@ HertzEngine::HertzEngine()
 
 
 	//Cam Setup
-	cam = std::make_shared<Camera>();
+	cam = std::make_shared<Camera>(std::static_pointer_cast<Spotlight>(m_lightManager->CreateLight(Spotlighter)));
 	projection = glm::perspective(glm::radians(cam->fZoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	fDeltaTime = 0.0f;
 	m_editor = std::make_shared<HertzEditor>(this->cam, m_EntityManager, m_textureManager, m_shaderManager, manager, m_lightManager);

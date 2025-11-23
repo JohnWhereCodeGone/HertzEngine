@@ -1,12 +1,16 @@
 #include "Lightmanager.h"
-
-
+#include "../Lights/DiffuseLight.h"
+#include "../Lights/PointLight.h"
+#include "../Lights/Spotlight.h"
 
 
 
 std::shared_ptr<Light> Lightmanager::CreateLight(const LightType& type)
 {
 	LightPtr toAdd;
+	std::string name;
+	bool isAlreadyDiffuseLight = false;
+
 	switch (type)
 	{
 		case(Pointlighter):
@@ -19,24 +23,32 @@ std::shared_ptr<Light> Lightmanager::CreateLight(const LightType& type)
 
 		case(DiffuseLighter):
 
-			
-			if (!m_lightlist.empty())
+			if (m_lightlist.empty())
+			{
+				toAdd = std::make_shared<DiffuseLight>();
+				name = "Diffuse ";
+			}
+			else
 			{
 				for (auto& light : m_lightlist)
 				{
 					if (light->GetLightType() == DiffuseLighter)
 					{
-						std::cout << "[Lightmanager]: There is already a diffuse light. Only one allowed per scene";
-						break;
-					}
-					else
-					{
-						toAdd = std::make_shared<DiffuseLight>();
-						break;
+						isAlreadyDiffuseLight = true;
 					}
 				}
 
+				if (!isAlreadyDiffuseLight)
+				{
+					toAdd = std::make_shared<DiffuseLight>();
+					name = "Diffuse ";
+					break;
+				}
+
 			}
+			break;
+					
+
 
 	}
 
@@ -91,6 +103,11 @@ void Lightmanager::ApplyLights(std::shared_ptr<Shader> shad)
 	}
 
 
+}
+
+const std::vector<std::shared_ptr<Light>>& Lightmanager::GetLights()
+{
+	return this->m_lightlist;
 }
 
 //Note. This code doesn't check if when adding/applying, there are less than 8, or less than 25. 

@@ -23,7 +23,6 @@ void Spotlight::UpdateTargetShader(std::shared_ptr<Shader> shad, int index)
     shad->setFloat("spotLights[" + std::to_string(index) + "].cutOff",      glm::cos(glm::radians(m_properties.Cutoff)));
 
     shad->setVec3("spotLights[" + std::to_string(index) + "].lightDir",     m_properties.LightDir);
-    shad->setVec3("spotLights[" + std::to_string(index) + "].spotDir",      m_properties.SpotDir);
     shad->setVec3("spotLights[" + std::to_string(index) + "].ambient",      m_properties.Ambient);
     shad->setVec3("spotLights[" + std::to_string(index) + "].diffuse",      m_properties.Diffuse);
     shad->setVec3("spotLights[" + std::to_string(index) + "].specular",     m_properties.Specular);

@@ -26,7 +26,7 @@ public:
 	virtual void	UpdateTargetShader(std::shared_ptr<Shader> shad, int index);
 
 	//for ui, defined in manager
-	const char*			m_ID;
+	std::string			m_ID;
 
 protected:
 

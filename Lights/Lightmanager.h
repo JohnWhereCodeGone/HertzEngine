@@ -9,10 +9,12 @@ class Lightmanager
 
 public:
 
-	std::shared_ptr<Light>	CreateLight(const LightType& type);
-	void					DeleteLight(LightPtr toDelete);
+	std::shared_ptr<Light>			CreateLight(const LightType& type);
+	void							DeleteLight(LightPtr toDelete);
 
-	void					ApplyLights(std::shared_ptr<Shader> shad);
+	void							ApplyLights(std::shared_ptr<Shader> shad);
+	const std::vector<LightPtr>&	GetLights();
+
 
 private:
 

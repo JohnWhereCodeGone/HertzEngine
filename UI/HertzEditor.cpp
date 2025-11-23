@@ -80,6 +80,7 @@ void HertzEditor::EditorUI(GLFWwindow* window)
 
     if (ImGui::TreeNodeEx("Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        ImGui::Checkbox("Spotlight Enabled", &m_camRef->m_lightIsOn);
         ImGui::Text("Transform");
         ImGui::InputFloat("Transform X", &m_camRef->vPos.x, 1.f);
         ImGui::InputFloat("Transform Y", &m_camRef->vPos.y, 1.f);
@@ -114,17 +115,179 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     {
         std::cout << "NO MESHES WTF" << std::endl;
     }
-
+    /// LIGHTS  ///
     if (ImGui::TreeNodeEx("Lights"))
     {
+        using DiffusePtr    = std::shared_ptr<DiffuseLight>;
+        using PointPtr      = std::shared_ptr<PointLight>;
+        using SpotPtr       = std::shared_ptr<Spotlight>;
 
+
+        std::vector<std::shared_ptr<Light>> lightlist   = m_lightManager->GetLights();
+
+        DiffusePtr   lightDiff   = nullptr;
+        PointPtr     lightPoint  = nullptr;
+        SpotPtr      lightSpot   = nullptr;
+
+        std::string  name        = " " ;
+
+
+        if (ImGui::Button("Create Light"))
+        {
+            ImGui::OpenPopup("Select Light");
+        }
+
+        if (ImGui::BeginPopup("Select Light"))
+        {
+            ImGui::Text("Light Type");
+            std::vector<std::shared_ptr<HertzTexture>> textures = m_TextureManager->GetTextureList();
+
+            if (ImGui::BeginListBox("Light Types..."))
+            {
+
+                
+
+                if (ImGui::Selectable("Spot Light"))
+                {
+                    m_lightManager->CreateLight(LightType::Spotlighter);
+                }
+                if (ImGui::Selectable("Point Light"))
+                {
+                    m_lightManager->CreateLight(LightType::Pointlighter);
+                }
+                if (ImGui::Selectable("Diffuse Light"))
+                {
+                    m_lightManager->CreateLight(LightType::DiffuseLighter);
+                }
+                if (ImGui::Button("Close"))
+                {
+                    ImGui::CloseCurrentPopup();
+                }
+
+
+                ImGui::EndListBox();
+            }
+
+            ImGui::EndPopup();
+        }
+
+
+        for (std::shared_ptr<Light> light : lightlist)
+        {
+
+            switch (light->GetLightType())
+            {
+            case(DiffuseLighter):
+                lightDiff = std::static_pointer_cast<DiffuseLight>(light);
+                name = "Diffuse Light ";
+                name.append(lightDiff->m_ID);
+                break;
+
+            case(Pointlighter):
+                lightPoint = std::static_pointer_cast<PointLight>(light);
+                name = "Point Light ";
+                name.append(lightPoint->m_ID);
+                break;
+
+            case(Spotlighter):
+                lightSpot = std::static_pointer_cast<Spotlight>(light);
+                name = "Spot Light ";
+                name.append(lightSpot->m_ID);
+                break;
+            }
+            ImGui::PushID((void*)light.get());
+            
+
+            if (ImGui::TreeNodeEx(name.c_str()))
+            {
+                if (ImGui::Button("Delete Light"))
+                {
+                    m_lightManager->DeleteLight(light);
+                }
+
+                if (lightDiff && light->m_ID == lightDiff->m_ID)
+                {
+
+                    if (ImGui::Button("Diffuse Button"))
+                    {
+
+                    }
+
+                    ImGui::DragFloat3("Diffuse XYZ",   glm::value_ptr(lightDiff->GetProperties().Diffuse),    0.5f, 0.f, 100.f);
+                    ImGui::DragFloat3("Direction XYZ", glm::value_ptr(lightDiff->GetProperties().Direction),  0.5f, 0.f, 100.f);
+                    ImGui::DragFloat3("Ambient XYZ",   glm::value_ptr(lightDiff->GetProperties().Ambient),    0.5f, 0.f, 100.f);
+                    ImGui::DragFloat3("Specular XYZ",  glm::value_ptr(lightDiff->GetProperties().Specular),   0.5f, 0.f, 100.f);
+                   
+
+                }
+
+                if (lightPoint && light->m_ID == lightPoint->m_ID)
+                {
+
+                    if (ImGui::Button("Point Button"))
+                    {
+
+                    }
+
+
+                    ImGui::InputFloat("Pos X", &lightPoint->GetTransform()->GetPos().x);
+                    ImGui::InputFloat("Pos Y", &lightPoint->GetTransform()->GetPos().y);
+                    ImGui::InputFloat("Pos Z", &lightPoint->GetTransform()->GetPos().z);
+
+
+                    ImGui::DragFloat3("Ambient XYZ",    glm::value_ptr(lightPoint->GetProperties().Ambient),    0.5f, 0.f, 100.f);
+                    ImGui::DragFloat3("Diffuse XYZ",    glm::value_ptr(lightPoint->GetProperties().Diffuse),    0.5f, 0.f, 100.f);
+                    ImGui::DragFloat3("Specular XYZ",   glm::value_ptr(lightPoint->GetProperties().Specular),   0.5f, 0.f, 100.f);
+                    
+                    ImGui::DragFloat("Constant XYZ",    &lightPoint->GetProperties().Constant,   0.5f, 0.f, 100.f);
+                    ImGui::DragFloat("Linear XYZ",      &lightPoint->GetProperties().Linear,     0.5f, 0.f, 100.f);
+                    ImGui::DragFloat("Quadratic XYZ",   &lightPoint->GetProperties().Quadratic,  0.5f, 0.f, 100.f);
+
+
+
+
+
+                }
+                if (lightSpot && light->m_ID == lightSpot->m_ID)
+                {
+                    if (ImGui::Button("Spot Button"))
+                    {
+
+                    }
+
+
+                    ImGui::InputFloat("Pos X", &lightSpot->GetTrans()->GetPos().x);
+                    ImGui::InputFloat("Pos Y", &lightSpot->GetTrans()->GetPos().y);
+                    ImGui::InputFloat("Pos Z", &lightSpot->GetTrans()->GetPos().z);
+
+                    ImGui::DragFloat3("Ambient XYZ",    glm::value_ptr(lightSpot->GetProperties().Ambient),     0.5f, 0.f, 100.f);
+                    ImGui::DragFloat3("Diffuse XYZ",    glm::value_ptr(lightSpot->GetProperties().Diffuse),     0.5f, 0.f, 100.f);
+                    ImGui::DragFloat3("Specular XYZ",   glm::value_ptr(lightSpot->GetProperties().Specular),    0.5f, 0.f, 100.f);
+
+                    ImGui::DragFloat("Constant XYZ",    &lightSpot->GetProperties().Constant,   0.5f, 0.f, 100.f);
+                    ImGui::DragFloat("Linear XYZ",      &lightSpot->GetProperties().Linear,     0.5f, 0.f, 100.f);
+                    ImGui::DragFloat("Quadratic XYZ",   &lightSpot->GetProperties().Quadratic,  0.5f, 0.f, 100.f);
+                }
+
+
+
+
+
+                ImGui::TreePop();
+            }
+            ImGui::PopID();
+
+            
+        }
 
         ImGui::TreePop();
     }
 
-    //Create, delete - Name, model, texture, position, rotation, scale. ---TODO Model / texture / shader
+
+    /// ENTITIES ///
     if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen))
     {
+            
             std::shared_ptr<Entity> entityToDelete;
             std::shared_ptr<Shader> selectedShad;
             
