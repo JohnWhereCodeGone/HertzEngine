@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "HertzTexture.h"
+#include "../Physics/Physics2/SphereCollider.h"
 
 class Mesh;
 class Shader;
@@ -33,33 +34,35 @@ public:
 	
 
 	const std::vector<std::shared_ptr<HertzTexture>> &GetTextures();
-	TransformPtr	GetTransform();
-	ShaderPtr		GetShader();
-	MeshPtr			GetMesh();
-	std::string*	GetName();
+	TransformPtr				GetTransform();
+	ShaderPtr					GetShader();
+	MeshPtr						GetMesh();
+	std::string*				GetName();
 
-	TexturePtr		GetDiffuseMap();
-	TexturePtr		GetSpecularMap();
-	
+	TexturePtr					GetDiffuseMap();
+	TexturePtr					GetSpecularMap();
 
-	
-	void			ClearMesh();
-	void			UpdateTextureTypes();
-	void			SetDiffuseMap(std::shared_ptr<HertzTexture> newmap);
-	void			SetSpecularMap(std::shared_ptr<HertzTexture> newmap);
-	
+
+
+	void						ClearMesh();
+	void						UpdateTextureTypes();
+	void						SetDiffuseMap(std::shared_ptr<HertzTexture> newmap);
+	void						SetSpecularMap(std::shared_ptr<HertzTexture> newmap);
+	std::shared_ptr<Collider>	GetCollider();
+	void						SetCollider(std::shared_ptr<Collider> toSet);
+
 	
 	void GenID();
 
 private:
 
-	TransformPtr	m_transform;
-	MeshPtr			m_mesh;
-	ShaderPtr		m_shader;
+	TransformPtr					m_transform;
+	MeshPtr							m_mesh;
+	ShaderPtr						m_shader;
 
-	TexturePtr		m_diffuseMap;
-	TexturePtr		m_SpecularMap;
-
+	TexturePtr						m_diffuseMap;
+	TexturePtr						m_SpecularMap;
+	std::shared_ptr<Collider>		m_Collider;
 
 	std::vector<std::shared_ptr<HertzTexture>> m_textures;
 	std::string* m_name;

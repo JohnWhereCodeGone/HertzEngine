@@ -216,6 +216,24 @@ void VirtualObject::SetSpecularMap(std::shared_ptr<HertzTexture> newmap)
 	UpdateTextureTypes();
 }
 
+std::shared_ptr<Collider> VirtualObject::GetCollider()
+{
+	if (m_Collider)
+	{
+		return this->m_Collider;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+void VirtualObject::SetCollider(std::shared_ptr<Collider> toSet)
+{
+	this->m_Collider = toSet;
+
+}
+
 
 
 void VirtualObject::GenID()

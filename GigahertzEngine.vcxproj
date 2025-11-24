@@ -157,6 +157,11 @@
     <ClCompile Include="Lights\Lightmanager.cpp" />
     <ClCompile Include="Lights\PointLight.cpp" />
     <ClCompile Include="Lights\Spotlight.cpp" />
+    <ClCompile Include="Physics\Physics2\Collider.cpp" />
+    <ClCompile Include="Physics\Physics2\Collision.cpp" />
+    <ClCompile Include="Physics\Physics2\CubeCollider.cpp" />
+    <ClCompile Include="Physics\Physics2\PhysicsEngine2.cpp" />
+    <ClCompile Include="Physics\Physics2\SphereCollider.cpp" />
     <ClCompile Include="Serializer\Serializer.cpp" />
     <ClCompile Include="Shaders\ShaderManager.cpp" />
     <ClCompile Include="Texture\TextureManager.cpp" />
@@ -167,7 +172,6 @@
     <ClCompile Include="MyDebug\Debugger.cpp" />
     <ClCompile Include="UI\HertzEditor.cpp" />
     <ClCompile Include="Mesh\Meshmanager.cpp" />
-    <ClCompile Include="Physics\Collider.cpp" />
     <ClCompile Include="Dependencies\stb_image\stb.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="HertzEngine.cpp">
@@ -214,6 +218,11 @@
     <ClInclude Include="Lights\Lightmanager.h" />
     <ClInclude Include="Lights\PointLight.h" />
     <ClInclude Include="Lights\Spotlight.h" />
+    <ClInclude Include="Physics\Physics2\Collider.h" />
+    <ClInclude Include="Physics\Physics2\Collision.h" />
+    <ClInclude Include="Physics\Physics2\CubeCollider.h" />
+    <ClInclude Include="Physics\Physics2\PhysicsEngine2.h" />
+    <ClInclude Include="Physics\Physics2\SphereCollider.h" />
     <ClInclude Include="Serializer\Serializer.h" />
     <ClInclude Include="Shaders\ShaderManager.h" />
     <ClInclude Include="Texture\TextureManager.h" />
@@ -224,7 +233,6 @@
     <ClInclude Include="MyDebug\Debugger.h" />
     <ClInclude Include="UI\HertzEditor.h" />
     <ClInclude Include="Mesh\Meshmanager.h" />
-    <ClInclude Include="Physics\Collider.h" />
     <ClInclude Include="Dependencies\stb_image\stb_image.h" />
     <ClInclude Include="HertzEngine.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>

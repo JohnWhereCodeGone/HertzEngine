@@ -29,6 +29,7 @@
 #include "Serializer/Serializer.h"
 
 #include "../Lights/Lightmanager.h"
+#include "../Physics/Physics2/CubeCollider.h"
 
 std::string crate = ".\\Dependencies\\Crate.obj";
 std::string monky = ".\\Dependencies\\monkey.obj";
@@ -63,7 +64,12 @@ int main()
 	lightman->CreateLight(DiffuseLighter);
 	
 	auto EntityManager = engine.GetEntityManager();
+
 	std::shared_ptr<Entity> test = EntityManager->CreateEntity();
+	test->SetCollider(std::make_shared<CubeCollider>(test));
+
+	std::shared_ptr<Entity> test2 = EntityManager->CreateEntity();
+	test2->SetCollider(std::make_shared<CubeCollider>(test2));
 
 	/*
 	std::shared_ptr<Entity> test1 = EntityManager->CreateEntity();

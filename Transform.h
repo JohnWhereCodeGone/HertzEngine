@@ -43,6 +43,9 @@ private:
 	
 	float m_VelocityDecayRate;
 
+	
+
+
 	glm::vec3 m_vVelocity;
 	glm::vec3 m_vPos;
 	glm::vec3 m_vRotation;

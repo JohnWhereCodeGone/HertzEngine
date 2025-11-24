@@ -440,6 +440,7 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                 if (ImGui::Button("Handle Mesh"))
                 {
                     ImGui::OpenPopup(HandleMeshID.c_str());
+                    std::cout << "print" << std::endl;
                 }
 
                 

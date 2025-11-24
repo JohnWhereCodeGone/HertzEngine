@@ -25,6 +25,7 @@
 class Meshmanager;
 class HertzEditor;
 class Lightmanager;
+class PhysicsEngine2;
 
 enum GameState
 {
@@ -43,9 +44,9 @@ public:
 
 
 	//defaults & managers;
-	std::shared_ptr<Meshmanager> manager; //this is the manager actually used.
-	std::shared_ptr<Camera> cam;
-	static std::shared_ptr<Shader> DefaultShader;
+	std::shared_ptr<Meshmanager>	manager; //this is the manager actually used.
+	std::shared_ptr<Camera>			cam;
+	static std::shared_ptr<Shader>	DefaultShader;
 
 	//returns Hertz::deltatime.
 	static const float DeltaTime();
@@ -71,17 +72,17 @@ public:
 	std::shared_ptr<TextureManager>						GetTextureManager();
 	std::shared_ptr<Lightmanager>						GetLightManager();
 	//input function holder
-	std::shared_ptr<Meshmanager> GetMeshMangr(); // depricated
+	std::shared_ptr<Meshmanager>						GetMeshMangr(); // depricated
 	
 
 
-	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-	void Shutdown();
-	void Update();
-	void MessageHandling(); //delete
-	void ProcessMessages(); //Spawns the worker thread - REAL FUNCTION
-	void WorkerThreadOBJ(); //delete
-	std::shared_ptr<EntityManager> GetEntityManager();
+	static void						framebuffer_size_callback(GLFWwindow* window, int width, int height);
+	void							Shutdown();
+	void							Update();
+	void							MessageHandling(); //delete
+	void							ProcessMessages(); //Spawns the worker thread - REAL FUNCTION
+	void							WorkerThreadOBJ(); //delete
+	std::shared_ptr<EntityManager>	GetEntityManager();
 
 
 	bool bShouldClose;
@@ -91,22 +92,26 @@ private:
 	//UI
 	std::shared_ptr<HertzEditor>	m_editor;
 
-	Meshmanager*					MeshManager;
+	Meshmanager*					MeshManager; //depricated
+
 	std::shared_ptr<EntityManager>	m_EntityManager;
 	std::shared_ptr<ShaderManager>	m_shaderManager;
 	std::shared_ptr<TextureManager> m_textureManager;
 	std::shared_ptr<Meshmanager>	m_meshman;
 	std::shared_ptr<Lightmanager>	m_lightManager;
+	std::shared_ptr<PhysicsEngine2> m_PhysicsEngine;
 	
-	glm::mat4 projection;
-	glm::mat4 view;
+	glm::mat4						projection;
+	glm::mat4						view;
 
-	GameState state;
-	GLFWwindow* GameWindow;
+	GameState						state;
+	GLFWwindow*						GameWindow;
+
+	bool							m_bIsSimulating;
 
 
 	//todo -- fix function pointers for glCallbacks. think it's okay?	
-protected:
+protected: //this is useless
 	static float fDeltaTime;
 	float fPrevFrame = 0.0f;
 

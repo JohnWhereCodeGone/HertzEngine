@@ -5,6 +5,7 @@
 #include "../Threading/MipMapMessage.h"
 #include "../Mesh/Meshmanager.h"
 #include "../Lights/Lightmanager.h"
+#include "Physics/Physics2/PhysicsEngine2.h"
 
 
 std::shared_ptr<Shader> HertzEngine::DefaultShader = nullptr;
@@ -42,11 +43,12 @@ HertzEngine::HertzEngine()
 	projection = glm::perspective(glm::radians(cam->fZoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	fDeltaTime = 0.0f;
 	m_editor = std::make_shared<HertzEditor>(this->cam, m_EntityManager, m_textureManager, m_shaderManager, manager, m_lightManager);
-	
+	m_PhysicsEngine = std::make_shared<PhysicsEngine2>(*this);
 
 	// Shader Setup:
 
 	
+	m_bIsSimulating = true;
 
 	GameWindow = GameInit();
 	DefaultShader = ShaderManager::MakeShader();
@@ -223,6 +225,13 @@ void HertzEngine::Update()
 		HertzInput::iprocessInput(GameWindow);
 
 		//ImGui::ShowDemoWindow();
+
+
+		if (m_bIsSimulating)
+		{
+			m_PhysicsEngine->Simulate(DeltaTime());
+		}
+
 
 		m_editor->EditorUI(GameWindow);
 
