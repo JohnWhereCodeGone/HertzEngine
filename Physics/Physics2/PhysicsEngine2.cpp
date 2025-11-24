@@ -2,6 +2,10 @@
 #include "../HertzEngine.h"
 #include "../Entity/Entity.h"
 #include "CubeCollider.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include "../glm/gtx/norm.hpp"
+#include "../glm/ext/matrix_common.hpp"
+
 
 void PhysicsEngine2::Simulate(float DeltaTime)
 {
@@ -24,7 +28,9 @@ void PhysicsEngine2::Simulate(float DeltaTime)
 
 
 
-	//Update
+	//Update Visuals
+	
+
 }
 
 void PhysicsEngine2::ApplyVelocity(std::vector<ColliderPtr> colliders, const float& deltaTime)
@@ -116,6 +122,15 @@ bool PhysicsEngine2::CheckIntersect(ColliderPtr collider1, ColliderPtr collider2
 
 	}
 
+	if (collider1->isOf<CubeCollider>() && collider2->isOf<SphereCollider>())
+	{
+		std::shared_ptr<CubeCollider> cube = std::static_pointer_cast<CubeCollider>(collider1);
+		std::shared_ptr<SphereCollider> sphere = std::static_pointer_cast<SphereCollider>(collider2);
+
+
+		return CubeSphereIntersect(*cube, *sphere);
+	}
+
 
 
 }
@@ -140,7 +155,7 @@ bool PhysicsEngine2::SphereSphereIntersect(const SphereCollider& sphere1, const 
 bool PhysicsEngine2::CubeCubeIntersect(const CubeCollider& cube1, const CubeCollider& cube2)
 {
 
-	
+	/*
 	glm::vec3 max1 = cube1.transformClass->GetPos() + (glm::vec3(cube1.m_Dimensions.x / 2, cube1.m_Dimensions.y / 2, cube1.m_Dimensions.z / 2));
 	glm::vec3 min1 = cube1.transformClass->GetPos() - (glm::vec3(cube1.m_Dimensions.x / 2, cube1.m_Dimensions.y / 2, cube1.m_Dimensions.z / 2));
 
@@ -157,6 +172,63 @@ bool PhysicsEngine2::CubeCubeIntersect(const CubeCollider& cube1, const CubeColl
 	{
 		return false;
 	}
+	*/
 
+	glm::mat3 rotation1 = glm::mat3(cube1.transformClass->GetModel());
+	glm::mat3 rotation2 = glm::mat3(cube2.transformClass->GetModel());
+	glm::vec3 translation = glm::vec3(cube2.transformClass->GetPos()) - glm::vec3(cube1.transformClass->GetPos());
+
+	translation = glm::transpose(rotation1) * translation;
+
+	glm::mat3 rotation = glm::transpose(rotation1) * rotation2;
+	glm::mat3 absRotation = glm::abs(rotation) + glm::mat3(0.0001f);
+
+
+	glm::vec3 halfSize1 = cube1.m_Dimensions * 0.5f;
+	glm::vec3 halfSize2 = cube2.m_Dimensions * 0.5f;
+
+	for (int i = 0; i < 3; i++)
+	{
+		float ra = halfSize1[i];
+		float rb = glm::dot(absRotation[i], halfSize2);
+		if (glm::abs(translation[i]) > ra + rb)
+		{
+			return false;
+		}
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		float ra = glm::dot(absRotation[i], halfSize1);
+		float rb = halfSize2[i];
+		if (glm::abs(glm::dot(rotation[i], translation)) > ra + rb)
+		{
+			return false;
+		}
+	}
+
+	std::cout << "Cube-cube collision!!" << std::endl;
+	return true;
+}
+
+bool PhysicsEngine2::CubeSphereIntersect(const CubeCollider& cube, const SphereCollider& sphere)
+{
+	glm::vec3 sphereCenter = sphere.transformClass->GetPos();
+	glm::vec3 localSphereCenter = glm::inverse(cube.transformClass->GetModel()) * glm::vec4(sphereCenter, 1.0f);
+
+	glm::vec3 closestPoint = glm::clamp(localSphereCenter, - cube.m_Dimensions * glm::vec3(0.5), cube.m_Dimensions * glm::vec3(0.5));
+
+	float distance = glm::length2(localSphereCenter - closestPoint);
+
+
+
+	if (distance < (sphere.m_Radius * sphere.m_Radius))
+	{
+		std::cout << "Sphere-Cube Collision Occuring" << std::endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 
 }

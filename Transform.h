@@ -32,6 +32,7 @@ public:
 	void UpdateModel(std::shared_ptr<Shader> shader);
 	void Move(float DeltaTime);
 
+	const glm::mat4& GetModel();
 	
 
 

@@ -117,3 +117,8 @@ void Transform::Move(float deltaTime)
 	this->m_vPos += this->m_vVelocity * deltaTime;
 	this->m_vVelocity *= m_VelocityDecayRate;
 }
+
+const glm::mat4& Transform::GetModel()
+{
+	return this->m_model;
+}

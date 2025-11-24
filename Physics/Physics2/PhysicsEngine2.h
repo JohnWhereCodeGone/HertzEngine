@@ -35,6 +35,7 @@ public:
 
 	bool SphereSphereIntersect(const SphereCollider& sphere1, const SphereCollider& sphere2);
 	bool CubeCubeIntersect(const CubeCollider& cube1, const CubeCollider& cube2);
+	bool CubeSphereIntersect(const CubeCollider& cube, const SphereCollider& sphere);
 
 
 

@@ -33,6 +33,7 @@
 
 std::string crate = ".\\Dependencies\\Crate.obj";
 std::string monky = ".\\Dependencies\\monkey.obj";
+std::string sphere = ".\\Mesh\\sphere2.obj";
 
 
 
@@ -78,7 +79,7 @@ int main()
 	std::shared_ptr<Entity> test34 = EntityManager->CreateEntity();
 	*/
 
-	std::shared_ptr<ObjMessage> msgtest = std::make_shared<ObjMessage>(crate);
+	std::shared_ptr<ObjMessage> msgtest = std::make_shared<ObjMessage>(sphere);
 	//engine.messagequeue.Push(msgtest);
 
 	std::shared_ptr<ObjMessage> msgMonkey = std::make_shared<ObjMessage>(monky);
