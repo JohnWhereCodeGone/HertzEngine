@@ -37,6 +37,8 @@ public:
 	bool CubeCubeIntersect(const CubeCollider& cube1, const CubeCollider& cube2);
 	bool CubeSphereIntersect(const CubeCollider& cube, const SphereCollider& sphere);
 
+	void UpdateVisuals(const std::vector<ColliderPtr>& toUpdate);
+
 
 
 private:

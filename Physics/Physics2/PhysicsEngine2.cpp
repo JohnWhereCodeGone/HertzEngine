@@ -213,7 +213,7 @@ bool PhysicsEngine2::CubeCubeIntersect(const CubeCollider& cube1, const CubeColl
 bool PhysicsEngine2::CubeSphereIntersect(const CubeCollider& cube, const SphereCollider& sphere)
 {
 	glm::vec3 sphereCenter = sphere.transformClass->GetPos();
-	glm::vec3 localSphereCenter = glm::inverse(cube.transformClass->GetModel()) * glm::vec4(sphereCenter, 1.0f);
+	glm::vec3 localSphereCenter = glm::inverse(cube.transformClass->GetModel()) * glm::vec4(sphereCenter, 1.0f); //moves sphere into local space of cube
 
 	glm::vec3 closestPoint = glm::clamp(localSphereCenter, - cube.m_Dimensions * glm::vec3(0.5), cube.m_Dimensions * glm::vec3(0.5));
 
@@ -230,5 +230,42 @@ bool PhysicsEngine2::CubeSphereIntersect(const CubeCollider& cube, const SphereC
 	{
 		return false;
 	}
+
+}
+
+void PhysicsEngine2::UpdateVisuals(const std::vector<ColliderPtr>& toUpdate)
+{
+
+	for (ColliderPtr col : toUpdate)
+	{
+		if (col->m_parent)
+		{
+			if (col->isOf<CubeCollider>())
+			{
+				std::shared_ptr<CubeCollider> cube = std::static_pointer_cast<CubeCollider>(col);
+
+				cube->m_Dimensions *= cube->transformClass->GetScale();
+
+			}
+
+			if (col->isOf<SphereCollider>())
+			{
+				std::shared_ptr<SphereCollider> sphere = std::static_pointer_cast<SphereCollider>(col);
+
+				glm::vec3& scale = sphere->transformClass->GetScale();
+
+				float largestAxis = glm::max(scale.x, glm::max(scale.y, scale.z));
+				
+				sphere->m_Radius *= largestAxis;
+
+			}
+
+
+
+		}
+
+
+	}
+
 
 }

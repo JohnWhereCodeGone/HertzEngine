@@ -15,6 +15,8 @@ SphereCollider::SphereCollider(std::shared_ptr<Entity> parent)
 		this->transformClass = std::make_shared<Transform>();
 	}
 	this->m_center = transformClass->GetPos();
+	
+	this->m_BaseRadius = 1.f;
 	this->m_Radius = 1.f;
 
 	this->velocity = glm::vec3(0);
