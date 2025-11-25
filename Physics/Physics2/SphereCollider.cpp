@@ -22,5 +22,6 @@ SphereCollider::SphereCollider(std::shared_ptr<Entity> parent)
 	this->velocity = glm::vec3(0);
 	this->mass = 1.f;
 	this->m_bHasGravity = true;
+	this->m_type = ColliderType::Sphere;
 
 }

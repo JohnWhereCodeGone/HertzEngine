@@ -399,6 +399,11 @@ std::shared_ptr<EntityManager> HertzEngine::GetEntityManager()
 	return this->m_EntityManager;
 }
 
+std::shared_ptr<PhysicsEngine2> HertzEngine::GetPhysicsEngine()
+{
+	return this->m_PhysicsEngine;
+}
+
 
 
 

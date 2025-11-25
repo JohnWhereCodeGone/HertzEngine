@@ -30,10 +30,12 @@
 
 #include "../Lights/Lightmanager.h"
 #include "../Physics/Physics2/CubeCollider.h"
+#include "Physics/Physics2/PhysicsEngine2.h"
 
 std::string crate = ".\\Dependencies\\Crate.obj";
 std::string monky = ".\\Dependencies\\monkey.obj";
 std::string sphere = ".\\Mesh\\sphere2.obj";
+
 
 
 
@@ -55,7 +57,9 @@ int main()
 {
 	using EntityPtr = std::shared_ptr<Entity>;
 	HertzEngine engine;
+
 	GLFWwindow* win = engine.GetWindow();
+	std::shared_ptr<PhysicsEngine2> physics = engine.GetPhysicsEngine();
 
 	std::shared_ptr<Lightmanager> lightman = engine.GetLightManager();
 	
@@ -67,10 +71,12 @@ int main()
 	auto EntityManager = engine.GetEntityManager();
 
 	std::shared_ptr<Entity> test = EntityManager->CreateEntity();
-	test->SetCollider(std::make_shared<CubeCollider>(test));
+	test->SetCollider(physics->CreateCollider(Sphere, test));
 
 	std::shared_ptr<Entity> test2 = EntityManager->CreateEntity();
-	test2->SetCollider(std::make_shared<CubeCollider>(test2));
+	test2->SetCollider(physics->CreateCollider(Sphere, test2));
+
+	
 
 	/*
 	std::shared_ptr<Entity> test1 = EntityManager->CreateEntity();
@@ -101,6 +107,7 @@ int main()
 
 	float time = 0;
 
+	std::shared_ptr<Camera> camref = engine.GetCam();
 
 	engine.GetMeshMangr()->LoadDataMesh();
 
@@ -110,6 +117,8 @@ int main()
 		engine.Update();
 
 		time += HertzEngine::DeltaTime();
+
+		physics->RayCast(camref->vPos, camref->vFront);
 
 		/*
 		if (time >= 2.0f && test->GetMesh() == nullptr)

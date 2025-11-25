@@ -161,6 +161,7 @@
     <ClCompile Include="Physics\Physics2\Collision.cpp" />
     <ClCompile Include="Physics\Physics2\CubeCollider.cpp" />
     <ClCompile Include="Physics\Physics2\PhysicsEngine2.cpp" />
+    <ClCompile Include="Physics\Physics2\Raycast.cpp" />
     <ClCompile Include="Physics\Physics2\SphereCollider.cpp" />
     <ClCompile Include="Serializer\Serializer.cpp" />
     <ClCompile Include="Shaders\ShaderManager.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="Physics\Physics2\Collision.h" />
     <ClInclude Include="Physics\Physics2\CubeCollider.h" />
     <ClInclude Include="Physics\Physics2\PhysicsEngine2.h" />
+    <ClInclude Include="Physics\Physics2\Raycast.h" />
     <ClInclude Include="Physics\Physics2\SphereCollider.h" />
     <ClInclude Include="Serializer\Serializer.h" />
     <ClInclude Include="Shaders\ShaderManager.h" />

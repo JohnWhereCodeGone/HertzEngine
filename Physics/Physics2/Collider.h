@@ -3,6 +3,12 @@
 #include "iostream"
 
 
+enum ColliderType
+{
+	Sphere,
+	Cube
+};
+
 
 class Entity;
 
@@ -21,7 +27,7 @@ public:
 	bool					m_bHasGravity;
 	glm::vec3				velocity;
 	float					mass;
-
+	ColliderType			m_type;
 	std::shared_ptr<Entity> m_parent;
 
 

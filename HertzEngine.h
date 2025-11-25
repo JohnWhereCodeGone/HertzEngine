@@ -83,6 +83,7 @@ public:
 	void							ProcessMessages(); //Spawns the worker thread - REAL FUNCTION
 	void							WorkerThreadOBJ(); //delete
 	std::shared_ptr<EntityManager>	GetEntityManager();
+	std::shared_ptr<PhysicsEngine2> GetPhysicsEngine();
 
 
 	bool bShouldClose;

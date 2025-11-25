@@ -10,7 +10,12 @@
 void PhysicsEngine2::Simulate(float DeltaTime)
 {
 	// this is meant to update visuals.
-	std::vector<ColliderPtr> colliders = UpdatePhysicsScene();
+	if (m_colliderList.empty())
+	{
+		return;
+	}
+
+	std::vector<ColliderPtr> colliders = m_colliderList;
 
 
 	//checking for any collisions based on the shape ie Sphere-Sphere, Box-Box, Box-Sphere, 
@@ -29,7 +34,7 @@ void PhysicsEngine2::Simulate(float DeltaTime)
 
 
 	//Update Visuals
-	
+	UpdateVisuals(colliders);
 
 }
 
@@ -135,6 +140,67 @@ bool PhysicsEngine2::CheckIntersect(ColliderPtr collider1, ColliderPtr collider2
 
 }
 
+bool PhysicsEngine2::CheckRayCastIntersect(const Raycast& ray, ColliderPtr other)
+{
+	bool hasHit = false;
+	switch (other->m_type)
+	{
+		case(Cube):
+		{
+
+			std::shared_ptr<CubeCollider> cube = std::static_pointer_cast<CubeCollider>(other);
+			hasHit = RayCubeIntersect(ray, cube);
+			break;
+		}
+
+		case(Sphere):
+			
+		{
+			std::shared_ptr<SphereCollider> sphere = std::static_pointer_cast<SphereCollider>(other);
+			hasHit = RaySphereIntersect(ray, sphere);
+			break;
+
+		}
+
+
+	}
+	return hasHit;
+
+}
+
+const RayHit& PhysicsEngine2::RayCast(const glm::vec3& origin, const glm::vec3& direction)
+{
+	Raycast ray = Raycast(origin, direction);
+	RayHit hit;
+
+
+	for (ColliderPtr col : m_colliderList)
+	{
+		if (CheckRayCastIntersect(ray, col))
+		{
+			glm::vec3 cubepos;
+			
+			if (col->m_parent)
+			{
+				cubepos = col->m_parent->GetTransform()->GetPos();
+			}
+
+			hit.m_distance = glm::length(origin - cubepos);
+			hit.m_collider = col;
+			hit.m_point = cubepos;
+
+			return hit;
+
+		}
+
+
+	}
+
+	return hit;
+
+}
+
+
 bool PhysicsEngine2::SphereSphereIntersect(const SphereCollider& sphere1, const SphereCollider& sphere2)
 {
 	float distance = glm::distance(sphere1.transformClass->GetPos(), sphere2.transformClass->GetPos());
@@ -233,6 +299,74 @@ bool PhysicsEngine2::CubeSphereIntersect(const CubeCollider& cube, const SphereC
 
 }
 
+bool PhysicsEngine2::RaySphereIntersect(const Raycast& ray, std::shared_ptr<SphereCollider> sphere)
+{
+	glm::vec3 originToSphere = sphere->transformClass->GetPos() - ray.m_origin;
+	float t0 = glm::dot(originToSphere, ray.m_direction);
+	float distSq = glm::dot(originToSphere, originToSphere) - t0 * t0;
+	float radSq = sphere->m_Radius * sphere->m_Radius;
+
+	if (distSq > radSq)
+	{
+		return false;
+	}
+	float t1 = glm::sqrt(radSq - distSq);
+	float eps = 1.e-6f;
+	float intersectDist = (t1 > t1 + eps) ? t0 - t1 : t0 + 1;
+
+	if (intersectDist > eps)
+	{
+		std::cout << "You hit a sphere, congrats retard" << std::endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+
+
+}
+
+bool PhysicsEngine2::RayCubeIntersect(const Raycast& ray, std::shared_ptr<CubeCollider> cube)
+{
+	glm::mat4 inverse = glm::inverse(cube->transformClass->GetModel());
+	glm::vec3 localRayCenter = glm::vec3(inverse * glm::vec4(ray.m_origin, 1));
+	glm::vec3 localRayDir = glm::normalize(glm::vec3(inverse * glm::vec4(ray.m_direction, 1)));
+
+	glm::vec3 min = -cube->m_Dimensions * 0.5f;
+	glm::vec3 max = cube->m_Dimensions * 0.5f;
+
+	float eds = 1.e-6f;
+	glm::vec3 invDir = glm::vec3(1.0f) / localRayDir;
+
+	float t1 = (min.x - localRayCenter.x) * invDir.x;
+	float t2 = (max.x - localRayCenter.x) * invDir.x;
+	float t3 = (min.y - localRayCenter.y) * invDir.y;
+	float t4 = (max.y - localRayCenter.y) * invDir.y;
+	float t5 = (min.z - localRayCenter.z) * invDir.z;
+	float t6 = (max.z - localRayCenter.z) * invDir.z;
+
+	float tMin = std::max(std::max(std::min(t1, t2), std::min(t3, t4)), std::min(t5, t6));
+	float tMax = std::min(std::min(std::max(t1, t2), std::max(t3, t4)), std::max(t5, t6));
+
+	if (tMax < 0)
+	{
+		return false;
+	}
+
+	if (tMin > tMax)
+	{
+		return false;
+	}
+
+	std::cout << "Raycast hit entity w/ cube collider: " << cube->m_parent->GetName() << std::endl;
+	return true;
+
+}
+
+
+
 void PhysicsEngine2::UpdateVisuals(const std::vector<ColliderPtr>& toUpdate)
 {
 
@@ -268,4 +402,36 @@ void PhysicsEngine2::UpdateVisuals(const std::vector<ColliderPtr>& toUpdate)
 	}
 
 
+}
+
+std::shared_ptr<Collider> PhysicsEngine2::CreateCollider(const ColliderType& type, std::shared_ptr<Entity> parent)
+{
+	std::shared_ptr<Collider> toReturn;
+	switch (type)
+	{
+	case(Cube):
+		toReturn = std::make_shared<CubeCollider>(parent);
+		break;
+
+	case(Sphere):
+		toReturn = std::make_shared<SphereCollider>(parent);
+		break;
+	}
+
+	if (toReturn)
+	{
+		this->m_colliderList.push_back(toReturn);
+		return toReturn;
+	}
+	else
+	{
+		return nullptr;
+	}
+
+}
+
+void PhysicsEngine2::DeleteCollider(ColliderPtr toDelete)
+{
+	auto it = std::find(m_colliderList.begin(), m_colliderList.end(), toDelete);
+	m_colliderList.erase(it);
 }
