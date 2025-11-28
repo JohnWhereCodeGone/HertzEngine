@@ -74,7 +74,15 @@ int main()
 	test->SetCollider(physics->CreateCollider(Sphere, test));
 
 	std::shared_ptr<Entity> test2 = EntityManager->CreateEntity();
-	test2->SetCollider(physics->CreateCollider(Sphere, test2));
+	test2->SetCollider(physics->CreateCollider(Cube, test2));
+
+	std::shared_ptr<Entity> ground = EntityManager->CreateEntity();
+	ground->GetTransform()->SetScale(glm::vec3(100.f, 1.f, 100.f));
+	ground->GetTransform()->SetPos(glm::vec3(0.0f, -10.f, 0.0f));
+
+	std::shared_ptr<CubeCollider> groundcollider = std::static_pointer_cast<CubeCollider>(physics->CreateCollider(Cube, ground));
+	groundcollider->m_bHasGravity = false;
+	ground->SetCollider(groundcollider);
 
 	
 
@@ -118,7 +126,7 @@ int main()
 
 		time += HertzEngine::DeltaTime();
 
-		physics->RayCast(camref->vPos, camref->vFront);
+		//physics->RayCast(camref->vPos, camref->vFront);
 
 		/*
 		if (time >= 2.0f && test->GetMesh() == nullptr)

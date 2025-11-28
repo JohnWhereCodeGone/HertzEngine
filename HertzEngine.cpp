@@ -42,13 +42,13 @@ HertzEngine::HertzEngine()
 	cam = std::make_shared<Camera>(std::static_pointer_cast<Spotlight>(m_lightManager->CreateLight(Spotlighter)));
 	projection = glm::perspective(glm::radians(cam->fZoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	fDeltaTime = 0.0f;
-	m_editor = std::make_shared<HertzEditor>(this->cam, m_EntityManager, m_textureManager, m_shaderManager, manager, m_lightManager);
 	m_PhysicsEngine = std::make_shared<PhysicsEngine2>(*this);
+	m_editor = std::make_shared<HertzEditor>(this->cam, m_EntityManager, m_textureManager, m_shaderManager, manager, m_lightManager, m_PhysicsEngine);
 
 	// Shader Setup:
 
 	
-	m_bIsSimulating = true;
+	m_bIsSimulating = false;
 
 	GameWindow = GameInit();
 	DefaultShader = ShaderManager::MakeShader();
@@ -227,7 +227,7 @@ void HertzEngine::Update()
 		//ImGui::ShowDemoWindow();
 
 
-		if (m_bIsSimulating)
+		if (m_PhysicsEngine->m_isSimulating)
 		{
 			m_PhysicsEngine->Simulate(DeltaTime());
 		}

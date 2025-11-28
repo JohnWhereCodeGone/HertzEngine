@@ -1,7 +1,7 @@
 #pragma once
 #include "../glm/glm.hpp"
 #include "iostream"
-
+#include "../Transform.h"
 
 enum ColliderType
 {
@@ -21,14 +21,14 @@ public:
 	template<typename T>
 	bool isOf() { return (dynamic_cast<T*>(this) != nullptr); };
 
-	glm::mat4				m_transform;
-	glm::vec3				m_center;
-							
-	bool					m_bHasGravity;
-	glm::vec3				velocity;
-	float					mass;
-	ColliderType			m_type;
-	std::shared_ptr<Entity> m_parent;
+	std::shared_ptr<Transform>		m_transform;
+	glm::vec3						m_center;
+									
+	bool							m_bHasGravity;
+	glm::vec3						m_velocity;
+	float							m_mass;
+	ColliderType					m_type;
+	std::shared_ptr<Entity>			m_parent;
 
 
 

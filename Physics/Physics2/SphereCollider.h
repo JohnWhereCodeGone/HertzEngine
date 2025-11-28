@@ -10,9 +10,10 @@ public:
 
 	SphereCollider(std::shared_ptr<Entity> parent = nullptr);
 
+
+
 	float m_Radius;
 	float m_BaseRadius;
 
-	std::shared_ptr<Transform> transformClass;
 };
 

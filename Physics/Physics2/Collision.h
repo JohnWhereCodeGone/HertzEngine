@@ -3,13 +3,14 @@
 
 
 
-class Collision
+struct Collision
 {
 
-public:
+	bool m_hasCollided = false;
+	Collider* m_col1;
+	Collider* m_col2;
 
-	std::shared_ptr<Collider> col1;
-	std::shared_ptr<Collider> col2;
+	glm::vec3 m_point;
 
 };
 

@@ -16,6 +16,7 @@
 #include "../imgui_stdlib.h"
 #include "../Mesh.h"
 #include "../Lights/Lightmanager.h"
+#include "../Physics/Physics2/PhysicsEngine2.h"
 
 bool show_demo_window = true;
 bool show_another_window = false;
@@ -70,6 +71,7 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);                          
     ImGui::Separator();
 
+    ImGui::Checkbox("Simulate Physics", &m_physicsEngine->m_isSimulating);
     
 
          

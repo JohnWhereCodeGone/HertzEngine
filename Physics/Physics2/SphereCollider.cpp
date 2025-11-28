@@ -8,19 +8,20 @@ SphereCollider::SphereCollider(std::shared_ptr<Entity> parent)
 	
 	if (parent)
 	{
-		this->transformClass = parent->GetTransform();
+		this->m_transform = parent->GetTransform();
+		this->m_parent = parent;
 	}
 	else
 	{
-		this->transformClass = std::make_shared<Transform>();
+		this->m_transform = std::make_shared<Transform>();
 	}
-	this->m_center = transformClass->GetPos();
+	this->m_center = m_transform->GetPos();
 	
 	this->m_BaseRadius = 1.f;
-	this->m_Radius = 1.f;
+	this->m_Radius = m_BaseRadius;
 
-	this->velocity = glm::vec3(0);
-	this->mass = 1.f;
+	this->m_velocity = glm::vec3(0);
+	this->m_mass = 1.f;
 	this->m_bHasGravity = true;
 	this->m_type = ColliderType::Sphere;
 

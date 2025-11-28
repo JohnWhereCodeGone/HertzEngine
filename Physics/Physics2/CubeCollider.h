@@ -14,8 +14,10 @@ public:
 
 	CubeCollider(std::shared_ptr<Entity> parent = nullptr);
 
+
+
+	glm::vec3 m_BaseDimensions;
 	glm::vec3 m_Dimensions;
-	std::shared_ptr<Transform> transformClass;
 
 };
 
