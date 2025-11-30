@@ -22,6 +22,8 @@ public:
 	glm::vec3& GetPos();
 	glm::vec3& GetScale();
 	glm::vec3& GetRot();
+	glm::vec3& GetVelocity();
+
 
 	void SetPos(const glm::vec3& newPos);
 	void SetRot(const glm::vec3& newRot);

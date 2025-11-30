@@ -22,6 +22,9 @@ void PhysicsEngine2::Simulate(float DeltaTime)
 	std::vector<Collision> collisions = CheckIntersections(m_colliderList);
 
 
+
+	ApplyGravity(DeltaTime);
+
 	//When Collided, what should happen?
 	HandleCollisions(collisions);
 
@@ -29,7 +32,7 @@ void PhysicsEngine2::Simulate(float DeltaTime)
 
 
 	//Gravivty for now.
-	//ApplyVelocity(m_colliderList, DeltaTime);
+	ApplyVelocity(m_colliderList, DeltaTime);
 
 
 
@@ -45,9 +48,11 @@ void PhysicsEngine2::ApplyVelocity(std::vector<ColliderPtr> colliders, const flo
 		if (col->m_bHasGravity)
 		{
 
-			float gravity = -2.f;
+			glm::vec3 pos = col->m_transform->GetPos();
+			pos += col->m_transform->GetVelocity() * deltaTime;
+			col->m_transform->SetPos(pos);
+			
 
-			col->m_transform->GetPos().y += gravity * deltaTime;
 		}
 
 	}
@@ -55,8 +60,72 @@ void PhysicsEngine2::ApplyVelocity(std::vector<ColliderPtr> colliders, const flo
 
 void PhysicsEngine2::HandleCollisions(std::vector<Collision> cols)
 {
+	/*
 
-	//actual force logic here.
+	for (Collision& col : cols)
+	{
+		auto& a = col.m_col1;
+		auto& b = col.m_col2;
+
+
+		glm::vec3 normal = glm::normalize(b->m_transform->GetPos() - b->m_transform->GetPos());
+		
+		if (glm::length2(normal) < 0.000001f)
+		{
+			normal = glm::vec3(0.1f);
+		}
+
+		glm::vec3 deltaV = b->m_transform->GetVelocity() - a->m_transform->GetVelocity();
+
+		float velocityAlongNormal = glm::dot(deltaV, normal);
+
+		if (velocityAlongNormal < 0)
+		{
+			float restitution = 0.1f;
+			float impulse = (1 + restitution) * velocityAlongNormal;
+
+			glm::vec3 impulseVector = impulse * normal;
+
+			if (!a->m_isKinematic)
+			{
+				a->m_transform->GetVelocity() += impulseVector;
+				glm::vec3 r = col.m_point + a->m_transform->GetPos();
+				a->
+
+			}
+			if (!b->m_isKinematic)
+			{
+
+			}
+		}
+
+	}
+	*/
+
+	for (Collision& col : cols)
+	{
+		auto& a = col.m_col1;
+		auto& b = col.m_col2;
+
+		float push = 20.f;
+		glm::vec3 normal = glm::normalize(b->m_transform->GetPos() - a->m_transform->GetPos());
+		if (glm::length2(normal) < 0.000001f)
+		{
+			normal = glm::vec3(1.f, 0.0f, 0.f);
+		}
+
+		if (!a->m_isKinematic)
+		{
+			a->m_transform->GetVelocity() *= -1;
+			//a->m_transform->SetPos(a->m_transform->GetPos() + normal * push);
+
+		}
+		if (!b->m_isKinematic)
+		{
+			b->m_transform->GetVelocity() *= -1;
+			//b->m_transform->SetPos(a->m_transform->GetPos() - normal * push);
+		}
+	}
 
 }
 
@@ -101,6 +170,8 @@ std::vector<Collision> PhysicsEngine2::CheckIntersections(std::vector<ColliderPt
 
 				
 				collisionsThisFrame.push_back(c);
+
+
 			}
 
 		}
@@ -322,6 +393,8 @@ Collision PhysicsEngine2::CubeCubeIntersect(const CubeCollider& cube1, const Cub
 
 	glm::vec3 halfSize1 = cube1.m_Dimensions * 0.5f;
 	glm::vec3 halfSize2 = cube2.m_Dimensions * 0.5f;
+	
+
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -347,7 +420,7 @@ Collision PhysicsEngine2::CubeCubeIntersect(const CubeCollider& cube1, const Cub
 	col.m_col2 = cube2.m_parent->GetCollider().get();
 
 	glm::vec3 collisionNormal = glm::vec3(cube1.m_transform->GetPos() - cube2.m_transform->GetPos());
-	col.m_point = cube1.m_transform->GetPos() + (glm::vec3(0.5) * cube1.m_Dimensions) * collisionNormal;
+	col.m_point = (col.m_col1->m_transform->GetPos() + col.m_col2->m_transform->GetPos()) * 0.5f;
 
 	std::cout << "Cube-cube collision!!" << std::endl;
 	col.m_hasCollided = true;
@@ -375,6 +448,12 @@ Collision PhysicsEngine2::CubeSphereIntersect(const CubeCollider& cube, const Sp
 		Collision col;
 		col.m_col1 = cube.m_parent->GetCollider().get();
 		col.m_col2 = sphere.m_parent->GetCollider().get();
+
+		glm::vec3 normalLocal = localSphereCenter - closestPoint;
+		glm::vec3 normalWorld = glm::normalize(glm::mat3(cube.m_transform->GetModel()) * normalLocal);
+		col.m_normal = normalWorld;
+
+		col.m_point = glm::vec3(cube.m_transform->GetModel() * glm::vec4(closestPoint, 1.0f));
 
 		col.m_hasCollided = true;
 		return col;
@@ -529,4 +608,22 @@ void PhysicsEngine2::DeleteCollider(ColliderPtr toDelete)
 {
 	auto it = std::find(m_colliderList.begin(), m_colliderList.end(), toDelete);
 	m_colliderList.erase(it);
+}
+
+void PhysicsEngine2::ApplyGravity(float deltaTime)
+{
+	//this doesn't need deltatime.
+
+	for (ColliderPtr col : m_colliderList)
+	{
+		if (col->m_bHasGravity && !col->m_isKinematic)
+		{
+			glm::vec3& velocity = col->m_transform->GetVelocity();
+			float Gravity = 0.2f;
+
+			velocity += glm::vec3(0.0f, -Gravity, 0.0f);
+		}
+
+	}
+
 }

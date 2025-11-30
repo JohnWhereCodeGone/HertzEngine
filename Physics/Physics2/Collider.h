@@ -29,6 +29,7 @@ public:
 	float							m_mass;
 	ColliderType					m_type;
 	std::shared_ptr<Entity>			m_parent;
+	bool							m_isKinematic;
 
 
 

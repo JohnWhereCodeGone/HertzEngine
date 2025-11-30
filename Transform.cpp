@@ -49,6 +49,11 @@ glm::vec3& Transform::GetRot()
 	return this->m_vRotation;
 }
 
+glm::vec3& Transform::GetVelocity()
+{
+	return this->m_vVelocity;
+}
+
 // 3 types of light, point point light, dir light, spotlight <- structure this into a class that handles all shaders.
 // then mip settings, UI add functions from Transform to update pos, rotation, scale.
 void Transform::SetPos(const glm::vec3& newPos)

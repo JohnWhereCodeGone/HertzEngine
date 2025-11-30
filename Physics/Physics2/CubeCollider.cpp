@@ -28,6 +28,7 @@ CubeCollider::CubeCollider(std::shared_ptr<Entity> parent)
 	this->m_mass = 1.f;
 	this->m_bHasGravity = true;
 	this->m_type = ColliderType::Cube;
+	this->m_isKinematic = false;
 	
 
 }

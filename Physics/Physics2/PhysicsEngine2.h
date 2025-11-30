@@ -36,18 +36,19 @@ public:
 
 	void EndStep(); //tf is this?
 
-	Collision SphereSphereIntersect	(const SphereCollider& sphere1, const SphereCollider& sphere2);
-	Collision CubeCubeIntersect		(const CubeCollider& cube1, const CubeCollider& cube2);
-	Collision CubeSphereIntersect	(const CubeCollider& cube, const SphereCollider& sphere);
+	Collision	SphereSphereIntersect	(const SphereCollider& sphere1, const SphereCollider& sphere2);
+	Collision	CubeCubeIntersect		(const CubeCollider& cube1, const CubeCollider& cube2);
+	Collision	CubeSphereIntersect	(const CubeCollider& cube, const SphereCollider& sphere);
 	
-	bool RaySphereIntersect		(const Raycast& ray, std::shared_ptr<SphereCollider> sphere);
-	bool RayCubeIntersect		(const Raycast& ray, std::shared_ptr<CubeCollider> cube);
-
-
-	void UpdateVisuals			(const std::vector<ColliderPtr>& toUpdate);
+	bool		RaySphereIntersect		(const Raycast& ray, std::shared_ptr<SphereCollider> sphere);
+	bool		RayCubeIntersect		(const Raycast& ray, std::shared_ptr<CubeCollider> cube);
+				
+				
+	void		UpdateVisuals			(const std::vector<ColliderPtr>& toUpdate);
 
 	ColliderPtr CreateCollider	(const ColliderType& type, std::shared_ptr<Entity> parent);
 	void		DeleteCollider	(ColliderPtr toDelete);
+	void		ApplyGravity(float deltaTime);
 
 	bool m_isSimulating;
 

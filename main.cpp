@@ -75,6 +75,7 @@ int main()
 
 	std::shared_ptr<Entity> test2 = EntityManager->CreateEntity();
 	test2->SetCollider(physics->CreateCollider(Cube, test2));
+	test2->GetTransform()->SetPos(glm::vec3(0.0f, -1.f, 0.0f));
 
 	std::shared_ptr<Entity> ground = EntityManager->CreateEntity();
 	ground->GetTransform()->SetScale(glm::vec3(100.f, 1.f, 100.f));
@@ -82,6 +83,7 @@ int main()
 
 	std::shared_ptr<CubeCollider> groundcollider = std::static_pointer_cast<CubeCollider>(physics->CreateCollider(Cube, ground));
 	groundcollider->m_bHasGravity = false;
+	groundcollider->m_isKinematic = true;
 	ground->SetCollider(groundcollider);
 
 	
