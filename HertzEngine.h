@@ -110,11 +110,16 @@ private:
 
 	bool							m_bIsSimulating;
 
+	//Graduation project
+
+	double							m_SimulationTimeStep;
+	double							m_SimulationAccumulator;
+
 
 	//todo -- fix function pointers for glCallbacks. think it's okay?	
 protected: //this is useless
-	static float fDeltaTime;
-	float fPrevFrame = 0.0f;
+	static double fDeltaTime;
+	double fPrevFrame = 0.0f;
 
 
 };

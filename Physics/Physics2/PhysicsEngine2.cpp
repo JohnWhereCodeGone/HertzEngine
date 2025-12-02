@@ -344,6 +344,7 @@ Collision PhysicsEngine2::SphereSphereIntersect(const SphereCollider& sphere1, c
 	{
 		std::cout << "Spheres are Intersecting!!!!" << std::endl;
 		Collision col;
+		
 		col.m_col1 = sphere1.m_parent->GetCollider().get();
 		col.m_col2 = sphere2.m_parent->GetCollider().get();
 

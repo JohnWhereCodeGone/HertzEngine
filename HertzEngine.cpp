@@ -10,7 +10,7 @@
 
 std::shared_ptr<Shader> HertzEngine::DefaultShader = nullptr;
 
-float HertzEngine::fDeltaTime = 0.0f;
+double HertzEngine::fDeltaTime = 0.0f;
 
 void HertzEngine::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -35,7 +35,9 @@ HertzEngine::HertzEngine()
 	m_lightManager = std::make_shared<Lightmanager>();
 	m_EntityManager = std::make_shared<EntityManager>();
 	
-	
+	//simulation
+	m_SimulationTimeStep = 1.f / 60.f;
+	m_SimulationAccumulator = 0;
 
 
 	//Cam Setup
@@ -209,9 +211,14 @@ void HertzEngine::Update()
 	{
 		
 		// DeltaTime
-		float currentFrame = static_cast<float>(glfwGetTime()); //get curent time
+		double currentFrame = (glfwGetTime()); //get curent time
 		fDeltaTime = currentFrame - fPrevFrame;//get time difference
 		fPrevFrame = currentFrame; //set last frame as current time for next iteration
+
+
+		//physics Step time
+		m_SimulationAccumulator += fDeltaTime;
+
 
 		// UI
 		ImGui_ImplOpenGL3_NewFrame();
@@ -227,9 +234,10 @@ void HertzEngine::Update()
 		//ImGui::ShowDemoWindow();
 
 
-		if (m_PhysicsEngine->m_isSimulating)
+		if (m_PhysicsEngine->m_isSimulating && m_SimulationAccumulator >= m_SimulationTimeStep)
 		{
-			m_PhysicsEngine->Simulate(DeltaTime());
+			m_PhysicsEngine->Simulate(m_SimulationTimeStep);
+			m_SimulationAccumulator = 0;
 		}
 
 

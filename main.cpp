@@ -128,7 +128,7 @@ int main()
 
 		time += HertzEngine::DeltaTime();
 
-		//physics->RayCast(camref->vPos, camref->vFront);
+		physics->RayCast(camref->vPos, camref->vFront);
 
 		/*
 		if (time >= 2.0f && test->GetMesh() == nullptr)
