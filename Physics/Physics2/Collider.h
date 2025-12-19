@@ -12,6 +12,15 @@ enum ColliderType
 
 class Entity;
 
+
+struct RotationState
+{
+	glm::dvec3 axis;
+	double angularSpeed;
+	glm::dquat orientation; //fuck me.
+
+};
+
 class Collider
 {
 public:	
@@ -25,13 +34,23 @@ public:
 	glm::vec3						m_center;
 									
 	bool							m_bHasGravity;
-	glm::vec3						m_velocity;
-	float							m_mass;
+	glm::dvec3						m_velocity;
 	ColliderType					m_type;
 	std::shared_ptr<Entity>			m_parent;
 	bool							m_isKinematic;
 
 
+
+
+	//Planetary Data Membersd
+	glm::dvec3						m_force;
+	double							m_mass;
+	bool							m_isSatellite;
+	
+	glm::dvec3						m_acceleration;
+	glm::dvec3						m_nextAcceleration;
+
+	RotationState					m_rotationState;
 
 };
 

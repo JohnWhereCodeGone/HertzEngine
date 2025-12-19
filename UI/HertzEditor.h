@@ -25,7 +25,7 @@ public:
 private:
 
 	char* m_charBuffer[256];
-	std::string m_stringBuffer;
+	std::string				m_stringBuffer;
 
 
 	std::shared_ptr<Camera> m_camRef;
@@ -46,6 +46,6 @@ private:
 
 	bool m_bIsSelected;
 	int m_selectedIndex;
-
+	double days = 0.0;
 };
 

@@ -36,15 +36,15 @@ HertzEngine::HertzEngine()
 	m_EntityManager = std::make_shared<EntityManager>();
 	
 	//simulation
-	m_SimulationTimeStep = 1.f / 60.f;
+	m_SimulationTimeStep = 1.f / 120.f;
 	m_SimulationAccumulator = 0;
 
 
 	//Cam Setup
 	cam = std::make_shared<Camera>(std::static_pointer_cast<Spotlight>(m_lightManager->CreateLight(Spotlighter)));
-	projection = glm::perspective(glm::radians(cam->fZoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(cam->fZoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 	fDeltaTime = 0.0f;
-	m_PhysicsEngine = std::make_shared<PhysicsEngine2>(*this);
+	m_PhysicsEngine = std::make_shared<PhysicsEngine2>(*this);// this is terrible
 	m_editor = std::make_shared<HertzEditor>(this->cam, m_EntityManager, m_textureManager, m_shaderManager, manager, m_lightManager, m_PhysicsEngine);
 
 	// Shader Setup:
@@ -80,7 +80,7 @@ GLFWwindow* HertzEngine::GameInit()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE)
 #endif
 
-	GameWindow = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GAMEE WINDOW", NULL, NULL);
+	GameWindow = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GigaHertz Engine", NULL, NULL);
 
 	if (!GameWindow)
 	{
@@ -216,8 +216,9 @@ void HertzEngine::Update()
 		fPrevFrame = currentFrame; //set last frame as current time for next iteration
 
 
+
 		//physics Step time
-		m_SimulationAccumulator += fDeltaTime;
+		m_SimulationAccumulator += fDeltaTime * m_PhysicsEngine->m_TimeScale;
 
 
 		// UI
@@ -234,19 +235,46 @@ void HertzEngine::Update()
 		//ImGui::ShowDemoWindow();
 
 
-		if (m_PhysicsEngine->m_isSimulating && m_SimulationAccumulator >= m_SimulationTimeStep)
+		int physicsIterations = 0;
+		while (m_PhysicsEngine->m_isSimulating && m_PhysicsEngine->m_FastForward || m_SimulationAccumulator >= m_SimulationTimeStep )
 		{
 			m_PhysicsEngine->Simulate(m_SimulationTimeStep);
-			m_SimulationAccumulator = 0;
+
+			if (!m_PhysicsEngine->m_FastForward)
+			{
+				m_SimulationAccumulator -= m_SimulationTimeStep; //ensures the simulation steps are proportional to frame rate, allowing accumulation for discrepencies
+			}
+
+			else
+			{
+				m_PhysicsEngine->m_FastForwardDuration -= m_SimulationTimeStep;
+				physicsIterations++;
+
+				if (physicsIterations % 10000 == 0)
+				{
+					std::cout << "Remaining Duration: " << m_PhysicsEngine->m_FastForwardDuration << std::endl;
+
+				}
+
+				if (m_PhysicsEngine->m_FastForwardDuration <= 0.01)
+				{
+					m_PhysicsEngine->m_FastForward = false;
+					break;
+				}
+
+			}
+
+			
+
 		}
 
 
 		m_editor->EditorUI(GameWindow);
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_EntityManager->Update(HertzEngine::DeltaTime());
+		m_EntityManager->Update(HertzEngine::DeltaTime(), cam);
 		//Render
 
 		glm::mat4 view = cam->GetViewMat4();
@@ -261,7 +289,7 @@ void HertzEngine::Update()
 		*/
 
 
-		manager->Render();
+		manager->Render(); //does nothing atm.
 
 		//End Render
 		ImGui::Render();

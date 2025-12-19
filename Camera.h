@@ -31,7 +31,7 @@ public:
 	//Update me for transform
 
 
-	glm::vec3 vPos;
+	glm::dvec3 vPos;
 	glm::vec3 vFront;
 	glm::vec3 vUp;
 	glm::vec3 vRight;
@@ -52,6 +52,9 @@ public:
 	float fprevY;
 
 	bool m_lightIsOn;
+
+
+	glm::dvec3 m_FloatingOrigin;
 
 	Camera(std::shared_ptr<Spotlight> light, glm::vec3 position = glm::vec3(0.f, 0.f, 0.f), glm::vec3 up = glm::vec3(0.f, 1.0f, 0.f), float yaw = fYAW, float pitch = fPITCH);
 

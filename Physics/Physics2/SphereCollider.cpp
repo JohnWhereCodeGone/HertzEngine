@@ -20,8 +20,12 @@ SphereCollider::SphereCollider(std::shared_ptr<Entity> parent)
 	this->m_BaseRadius = 1.f;
 	this->m_Radius = m_BaseRadius;
 
-	this->m_velocity = glm::vec3(0);
-	this->m_mass = 1.f;
+	this->m_force = glm::dvec3(0);
+	this->m_nextAcceleration = glm::dvec3(0);
+	this->m_isSatellite = true;
+	this->m_acceleration = glm::dvec3(0);
+	this->m_velocity = glm::dvec3(0);
+	this->m_mass = 10000000;
 	this->m_bHasGravity = true;
 	this->m_type = ColliderType::Sphere;
 	this->m_isKinematic = false;

@@ -6,7 +6,18 @@
 
 
 class vec3;
+class Camera;
 
+constexpr double SCALE = 1.0 / 1000000.0; //Rendering at one millionth the scale, 1 unit = 1000 km. DEPRICATED.
+constexpr double DISTANCE_SCALE = 1 / 100000000;
+
+
+enum StellarType
+{
+	UNSPECIFIED,
+	STAR,
+	PLANET,
+};
 
 
 class Transform
@@ -19,24 +30,27 @@ public:
 
 	//add vectors of motion for gravity etc
 	
-	glm::vec3& GetPos();
-	glm::vec3& GetScale();
+	glm::dvec3& GetPos();
+	glm::dvec3& GetScale();
 	glm::vec3& GetRot();
 	glm::vec3& GetVelocity();
 
 
-	void SetPos(const glm::vec3& newPos);
+	void SetPos(const glm::dvec3& newPos);
 	void SetRot(const glm::vec3& newRot);
 	void SetScale(const glm::vec3& newScale);
 	void AddVelocity(const glm::vec3& addedVelocity);
-	void AddVelocity(float x = 0, float y = 0, float z = 0);
+	void AddVelocity(float x = 0, float y = 0, float z = 0); //I don't work, lol.
 	
 	void UpdateModel(std::shared_ptr<Shader> shader);
+	void UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared_ptr<Camera> cam);
+	glm::vec3& GetVisualPos();
 	void Move(float DeltaTime);
 
 	const glm::mat4& GetModel();
 	
-
+	StellarType m_stellartype;
+	glm::dquat m_rotationQuat = glm::dquat(1, 0, 0, 0);
 
 private:
 	
@@ -48,10 +62,10 @@ private:
 
 	
 
-
+	glm::vec3 m_visualPos;
 	glm::vec3 m_vVelocity;
-	glm::vec3 m_vPos;
+	glm::dvec3 m_vPos;
 	glm::vec3 m_vRotation;
-	glm::vec3 m_vScale;
+	glm::dvec3 m_vScale;
 };
 

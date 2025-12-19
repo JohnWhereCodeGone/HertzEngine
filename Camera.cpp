@@ -49,7 +49,7 @@ void Camera::CameraScroll(float value)
 
 glm::mat4 Camera::GetProjection() const
 {
-	return glm::perspective(glm::radians(fZoom), 1920.f / 1080.f, 0.1f, 100.f);
+	return glm::perspective(glm::radians(fZoom), 1920.f / 1080.f, 0.1f, 500000.f);
 	//return this->projection;
 }
 
@@ -108,6 +108,6 @@ void Camera::MouseMovement(float xOffset, float yOffset)
 
 glm::mat4 Camera::GetViewMat4()
 {
-	return glm::lookAt(vPos, vPos + vFront, vUp);
+	return glm::lookAt((glm::vec3)vPos, (glm::vec3)vPos + vFront, vUp);
 }
 

@@ -7,7 +7,16 @@
 #include "../glm/ext/matrix_common.hpp"
 
 
-void PhysicsEngine2::Simulate(float DeltaTime)
+constexpr double OFFSET = 1e-7;
+
+void PhysicsEngine2::timeSkip(double days)
+{
+	m_FastForward = true;
+	m_FastForwardDuration = 86400.0 * days; //seconds in day * amount of days
+
+}
+
+void PhysicsEngine2::Simulate(double DeltaTime)
 {
 	// this is meant to update visuals.
 	if (m_colliderList.empty())
@@ -15,26 +24,63 @@ void PhysicsEngine2::Simulate(float DeltaTime)
 		return;
 	}
 
-	
+	// VELOCITY VARLET //
+	// UPDATE POS, CLEAR FORCES & RECOMPUTE ACCELERATION, UPDATE VELOCITY (V += 0.5 * (acceleration * newacceleration * dt), STORE NEW ACCELERATION) 
+	//clear forces after each step or F will accumulate and break everything.
+
+
+	//std::vector<Collision> collisions = CheckIntersections(m_colliderList);
+
+	for (ColliderPtr col : m_colliderList)
+	{
+		if (!col->m_isSatellite)
+			continue;
+		glm::dvec3 pos = col->m_transform->GetPos();
+
+		glm::dvec3 nPos = col->m_velocity * DeltaTime + 0.5 * col->m_acceleration * DeltaTime * DeltaTime;
+		
+		glm::dvec3 resault = nPos + pos;
+
+		col->m_transform->SetPos(resault);
+
+		col->m_force = glm::dvec3(0);
+	}
 
 
 	//checking for any collisions based on the shape ie Sphere-Sphere, Box-Box, Box-Sphere, 
-	std::vector<Collision> collisions = CheckIntersections(m_colliderList);
 
 
 
-	ApplyGravity(DeltaTime);
+	//ApplyGravity(DeltaTime);
+	ApplyNewtonianGravity();
+
+
+	for (ColliderPtr col : m_colliderList)
+	{
+
+		if (!col->m_isSatellite)
+			continue;
+		
+		col->m_nextAcceleration = col->m_force/col->m_mass;
+
+		//new velocity--
+
+		col->m_velocity += 0.5 * (col->m_acceleration + col->m_nextAcceleration) * DeltaTime;
+
+		col->m_acceleration = col->m_nextAcceleration;
+	}
 
 	//When Collided, what should happen?
-	HandleCollisions(collisions);
+	//HandleCollisions(collisions);
 
 
 
 
 	//Gravivty for now.
-	ApplyVelocity(m_colliderList, DeltaTime);
+	//SatelliteMotion(DeltaTime);
+	//ApplyVelocity(m_colliderList, DeltaTime);
 
-
+	PlanetRotation(DeltaTime);
 
 	//Update Visuals //BUG: SPHERE DOESN'T WORK
 	UpdateVisuals(m_colliderList);
@@ -54,6 +100,31 @@ void PhysicsEngine2::ApplyVelocity(std::vector<ColliderPtr> colliders, const flo
 			
 
 		}
+
+	}
+}
+
+void PhysicsEngine2::PlanetRotation(double dT)
+{
+	for (auto& col : m_colliderList)
+	{
+		if (col->m_isSatellite)
+		{
+			RotationState& state = col->m_rotationState;
+
+			double angle = state.angularSpeed * dT;
+			glm::dquat q = glm::angleAxis(angle, state.axis);
+
+			state.orientation = glm::normalize(q * state.orientation);
+
+			if (col->m_transform)
+			{
+				col->m_transform->m_rotationQuat = state.orientation;
+			}
+
+
+		}
+
 
 	}
 }
@@ -98,6 +169,7 @@ void PhysicsEngine2::HandleCollisions(std::vector<Collision> cols)
 
 			}
 		}
+
 
 	}
 	*/
@@ -307,18 +379,18 @@ const RayHit& PhysicsEngine2::RayCast(const glm::vec3& origin, const glm::vec3& 
 			if (col->m_type == Cube)
 			{
 				std::shared_ptr<CubeCollider> cube = std::static_pointer_cast<CubeCollider>(col);
-				hit.m_distance = glm::length(origin - col->m_transform->GetPos() + cube->m_Dimensions * 0.5f);
+				hit.m_distance = glm::length((glm::dvec3)origin - col->m_transform->GetPos() + cube->m_Dimensions * 0.5);
 
 			}
 			else if (col->m_type == Sphere)
 			{
 				std::shared_ptr<SphereCollider> sphere = std::static_pointer_cast<SphereCollider>(col);
-				hit.m_distance = glm::length(origin - col->m_transform->GetPos() - sphere->m_Radius);
+				hit.m_distance = glm::length((glm::dvec3)origin - col->m_transform->GetPos() - sphere->m_Radius);
 			}
 
 			hit.m_collider = col;
 			hit.m_point = cubepos;
-			std::cout << "ray distance: " << hit.m_distance << std::endl;
+			//std::cout << "ray distance: " << hit.m_distance << std::endl;
 
 			return hit;
 
@@ -336,13 +408,13 @@ Collision PhysicsEngine2::SphereSphereIntersect(const SphereCollider& sphere1, c
 {
 	float distance = glm::distance(sphere1.m_transform->GetPos(), sphere2.m_transform->GetPos());
 
-	glm::vec3 collisionNormal = (glm::normalize(sphere2.m_transform->GetPos() - sphere1.m_transform->GetPos()));
+	glm::dvec3 collisionNormal = (glm::normalize(sphere2.m_transform->GetPos() - sphere1.m_transform->GetPos()));
 
 
 
 	if (distance < sphere1.m_Radius + sphere2.m_Radius)
 	{
-		std::cout << "Spheres are Intersecting!!!!" << std::endl;
+		//std::cout << "Spheres are Intersecting!!!!" << std::endl;
 		Collision col;
 		
 		col.m_col1 = sphere1.m_parent->GetCollider().get();
@@ -392,8 +464,8 @@ Collision PhysicsEngine2::CubeCubeIntersect(const CubeCollider& cube1, const Cub
 	glm::mat3 absRotation = glm::abs(rotation) + glm::mat3(0.0001f);
 
 
-	glm::vec3 halfSize1 = cube1.m_Dimensions * 0.5f;
-	glm::vec3 halfSize2 = cube2.m_Dimensions * 0.5f;
+	glm::vec3 halfSize1 = cube1.m_Dimensions * 0.5;
+	glm::vec3 halfSize2 = cube2.m_Dimensions * 0.5;
 	
 
 
@@ -421,7 +493,7 @@ Collision PhysicsEngine2::CubeCubeIntersect(const CubeCollider& cube1, const Cub
 	col.m_col2 = cube2.m_parent->GetCollider().get();
 
 	glm::vec3 collisionNormal = glm::vec3(cube1.m_transform->GetPos() - cube2.m_transform->GetPos());
-	col.m_point = (col.m_col1->m_transform->GetPos() + col.m_col2->m_transform->GetPos()) * 0.5f;
+	col.m_point = (col.m_col1->m_transform->GetPos() + col.m_col2->m_transform->GetPos()) * 0.5;
 
 	std::cout << "Cube-cube collision!!" << std::endl;
 	col.m_hasCollided = true;
@@ -437,7 +509,7 @@ Collision PhysicsEngine2::CubeSphereIntersect(const CubeCollider& cube, const Sp
 	glm::vec3 sphereCenter = sphere.m_transform->GetPos();
 	glm::vec3 localSphereCenter = glm::inverse(cube.m_transform->GetModel()) * glm::vec4(sphereCenter, 1.0f); //moves sphere into local space of cube
 
-	glm::vec3 closestPoint = glm::clamp(localSphereCenter, - cube.m_Dimensions * glm::vec3(0.5), cube.m_Dimensions * glm::vec3(0.5));
+	glm::vec3 closestPoint = glm::clamp(localSphereCenter, - (glm::vec3)cube.m_Dimensions * glm::vec3(0.5), (glm::vec3)cube.m_Dimensions * glm::vec3(0.5));
 
 	float distance = glm::length2(localSphereCenter - closestPoint);
 
@@ -468,7 +540,7 @@ Collision PhysicsEngine2::CubeSphereIntersect(const CubeCollider& cube, const Sp
 
 bool PhysicsEngine2::RaySphereIntersect(const Raycast& ray, std::shared_ptr<SphereCollider> sphere)
 {
-	glm::vec3 originToSphere = sphere->m_transform->GetPos() - ray.m_origin;
+	glm::dvec3 originToSphere = sphere->m_transform->GetPos() - ray.m_origin;
 	float t0 = glm::dot(originToSphere, ray.m_direction);
 	float distSq = glm::dot(originToSphere, originToSphere) - t0 * t0;
 	float radSq = sphere->m_Radius * sphere->m_Radius;
@@ -485,7 +557,7 @@ bool PhysicsEngine2::RaySphereIntersect(const Raycast& ray, std::shared_ptr<Sphe
 	if (intersectDist > eps)
 	{
 
-		std::cout << "You hit a sphere, congrats" << std::endl;
+		//std::cout << "You hit a sphere, congrats" << std::endl;
 		return true;
 
 	}
@@ -504,8 +576,8 @@ bool PhysicsEngine2::RayCubeIntersect(const Raycast& ray, std::shared_ptr<CubeCo
 	glm::vec3 localRayCenter = glm::vec3(inverse * glm::vec4(ray.m_origin, 1));
 	glm::vec3 localRayDir = glm::normalize(glm::vec3(inverse * glm::vec4(ray.m_direction, 0)));
 
-	glm::vec3 min = -cube->m_Dimensions * 0.5f;
-	glm::vec3 max = cube->m_Dimensions * 0.5f;
+	glm::dvec3 min = -cube->m_Dimensions * 0.5;
+	glm::dvec3 max = cube->m_Dimensions * 0.5;
 
 	float eds = 1.e-6f;
 
@@ -535,7 +607,7 @@ bool PhysicsEngine2::RayCubeIntersect(const Raycast& ray, std::shared_ptr<CubeCo
 		return false;
 	}
 
-	std::cout << "Raycast hit entity w/ cube collider: " << cube->m_parent->GetName() << std::endl;
+	//std::cout << "Raycast hit entity w/ cube collider: " << cube->m_parent->GetName() << std::endl;
 	return true;
 
 }
@@ -561,7 +633,7 @@ void PhysicsEngine2::UpdateVisuals(const std::vector<ColliderPtr>& toUpdate)
 			{
 				std::shared_ptr<SphereCollider> sphere = std::static_pointer_cast<SphereCollider>(col);
 
-				glm::vec3& scale = sphere->m_transform->GetScale();
+				glm::dvec3& scale = sphere->m_transform->GetScale();
 
 				float largestAxis = glm::max(scale.x, glm::max(scale.y, scale.z));
 				
@@ -609,6 +681,90 @@ void PhysicsEngine2::DeleteCollider(ColliderPtr toDelete)
 {
 	auto it = std::find(m_colliderList.begin(), m_colliderList.end(), toDelete);
 	m_colliderList.erase(it);
+}
+
+void PhysicsEngine2::ApplyNewtonianGravity()
+{
+	for (int i = 0; i < m_colliderList.size(); i++)
+	{
+
+
+		for (int j = i + 1; j < m_colliderList.size(); j++)
+		{
+			// F = G * (m1 * m2 / r^2)
+			ColliderPtr col1 = m_colliderList[i];
+			ColliderPtr col2 = m_colliderList[j];
+			if (!col1->m_isSatellite || !col2->m_isSatellite)
+			{
+				continue;
+			}
+
+
+			glm::dvec3 distance = col2->m_transform->GetPos() - col1->m_transform->GetPos();
+
+			//r^2
+			double distSqr = glm::length2(distance) + OFFSET;
+
+			// m1 * m2
+			double massProduct = col1->m_mass * col2->m_mass;
+			
+
+			double ddist = glm::length(distance);
+			if (ddist < OFFSET)
+			{
+				continue; // prevent NaN if they get too close - skip gravity.
+			}
+			glm::dvec3 distanceNorm = distance / ddist;
+
+			double GravForce = m_GravitationalConstant * (massProduct / distSqr);
+
+
+			glm::dvec3 result = distanceNorm * GravForce;
+
+			if (col1->m_isSatellite)
+			{
+				col1->m_force += result;
+
+			}
+			if (col2->m_isSatellite)
+			{
+				col2->m_force -= result;
+			}
+
+
+			
+
+
+			
+
+		}
+
+
+	}
+
+}
+
+void PhysicsEngine2::SatelliteMotion(double deltaTime)
+{
+
+	for (auto& col : m_colliderList)
+	{
+
+		//semi-implicit euler for now, update me to
+		constexpr double offset = 1e-6;
+		
+		glm::dvec3 acceleration = (col->m_force / col->m_mass);
+		col->m_velocity += acceleration * deltaTime;
+		col->m_force = glm::dvec3(0);
+
+
+		glm::dvec3 pos = col->m_transform->GetPos();
+
+		pos += col->m_velocity * deltaTime;
+		col->m_transform->SetPos(pos);
+
+	}
+
 }
 
 void PhysicsEngine2::ApplyGravity(float deltaTime)

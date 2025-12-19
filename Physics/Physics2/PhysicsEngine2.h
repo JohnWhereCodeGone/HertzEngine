@@ -10,6 +10,21 @@ class HertzEngine;
 
 
 
+struct AstronomyDebug
+{
+	double moonEarthDistance;
+	double earthSunDistance;
+
+	double OrbitalPeriodEarth;
+	double OrbitalPeriodMoon;
+
+	double TotalSystemMomentum;
+
+
+};
+constexpr double THREE_MONTHS = 3.0 * 27.321661 * 86400.0;
+
+
 class PhysicsEngine2
 {
 
@@ -18,13 +33,16 @@ private:
 
 
 public:
-
+	AstronomyDebug m_Debug;
 	using ColliderPtr = std::shared_ptr<Collider>;
 
-	PhysicsEngine2				(HertzEngine& engineRef) : m_engineRef(engineRef), m_isSimulating(true) {};
-	void Simulate				(float DeltaTime);
+
+	void						timeSkip(double days);
+	PhysicsEngine2				(HertzEngine& engineRef) : m_engineRef(engineRef), m_isSimulating(true), m_GravitationalConstant(6.67 * 10e-11f) {};
+	void Simulate				(double DeltaTime);
 
 	void ApplyVelocity			(std::vector<ColliderPtr> colliders, const float& deltaTime);
+	void PlanetRotation(double dT);
 	void HandleCollisions		(std::vector<Collision> cols);
 
 	std::vector<ColliderPtr> UpdatePhysicsScene(); //depricated
@@ -38,7 +56,7 @@ public:
 
 	Collision	SphereSphereIntersect	(const SphereCollider& sphere1, const SphereCollider& sphere2);
 	Collision	CubeCubeIntersect		(const CubeCollider& cube1, const CubeCollider& cube2);
-	Collision	CubeSphereIntersect	(const CubeCollider& cube, const SphereCollider& sphere);
+	Collision	CubeSphereIntersect		(const CubeCollider& cube, const SphereCollider& sphere);
 	
 	bool		RaySphereIntersect		(const Raycast& ray, std::shared_ptr<SphereCollider> sphere);
 	bool		RayCubeIntersect		(const Raycast& ray, std::shared_ptr<CubeCollider> cube);
@@ -48,9 +66,20 @@ public:
 
 	ColliderPtr CreateCollider	(const ColliderType& type, std::shared_ptr<Entity> parent);
 	void		DeleteCollider	(ColliderPtr toDelete);
+
 	void		ApplyGravity(float deltaTime);
 
 	bool m_isSimulating;
+	
+	
+	// Simulation methods & variables 
+	void		ApplyNewtonianGravity();
+	void		SatelliteMotion(double deltatime);
+	double		m_GravitationalConstant;
+	float		m_TimeScale = 1.0;
+	bool		m_FastForward = false;
+	double		m_FastForwardDuration;
+
 
 private:
 

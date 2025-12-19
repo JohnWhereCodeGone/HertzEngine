@@ -16,8 +16,8 @@ public:
 
 
 
-	glm::vec3 m_BaseDimensions;
-	glm::vec3 m_Dimensions;
+	glm::dvec3 m_BaseDimensions;
+	glm::dvec3 m_Dimensions;
 
 };
 

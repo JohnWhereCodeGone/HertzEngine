@@ -66,27 +66,58 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     }
     
 
+
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+
     ImGui::SetNextWindowPos(ImVec2(0, 20));
     ImGui::SetNextWindowSize(ImVec2(350.f, ImGui::GetIO().DisplaySize.y));
     ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);                          
     ImGui::Separator();
 
     ImGui::Checkbox("Simulate Physics", &m_physicsEngine->m_isSimulating);
-    
+    ImGui::DragFloat("Time Scale", &m_physicsEngine->m_TimeScale, 5.f, 1.f, 2000.f);
 
          
     //When you continue tomorrow -> Continue rename -> cam rotation -> select mesh / shader for entity -> v nice
 
     
+    if (ImGui::TreeNodeEx("Astronomy"))
+    {
+        ImGui::InputDouble("Time Skip Days:", &days);
+
+        if (ImGui::Button("Skip Time"))
+        {
+            m_physicsEngine->timeSkip(days);
+        }
+
+        ImGui::TreePop();
+
+    }
 
 
     if (ImGui::TreeNodeEx("Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        //CAMERA SPEED
+        
+
         ImGui::Checkbox("Spotlight Enabled", &m_camRef->m_lightIsOn);
         ImGui::Text("Transform");
-        ImGui::InputFloat("Transform X", &m_camRef->vPos.x, 1.f);
-        ImGui::InputFloat("Transform Y", &m_camRef->vPos.y, 1.f);
-        ImGui::InputFloat("Transform Z", &m_camRef->vPos.z, 1.f);
+        ImGui::InputDouble("Transform X", &m_camRef->vPos.x, 1.f);
+        ImGui::InputDouble("Transform Y", &m_camRef->vPos.y, 1.f);
+        ImGui::InputDouble("Transform Z", &m_camRef->vPos.z, 1.f);
         ImGui::Separator();
 
         ImGui::Spacing();
@@ -232,9 +263,9 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                     }
 
 
-                    ImGui::InputFloat("Pos X", &lightPoint->GetTransform()->GetPos().x);
-                    ImGui::InputFloat("Pos Y", &lightPoint->GetTransform()->GetPos().y);
-                    ImGui::InputFloat("Pos Z", &lightPoint->GetTransform()->GetPos().z);
+                    ImGui::InputDouble("Pos X", &lightPoint->GetTransform()->GetPos().x);
+                    ImGui::InputDouble("Pos Y", &lightPoint->GetTransform()->GetPos().y);
+                    ImGui::InputDouble("Pos Z", &lightPoint->GetTransform()->GetPos().z);
 
 
                     ImGui::DragFloat3("Ambient XYZ",    glm::value_ptr(lightPoint->GetProperties().Ambient),    0.5f, 0.f, 100.f);
@@ -258,9 +289,9 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                     }
 
 
-                    ImGui::InputFloat("Pos X", &lightSpot->GetTrans()->GetPos().x);
-                    ImGui::InputFloat("Pos Y", &lightSpot->GetTrans()->GetPos().y);
-                    ImGui::InputFloat("Pos Z", &lightSpot->GetTrans()->GetPos().z);
+                    ImGui::InputDouble("Pos X", &lightSpot->GetTrans()->GetPos().x);
+                    ImGui::InputDouble("Pos Y", &lightSpot->GetTrans()->GetPos().y);
+                    ImGui::InputDouble("Pos Z", &lightSpot->GetTrans()->GetPos().z);
 
                     ImGui::DragFloat3("Ambient XYZ",    glm::value_ptr(lightSpot->GetProperties().Ambient),     0.5f, 0.f, 100.f);
                     ImGui::DragFloat3("Diffuse XYZ",    glm::value_ptr(lightSpot->GetProperties().Diffuse),     0.5f, 0.f, 100.f);
@@ -349,9 +380,15 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                     ImGui::OpenPopup(RenameID.c_str());
                 }
                 ImGui::Text("Transform");
-                ImGui::InputFloat("Pos X", &en->GetTransform()->GetPos().x, 1.f);
-                ImGui::InputFloat("Pos Y", &en->GetTransform()->GetPos().y, 1.f);
-                ImGui::InputFloat("Pos Z", &en->GetTransform()->GetPos().z, 1.f);
+                ImGui::InputDouble("Pos X", &en->GetTransform()->GetPos().x, 1.f);
+                ImGui::InputDouble("Pos Y", &en->GetTransform()->GetPos().y, 1.f);
+                ImGui::InputDouble("Pos Z", &en->GetTransform()->GetPos().z, 1.f);
+
+
+                ImGui::SeparatorText("Visual Position");
+                ImGui::InputFloat("Visual Pos X", &en->GetTransform()->GetVisualPos().x);
+                ImGui::InputFloat("Visual Pos Y", &en->GetTransform()->GetVisualPos().y);
+                ImGui::InputFloat("Visual Pos Z", &en->GetTransform()->GetVisualPos().z);
 
                 ImGui::Separator();
 
@@ -363,9 +400,9 @@ void HertzEditor::EditorUI(GLFWwindow* window)
                 ImGui::Separator();
 
                 ImGui::Text("Scale");
-                ImGui::InputFloat("Scale X", &en->GetTransform()->GetScale().x, 1.f);
-                ImGui::InputFloat("Scale Y", &en->GetTransform()->GetScale().y, 1.f);
-                ImGui::InputFloat("Scale Z", &en->GetTransform()->GetScale().z, 1.f);
+                ImGui::InputDouble("Scale X", &en->GetTransform()->GetScale().x, 1.f);
+                ImGui::InputDouble("Scale Y", &en->GetTransform()->GetScale().y, 1.f);
+                ImGui::InputDouble("Scale Z", &en->GetTransform()->GetScale().z, 1.f);
                 
                 ImGui::Separator();
                 

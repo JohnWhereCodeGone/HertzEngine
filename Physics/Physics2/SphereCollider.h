@@ -12,7 +12,7 @@ public:
 
 
 
-	float m_Radius;
+	double m_Radius;
 	float m_BaseRadius;
 
 };

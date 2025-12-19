@@ -11,8 +11,8 @@ struct Collision
 	Collider* m_col2;
 
 
-	glm::vec3 m_normal;
-	glm::vec3 m_point;
+	glm::dvec3 m_normal;
+	glm::dvec3 m_point;
 
 };
 

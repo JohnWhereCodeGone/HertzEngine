@@ -4,6 +4,7 @@
 
 class Entity;
 class Component;
+class Camera;
 
 class EntityManager
 {
@@ -20,7 +21,7 @@ public:
 
 	std::vector<std::shared_ptr<Entity>> m_entityList;
 
-	void Update(float DeltaTime);
+	void Update(float DeltaTime, std::shared_ptr<Camera> cam);
 
 private:
 

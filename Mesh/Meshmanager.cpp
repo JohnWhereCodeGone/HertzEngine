@@ -113,6 +113,24 @@ std::shared_ptr<Mesh> Meshmanager::AddMeshByData(std::shared_ptr<ObjData> data, 
 }
 
 
+std::shared_ptr<Mesh> Meshmanager::GetMeshByName(const std::string& name)
+{
+
+	for (auto& m : MeshList)
+	{
+		if (m)
+		{
+			if (m->GetName() == name)
+			{
+				return m;
+			}
+		}
+
+
+	}
+
+	return nullptr;
+}
 
 bool Meshmanager::AddMesh(std::shared_ptr<Mesh> meshToAdd)
 {

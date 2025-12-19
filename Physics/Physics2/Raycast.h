@@ -18,8 +18,8 @@ public:
 	};
 
 
-	glm::vec3 m_origin;
-	glm::vec3 m_direction;
+	glm::dvec3 m_origin;
+	glm::dvec3 m_direction;
 };
 struct RayHit
 {
@@ -35,7 +35,7 @@ struct RayHit
 
 	glm::vec3					m_point;
 	std::shared_ptr<Collider>	m_collider;
-	float						m_distance;
+	double						m_distance;
 
 };
 

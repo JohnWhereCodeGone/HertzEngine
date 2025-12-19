@@ -4,14 +4,14 @@
 
 Entity::Entity() : VirtualObject()
 {
-	std::cout << "constructor entity called" << std::endl;
+	//std::cout << "constructor entity called" << std::endl;
 	
 
 }
 
 
 
-void Entity::Update(float Deltatime)
+void Entity::Update(float Deltatime, std::shared_ptr<Camera> cam)
 {
 	//update model with pos.
 	ShaderPtr shad = GetShader();
@@ -20,7 +20,16 @@ void Entity::Update(float Deltatime)
 	if (shad)
 	{
 		trans->Move(Deltatime);
-		trans->UpdateModel(shad);
+
+		if (m_isSatellite && cam)
+		{
+			trans->UpdateModelPlanetary(shad, cam);
+
+		}
+		else
+		{
+			trans->UpdateModel(shad);
+		}
 
 
 	}

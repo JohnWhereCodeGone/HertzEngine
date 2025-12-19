@@ -41,6 +41,7 @@ public:
 	std::shared_ptr<Mesh> AddMeshByData(std::shared_ptr<ObjData> data, const char* name = nullptr, ShaderPtr shader = nullptr);
 	std::shared_ptr<Mesh> AddMesh(const char* tPath, ShaderPtr shader = nullptr);
 	void AddMesh(const char* tPath);
+	std::shared_ptr<Mesh> GetMeshByName(const std::string& name);
 	bool AddMesh(std::shared_ptr<Mesh> meshToAdd);
 	void RemoveMesh(std::shared_ptr<Mesh> mDelete);
 	void Render();

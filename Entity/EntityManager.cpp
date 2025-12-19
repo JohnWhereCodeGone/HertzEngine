@@ -73,12 +73,12 @@ bool EntityManager::RemoveComponent(Component* to_remove)
 	return false;
 }
 
-void EntityManager::Update(float DeltaTime)
+void EntityManager::Update(float DeltaTime, std::shared_ptr<Camera> cam)
 {
 	for (EntityPtr en : m_entityList)
 	{
 
-		en->Update(HertzEngine::DeltaTime());
+		en->Update(HertzEngine::DeltaTime(), cam);
 		//std::cout << en->GetTransform()->GetPos().x << " " << en->GetTransform()->GetPos().y << " " << en->GetTransform()->GetPos().z << std::endl;
 	}
 }
