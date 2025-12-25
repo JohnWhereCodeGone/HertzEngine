@@ -62,7 +62,7 @@ public:
 	bool		RayCubeIntersect		(const Raycast& ray, std::shared_ptr<CubeCollider> cube);
 				
 				
-	void		UpdateVisuals			(const std::vector<ColliderPtr>& toUpdate);
+	void		UpdateVisuals			(const std::vector<ColliderPtr>& toUpdate, double trailDT);
 
 	ColliderPtr CreateCollider	(const ColliderType& type, std::shared_ptr<Entity> parent);
 	void		DeleteCollider	(ColliderPtr toDelete);
@@ -80,10 +80,10 @@ public:
 	bool		m_FastForward = false;
 	double		m_FastForwardDuration;
 
+	std::vector<ColliderPtr> m_colliderList;
 
 private:
 
-	std::vector<ColliderPtr> m_colliderList;
 
 	HertzEngine& m_engineRef;
 

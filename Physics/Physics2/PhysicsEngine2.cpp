@@ -8,6 +8,7 @@
 
 
 constexpr double OFFSET = 1e-7;
+constexpr double TRAIL_DELAY = 60;
 
 void PhysicsEngine2::timeSkip(double days)
 {
@@ -83,10 +84,97 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 	PlanetRotation(DeltaTime);
 
 	//Update Visuals //BUG: SPHERE DOESN'T WORK
-	UpdateVisuals(m_colliderList);
+	UpdateVisuals(m_colliderList, DeltaTime);
+
+
+
+
 
 }
 
+
+void PhysicsEngine2::UpdateVisuals(const std::vector<ColliderPtr>& toUpdate, double trailDT)
+{
+
+	for (auto& col : toUpdate)
+	{
+
+		if (col->m_isSatellite && col->m_parent)
+		{
+			SphereCollider* planet = std::static_pointer_cast<SphereCollider>(col).get();
+			Trail* trailer = planet->m_trail.get();
+
+			trailer->m_Accumulator += trailDT;
+
+			if (trailer->m_Accumulator >= TRAIL_DELAY)
+			{
+				
+				if (trailer->points.size() >= trailer->m_maxPoints)
+				{
+					trailer->points.pop_front();
+				}
+				trailer->points.push_back(planet->m_transform->GetVisualPos());
+
+				trailer->m_Accumulator = 0.0;
+				
+
+			}
+
+			
+
+			
+
+
+		}
+
+		
+
+
+
+	}
+
+
+
+
+
+
+	/*
+
+
+	for (ColliderPtr col : toUpdate)
+	{
+		if (col->m_parent)
+		{
+			if (col->isOf<CubeCollider>())
+			{
+				std::shared_ptr<CubeCollider> cube	= std::static_pointer_cast<CubeCollider>(col);
+
+				cube->m_Dimensions = cube->m_BaseDimensions * cube->m_transform->GetScale();
+
+			}
+
+			if (col->isOf<SphereCollider>())
+			{
+				std::shared_ptr<SphereCollider> sphere = std::static_pointer_cast<SphereCollider>(col);
+
+				glm::dvec3& scale = sphere->m_transform->GetScale();
+
+				float largestAxis = glm::max(scale.x, glm::max(scale.y, scale.z));
+				
+				sphere->m_Radius = largestAxis * sphere->m_BaseRadius;
+
+			}
+
+
+
+		}
+
+
+	}
+
+	*/
+
+}
 void PhysicsEngine2::ApplyVelocity(std::vector<ColliderPtr> colliders, const float& deltaTime)
 {
 	for (ColliderPtr col : m_colliderList)
@@ -613,43 +701,6 @@ bool PhysicsEngine2::RayCubeIntersect(const Raycast& ray, std::shared_ptr<CubeCo
 }
 
 
-
-void PhysicsEngine2::UpdateVisuals(const std::vector<ColliderPtr>& toUpdate)
-{
-
-	for (ColliderPtr col : toUpdate)
-	{
-		if (col->m_parent)
-		{
-			if (col->isOf<CubeCollider>())
-			{
-				std::shared_ptr<CubeCollider> cube	= std::static_pointer_cast<CubeCollider>(col);
-
-				cube->m_Dimensions = cube->m_BaseDimensions * cube->m_transform->GetScale();
-
-			}
-
-			if (col->isOf<SphereCollider>())
-			{
-				std::shared_ptr<SphereCollider> sphere = std::static_pointer_cast<SphereCollider>(col);
-
-				glm::dvec3& scale = sphere->m_transform->GetScale();
-
-				float largestAxis = glm::max(scale.x, glm::max(scale.y, scale.z));
-				
-				sphere->m_Radius = largestAxis * sphere->m_BaseRadius;
-
-			}
-
-
-
-		}
-
-
-	}
-
-
-}
 
 std::shared_ptr<Collider> PhysicsEngine2::CreateCollider(const ColliderType& type, std::shared_ptr<Entity> parent)
 {

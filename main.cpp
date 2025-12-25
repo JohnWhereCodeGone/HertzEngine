@@ -375,9 +375,10 @@ int main()
 
 		time += HertzEngine::DeltaTime();
 
-		physics->RayCast(camref->vPos, camref->vFront);
+		//physics->RayCast(camref->vPos, camref->vFront);
 
-		if (time >= 10)
+
+		if (time >= 10 && debugInitialized)
 		{
 
 		glm::dvec3 sunPos = Sun->GetTransform()->GetPos();
@@ -386,7 +387,7 @@ int main()
 
 		//earth year, rotation.
 		double earthDay = RotationalPeriod(stateEarth.angularSpeed);
-		double moonDay = RotationalPeriod(stateMoon.angularSpeed);
+		double moonDay	= RotationalPeriod(stateMoon.angularSpeed);
 
 		double earthYear = OrbitalPeriod(AU, c_SunMass, c_EarthMass);
 		double moonYear = OrbitalPeriod(c_MoonsOffset, c_EarthMass, c_MoonMass);

@@ -234,6 +234,8 @@ void HertzEngine::Update()
 
 		//ImGui::ShowDemoWindow();
 
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		int physicsIterations = 0;
 		while (m_PhysicsEngine->m_isSimulating && m_PhysicsEngine->m_FastForward || m_SimulationAccumulator >= m_SimulationTimeStep )
@@ -268,11 +270,11 @@ void HertzEngine::Update()
 
 		}
 
+		
+
 
 		m_editor->EditorUI(GameWindow);
 
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		m_EntityManager->Update(HertzEngine::DeltaTime(), cam);
 		//Render
@@ -290,6 +292,11 @@ void HertzEngine::Update()
 
 
 		manager->Render(); //does nothing atm.
+
+		/* PLANET TRAILS */
+
+
+
 
 		//End Render
 		ImGui::Render();
@@ -329,6 +336,8 @@ void HertzEngine::MessageHandling()
 	*/
 	
 }
+
+
 
 void HertzEngine::ProcessMessages()
 {

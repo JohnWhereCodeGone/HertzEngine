@@ -52,6 +52,7 @@ public:
 	StellarType m_stellartype;
 	glm::dquat m_rotationQuat = glm::dquat(1, 0, 0, 0);
 
+
 private:
 	
 	glm::mat4 m_model;

@@ -30,4 +30,46 @@ SphereCollider::SphereCollider(std::shared_ptr<Entity> parent)
 	this->m_type = ColliderType::Sphere;
 	this->m_isKinematic = false;
 
+	this->m_trail = std::make_shared<Trail>();
+	this->m_trail->Init();
+
+
+}
+
+
+void Trail::Init()
+{
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+
+}
+
+void Trail::UpdateBuffer()
+{
+	verticies.clear();
+	verticies.reserve(points.size());
+	for (const auto& point : points)
+	{
+		verticies.push_back((glm::vec3)point);
+	}
+}
+
+void Trail::Draw()
+{
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(glm::vec3), verticies.data(), GL_DYNAMIC_DRAW);
+
+	glDrawArrays(GL_LINE_STRIP, 0, verticies.size());
+
+	glBindVertexArray(0);
+
 }
