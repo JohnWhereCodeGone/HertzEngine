@@ -1,13 +1,43 @@
 #include "Camera.h"
+#define GLM_ENABLE_EXPERIMENTAL
 #include "../Lights/Spotlight.h"
+#include "../glm/gtx/string_cast.hpp"
 
 void Camera::CameraUpdate()
 {
+
 	glm::vec3 front = {};
-	front.x = cos(glm::radians(fYaw)) * cos(glm::radians(fPitch));
-	front.y = sin(glm::radians(fPitch));
-	front.z = sin(glm::radians(fYaw)) * cos(glm::radians(fPitch));
-	vFront = glm::normalize(front);
+	if (m_LookAt)   //Orbital cam
+	{
+
+		glm::dvec3 tarPos = m_LookAt->GetPos();
+		if (m_LookAt->m_stellartype != 0)
+		{
+			tarPos = m_LookAt->GetVisualPos();
+		}
+
+		constexpr float limit = glm::radians(89.9f);
+		m_latitude = glm::clamp(m_latitude, -limit, limit);
+			
+		
+		vPos.x = tarPos.x + m_distance * cos(m_latitude) * cos(m_longitude);
+		vPos.y = tarPos.y + m_distance * sin(m_latitude);
+		vPos.z = tarPos.z + m_distance * cos(m_latitude) * sin(m_longitude);
+
+		
+		vFront = glm::normalize(tarPos - vPos);
+
+
+	}
+
+	else
+	{
+		front.x = cos(glm::radians(fYaw)) * cos(glm::radians(fPitch));
+		front.y = sin(glm::radians(fPitch));
+		front.z = sin(glm::radians(fYaw)) * cos(glm::radians(fPitch));
+		vFront = glm::normalize(front);
+	}
+
 	vRight = glm::normalize(glm::cross(vFront, vWorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	vUp = glm::normalize(glm::cross(vRight, vFront));
 
@@ -30,7 +60,16 @@ Camera::Camera(std::shared_ptr<Spotlight> light, glm::vec3 position, glm::vec3 u
 	vWorldUp = up;
 	fYaw = yaw;
 	fPitch = pitch;
-	m_lightIsOn = true;
+	m_lightIsOn = false;
+
+	m_LookAtName = " ";
+	/*
+	front.x = cos(glm::radians(fYaw)) * cos(glm::radians(fPitch));
+	front.y = sin(glm::radians(fPitch));
+	front.z = sin(glm::radians(fYaw)) * cos(glm::radians(fPitch));
+	*/
+
+	this->m_takesInput = true;
 
 	if (light)
 	{
@@ -39,12 +78,28 @@ Camera::Camera(std::shared_ptr<Spotlight> light, glm::vec3 position, glm::vec3 u
 	
 	//m_cameralight->m_ID = "Camera Spot Light";
 	projection = glm::mat4(1.0f);
+	m_LookAt = nullptr;
 	CameraUpdate();
 }
 void Camera::CameraScroll(float value)
 {
+	if (m_LookAt && m_LookAt->m_stellartype != 0)
+	{
+		m_distance += value * 10000000;
+		return;
+	}
 	fCamSpeed += value / 2;
 	
+}
+
+void Camera::SetOrbitalTarget(std::shared_ptr<Transform> target, float distance, std::string name)
+{
+
+	
+
+	m_distance = distance;
+	m_LookAt = target;
+	m_LookAtName = name;
 }
 
 glm::mat4 Camera::GetProjection() const
@@ -55,8 +110,47 @@ glm::mat4 Camera::GetProjection() const
 
 void Camera::CameraInput(CameraMove dir, float deltaTime)
 {
-	float displacement = fCamSpeed * deltaTime;
+	if (!m_takesInput)
+	{
+		return;
+	}
+	double displacement = fCamSpeed * deltaTime * 0.01;
 
+	/*
+	if (m_LookAt)
+	{
+		if (dir == FORWARD)
+		{
+			m_latitude += displacement;
+		}
+		if (dir == BACK)
+		{
+			m_latitude -= displacement;
+		}
+		if (dir == LEFT)
+		{
+			m_longitude += displacement;
+		}
+		if (dir == RIGHT)
+		{
+			m_longitude -= displacement;
+		}
+		if (dir == UP)
+		{
+			m_distance += displacement;
+		}
+		if (dir == DOWN)
+		{
+			m_distance -= displacement;
+
+		}
+
+		
+	}
+	*/
+
+	
+	
 	if (dir == FORWARD)
 	{
 		vPos += vFront * displacement;
@@ -81,13 +175,31 @@ void Camera::CameraInput(CameraMove dir, float deltaTime)
 	{
 		vPos -= vUp * displacement;
 	}
+	CameraUpdate();
 }
 
 
 void Camera::MouseMovement(float xOffset, float yOffset)
 {
+	/*
+	if (m_LookAt)
+	{
+		CameraUpdate();
+		return;
+	}
+	*/
+	if (!m_takesInput)
+	{
+		return;
+	}
 	xOffset *= fMouseSensitivity;
 	yOffset *= fMouseSensitivity;
+
+
+	constexpr float orbitalCamSense = 1.f / 3.f;
+
+	m_longitude += xOffset * orbitalCamSense;
+	m_latitude += yOffset * orbitalCamSense;
 
 	fYaw += xOffset;
 	fPitch += yOffset;
@@ -101,13 +213,18 @@ void Camera::MouseMovement(float xOffset, float yOffset)
 		fPitch = -89.f;
 	}
 
-
 	CameraUpdate();
+
 }
 
 
 glm::mat4 Camera::GetViewMat4()
 {
-	return glm::lookAt((glm::vec3)vPos, (glm::vec3)vPos + vFront, vUp);
+	return glm::lookAt(vPos, vPos + vFront, vUp);
+}
+
+std::string Camera::GetLookAtName()
+{
+	return this->m_LookAtName;
 }
 

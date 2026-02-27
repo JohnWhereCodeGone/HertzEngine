@@ -35,24 +35,22 @@
 std::string crate = ".\\Dependencies\\Crate.obj";
 std::string monky = ".\\Dependencies\\monkey.obj";
 std::string sphere = ".\\Mesh\\sphere2.obj";
-
+#include "../Entity/EntityManager.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include "../glm/gtx/string_cast.hpp"
 
 
-// mutex
-// collis, wireframe - 
-//  DO MUTEX - PHYSICS
+
 
 double ijrtdh = glm::two_pi<double>();
 
-// producer/consumer - application
 
 
-//ALL CONSTANTS HERE PLS
 
-constexpr double c_EarthRadius = 6.3781e6; //meters
+//ALL CONSTANTS IN SI UNITS
+
+constexpr double c_EarthRadius = 6.3781e6; 
 constexpr double c_MoonRadius = 1737400;
 constexpr double c_sunRadius = 6.9634e8;
 
@@ -64,8 +62,10 @@ constexpr double c_EarthDistance = 1.989;
 
 constexpr double G = 6.67430e-11;
 
+
 constexpr double AU = 1.495978707e11;
 constexpr double c_MoonsOffset = 3.844e8;
+
 
 constexpr double earthRotationSeconds = 86164.0905;
 constexpr double earthOmega = glm::two_pi<double>() / earthRotationSeconds;
@@ -296,6 +296,9 @@ int main()
 	mC->m_velocity -= velocityCorrection;
 
 
+
+	
+	//engine.GetCam()->SetOrbitalTarget(mC->m_transform, 100);
 
 
 

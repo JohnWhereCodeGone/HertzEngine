@@ -19,7 +19,7 @@ void Entity::Update(float Deltatime, std::shared_ptr<Camera> cam)
 	
 	if (shad)
 	{
-		trans->Move(Deltatime);
+		//trans->Move(Deltatime);
 
 		if (m_isSatellite && cam)
 		{

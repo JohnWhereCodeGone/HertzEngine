@@ -6,9 +6,15 @@
 #include "../Mesh/Meshmanager.h"
 #include "../Lights/Lightmanager.h"
 #include "Physics/Physics2/PhysicsEngine2.h"
+#include "../Mesh/Trail.h"
+#include "../Entity/Entity.h"
+#include "../Entity/EntityManager.h"
 
 
 std::shared_ptr<Shader> HertzEngine::DefaultShader = nullptr;
+std::unique_ptr<Trail> trailTest;
+std::shared_ptr<Entity> entityTest;
+
 
 double HertzEngine::fDeltaTime = 0.0f;
 
@@ -42,7 +48,7 @@ HertzEngine::HertzEngine()
 
 	//Cam Setup
 	cam = std::make_shared<Camera>(std::static_pointer_cast<Spotlight>(m_lightManager->CreateLight(Spotlighter)));
-	projection = glm::perspective(glm::radians(cam->fZoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+	projection = glm::perspective(glm::radians(cam->fZoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);  //depricated, see camera class
 	fDeltaTime = 0.0f;
 	m_PhysicsEngine = std::make_shared<PhysicsEngine2>(*this);// this is terrible
 	m_editor = std::make_shared<HertzEditor>(this->cam, m_EntityManager, m_textureManager, m_shaderManager, manager, m_lightManager, m_PhysicsEngine);
@@ -56,10 +62,17 @@ HertzEngine::HertzEngine()
 	DefaultShader = ShaderManager::MakeShader();
 	DefaultShader->setFloat("material.shine", 264.f);
 
+
 	
 	
+	//DELETE ME
+	entityTest = m_EntityManager->CreateEntity();
+	entityTest->GetTransform()->SetPos(glm::dvec3(0));
+
+
 	
 
+	trailTest = std::make_unique<Trail>(entityTest->GetTransform(), ShaderManager::MakeShader(".\Shaders\fragmentLineShader.glsl"));
 
 	//initialize view
 	
@@ -274,7 +287,11 @@ void HertzEngine::Update()
 
 
 		m_editor->EditorUI(GameWindow);
-
+		//del me
+		if (!cam->m_LookAt)
+		{
+			cam->SetOrbitalTarget(entityTest->GetTransform(), 3.f, entityTest->GetName()->c_str());
+		}
 
 		m_EntityManager->Update(HertzEngine::DeltaTime(), cam);
 		//Render
@@ -282,6 +299,10 @@ void HertzEngine::Update()
 		glm::mat4 view = cam->GetViewMat4();
 		
 		m_shaderManager->UpdateShaders(cam->GetProjection(), view, cam->vPos, cam, m_lightManager);
+
+
+		//trailTest->Update(fDeltaTime);
+		entityTest->GetTransform()->GetPos() += 0.01f;
 		
 		/*
 		DefaultShader->Use();

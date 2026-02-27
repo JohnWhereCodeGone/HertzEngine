@@ -255,7 +255,6 @@ void Mesh::Render()
 			std::cout << "MESH - Texture Bind Error: " << error << std::endl;
 		}
 	}
-
 	//clear error
 	while ((error = glGetError()) != GL_NO_ERROR) {}
 
@@ -395,7 +394,6 @@ void Mesh::InitMesh()
 
 	//Indicies steps wrongly, most likely wrong order
 
-	//add remove entities, adjust name position
 
 	glBindVertexArray(0);
 }

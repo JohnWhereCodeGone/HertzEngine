@@ -65,6 +65,8 @@ void ShaderManager::UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::
             
 
         shad->Use();
+
+
         if (lightman)
         {
             lightman->ApplyLights(shad);

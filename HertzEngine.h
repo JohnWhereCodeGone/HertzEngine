@@ -14,7 +14,7 @@
 //input
 
 #include "Shaders/ShaderManager.h"
-#include "Entity/EntityManager.h"
+//#include "Entity/EntityManager.h"
 #include "TextureManager.h"
 
 
@@ -26,6 +26,7 @@ class Meshmanager;
 class HertzEditor;
 class Lightmanager;
 class PhysicsEngine2;
+class EntityManager;
 
 enum GameState
 {

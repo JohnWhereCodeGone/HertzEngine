@@ -71,12 +71,48 @@ void HertzEditor::EditorUI(GLFWwindow* window)
 
 
 
-
-
-    
+    ImVec2 buttonSize = ImVec2(100.f, 35.f);
     
 
+    const char* currentname = m_camRef->m_LookAtName.c_str();
 
+    
+    ImVec2 CameraLockerSize = ImVec2(300.f, 200.f);
+    ImGui::SetNextWindowSize(CameraLockerSize);
+    ImGui::SetNextWindowPos(ImVec2((ImGui::GetIO().DisplaySize.x / 2) - (CameraLockerSize.x / 2), 10));
+    
+    ImGui::Begin("Camera Locker", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+    
+    ImGui::Text("Highlighted Object");
+    ImGui::Separator();
+    
+    ImGui::SetWindowFontScale(1.4f);
+
+    if (ImGui::Button("< Q", buttonSize))
+    {
+        m_EntityManager
+
+
+    }
+    ImGui::SetWindowFontScale(1.f);
+
+    ImGui::SameLine();
+
+    //TODO: upgrade to a listbox.
+    ImGui::Text(currentname);
+
+    ImGui::SameLine();
+    ImGui::SetWindowFontScale(1.4f);
+
+
+    if (ImGui::Button("E >", buttonSize))
+    {
+
+    }
+    ImGui::SetWindowFontScale(1.f);
+
+
+    ImGui::End();
 
 
 
@@ -90,6 +126,8 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     ImGui::Checkbox("Simulate Physics", &m_physicsEngine->m_isSimulating);
     ImGui::DragFloat("Time Scale", &m_physicsEngine->m_TimeScale, 5.f, 1.f, 2000.f);
 
+
+    ImGui::BeginMenu("test", true);
          
     //When you continue tomorrow -> Continue rename -> cam rotation -> select mesh / shader for entity -> v nice
 
@@ -119,6 +157,8 @@ void HertzEditor::EditorUI(GLFWwindow* window)
         ImGui::InputDouble("Transform Y", &m_camRef->vPos.y, 1.f);
         ImGui::InputDouble("Transform Z", &m_camRef->vPos.z, 1.f);
         ImGui::Separator();
+
+        
 
         ImGui::Spacing();
         ImGui::Spacing();

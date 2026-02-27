@@ -5,7 +5,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "../glm/gtx/norm.hpp"
 #include "../glm/ext/matrix_common.hpp"
-
+#include "../Entity/EntityManager.h"
 
 constexpr double OFFSET = 1e-7;
 constexpr double TRAIL_DELAY = 60;
@@ -25,7 +25,6 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 		return;
 	}
 
-	// VELOCITY VARLET //
 	// UPDATE POS, CLEAR FORCES & RECOMPUTE ACCELERATION, UPDATE VELOCITY (V += 0.5 * (acceleration * newacceleration * dt), STORE NEW ACCELERATION) 
 	//clear forces after each step or F will accumulate and break everything.
 
@@ -95,7 +94,7 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 
 void PhysicsEngine2::UpdateVisuals(const std::vector<ColliderPtr>& toUpdate, double trailDT)
 {
-
+	/*
 	for (auto& col : toUpdate)
 	{
 
@@ -131,7 +130,8 @@ void PhysicsEngine2::UpdateVisuals(const std::vector<ColliderPtr>& toUpdate, dou
 
 
 
-	}
+	*/
+
 
 
 

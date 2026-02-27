@@ -138,6 +138,7 @@ void HertzInput::iKeyCallbackImproved(GLFWwindow* window, int key, int scancode,
 
 	if (action == GLFW_PRESS)
 	{
+		/*
 		if (key == GLFW_KEY_9)
 		{
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -156,10 +157,38 @@ void HertzInput::iKeyCallbackImproved(GLFWwindow* window, int key, int scancode,
 			
 			io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
 		}
+		*/
 		if (key == GLFW_KEY_ESCAPE)
 		{
 			eng->Shutdown();
 		}
+		if (key == GLFW_KEY_F1)
+		{
+			bool check = eng->GetCam()->m_takesInput;
+			
+			if (check)
+			{
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+				eng->GetCam()->m_takesInput = false;
+			}
+			else
+			{
+
+				glfwFocusWindow(window);
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				int i = glfwGetInputMode(window, GLFW_CURSOR);
+				if (i == GLFW_CURSOR_DISABLED)
+				{
+					//std::cout << "it's capturin" << std::endl;
+				}
+
+				io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
+				eng->GetCam()->m_takesInput = true;
+			}
+		}
+
+
 	}
 
 	/*

@@ -157,6 +157,7 @@
     <ClCompile Include="Lights\Lightmanager.cpp" />
     <ClCompile Include="Lights\PointLight.cpp" />
     <ClCompile Include="Lights\Spotlight.cpp" />
+    <ClCompile Include="Mesh\Trail.cpp" />
     <ClCompile Include="Physics\Physics2\Collider.cpp" />
     <ClCompile Include="Physics\Physics2\Collision.cpp" />
     <ClCompile Include="Physics\Physics2\CubeCollider.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Lights\Lightmanager.h" />
     <ClInclude Include="Lights\PointLight.h" />
     <ClInclude Include="Lights\Spotlight.h" />
+    <ClInclude Include="Mesh\Trail.h" />
     <ClInclude Include="Physics\Physics2\Collider.h" />
     <ClInclude Include="Physics\Physics2\Collision.h" />
     <ClInclude Include="Physics\Physics2\CubeCollider.h" />

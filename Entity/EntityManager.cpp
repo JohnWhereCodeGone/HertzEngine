@@ -73,6 +73,27 @@ bool EntityManager::RemoveComponent(Component* to_remove)
 	return false;
 }
 
+
+std::shared_ptr<Entity> EntityManager::FindByName(std::string name)
+{
+
+	for (auto it = m_entityList.begin(); it != m_entityList.end(); it++)
+	{
+		if (*it->get()->GetName() == name)
+		{
+
+			EntityPtr en = *it;
+			return en;
+		}
+		else
+		{
+			std::cout << "[EntityManager::FindByName]  Entity by Name Not found";
+		}
+
+	}
+
+}
+
 void EntityManager::Update(float DeltaTime, std::shared_ptr<Camera> cam)
 {
 	for (EntityPtr en : m_entityList)
