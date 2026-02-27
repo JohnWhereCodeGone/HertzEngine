@@ -8,8 +8,7 @@
 class vec3;
 class Camera;
 
-constexpr double SCALE = 1.0 / 1000000.0; //Rendering at one millionth the scale, 1 unit = 1000 km. DEPRICATED.
-constexpr double DISTANCE_SCALE = 1 / 100000000;
+constexpr double RENDER_SCALE = 1.0 / 1000000.0; //Rendering at one millionth the scale, 1 unit = 1000 km.
 
 
 enum StellarType
@@ -45,6 +44,7 @@ public:
 	void UpdateModel(std::shared_ptr<Shader> shader);
 	void UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared_ptr<Camera> cam);
 	glm::vec3& GetVisualPos();
+	double GetRenderScale();
 	void Move(float DeltaTime);
 
 	const glm::mat4& GetModel();

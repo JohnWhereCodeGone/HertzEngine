@@ -72,7 +72,7 @@ HertzEngine::HertzEngine()
 
 	
 
-	trailTest = std::make_unique<Trail>(entityTest->GetTransform(), ShaderManager::MakeShader(".\Shaders\fragmentLineShader.glsl"));
+	trailTest = std::make_unique<Trail>(entityTest->GetTransform(), ShaderManager::MakeShader(".\\Shaders\\fragmentLineShader.glsl"));
 
 	//initialize view
 	

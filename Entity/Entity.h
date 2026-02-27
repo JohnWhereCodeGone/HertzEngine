@@ -16,7 +16,7 @@ public:
 	float GetVelocity();
 
 	bool m_isSatellite = false;
-	
+	float m_CameraDistanceRadius = 10.f;
 
 };
 

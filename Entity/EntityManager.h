@@ -17,7 +17,7 @@ public:
 
 	bool  AddComponent(Component* to_add, EntityPtr add_to);
 	bool  RemoveComponent(Component* to_remove);
-	EntityPtr FindByName(std::string name);
+	std::vector<EntityManager::EntityPtr>::iterator FindByName(std::string name);
 
 
 	std::vector<std::shared_ptr<Entity>> m_entityList;

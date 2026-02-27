@@ -165,7 +165,7 @@ void HertzInput::iKeyCallbackImproved(GLFWwindow* window, int key, int scancode,
 		if (key == GLFW_KEY_F1)
 		{
 			bool check = eng->GetCam()->m_takesInput;
-			
+			//TODO: Create an actual input/game state
 			if (check)
 			{
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

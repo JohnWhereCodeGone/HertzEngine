@@ -196,6 +196,7 @@ int main()
 	//mass
 	std::shared_ptr<SphereCollider> sC = std::static_pointer_cast<SphereCollider>(Sun->GetCollider());
 	sC->m_mass = c_SunMass;
+	Sun->m_CameraDistanceRadius = c_sunRadius * Sun->GetTransform()->GetRenderScale() * 2;
 	////////////////////////////////////////////////////////
 	
 	/* E A R T H */
@@ -207,7 +208,10 @@ int main()
 	earth->GetTransform()->SetPos(c_EarthStartPos);
 
 	
+
+	
 	std::shared_ptr<SphereCollider> cE = std::static_pointer_cast<SphereCollider>(earth->GetCollider());
+	
 
 	//textures
 	earth->SetDiffuseMap(engine.GetTextureManager()->LoadTexture(".\\Texture\\8k_earth_daymap.jpg", Diffuse));
@@ -219,12 +223,15 @@ int main()
 	double radius = c_EarthRadius;
 	scale = glm::dvec3(radius);
 	earth->GetTransform()->SetScale(scale);
+	earth->m_CameraDistanceRadius = radius * earth->GetTransform()->GetRenderScale() * 2;
 
 	//MASS
 	std::shared_ptr<SphereCollider> eC = std::static_pointer_cast<SphereCollider>(earth->GetCollider());
 	eC->m_mass = c_EarthMass;
 	eC->m_velocity = CircularOrbitVelocity(Sun, AU, c_SunMass) * vDir;
 	eC->m_rotationState = stateEarth;
+
+
 
 
 	////////////////////////////////////////////////////////

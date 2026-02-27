@@ -139,7 +139,7 @@ void Transform::UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared
 
 	glm::mat4 transmat = glm::mat4(1.0f);
 	glm::dvec3 appliedPosition = m_vPos;
-	glm::vec3 renderScale = m_vScale * SCALE;
+	glm::vec3 renderScale = m_vScale * RENDER_SCALE;
 	
 	switch (m_stellartype)
 	{
@@ -163,11 +163,11 @@ void Transform::UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared
 
 	if (cam)
 	{
-		appliedPosition = (m_vPos - cam->vPos) * SCALE;
+		appliedPosition = (m_vPos - cam->vPos) * RENDER_SCALE;
 	}
 	else
 	{
-		appliedPosition = m_vPos * SCALE;
+		appliedPosition = m_vPos * RENDER_SCALE;
 	}
 
 	transmat = glm::translate(transmat, (glm::vec3)appliedPosition);
@@ -187,6 +187,11 @@ void Transform::UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared
 glm::vec3& Transform::GetVisualPos()
 {
 	return this->m_visualPos;
+}
+
+double Transform::GetRenderScale()
+{
+	return RENDER_SCALE;
 }
 
 void Transform::Move(float deltaTime)

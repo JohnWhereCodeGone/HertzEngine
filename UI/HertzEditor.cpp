@@ -42,19 +42,19 @@ void HertzEditor::EditorUI(GLFWwindow* window)
             }
             if (ImGui::MenuItem("Bilinear Filterning (balanced)"))
             {
-                
+
                 TextureManager::UpdateMipMap(MipMapSettings::LINEAR_NEAREST);
 
             }
             if (ImGui::MenuItem("Nearest Linear (abarrent)"))
             {
                 TextureManager::UpdateMipMap(MipMapSettings::NEAREST_LINEAR);
-                
+
             }
             if (ImGui::MenuItem("Trilinear (highest)"))
             {
                 TextureManager::UpdateMipMap(MipMapSettings::LINEAR_LINEAR);
-                
+
             }
             if (ImGui::MenuItem("Untitled"))
             {
@@ -64,12 +64,11 @@ void HertzEditor::EditorUI(GLFWwindow* window)
         }
         ImGui::EndMainMenuBar();
     }
+
+
+
+
     
-
-
-
-
-
 
     ImVec2 buttonSize = ImVec2(100.f, 35.f);
     
@@ -87,11 +86,31 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     ImGui::Separator();
     
     ImGui::SetWindowFontScale(1.4f);
-
+    if(ImGui::IsKeyPressed(ImGuiKey_Q, false))
+    {
+        
+    }
     if (ImGui::Button("< Q", buttonSize))
     {
-        m_EntityManager
+        
+        auto itt =  m_EntityManager->FindByName(currentname);
 
+
+        if (itt ==  m_EntityManager->m_entityList.begin() || *itt == nullptr)
+            
+        {
+            return;
+        }
+        else
+        {
+            itt--;
+            
+            std::shared_ptr<Entity> en = *itt;
+
+            m_camRef->SetOrbitalTarget(en->GetTransform(), 20.f, *en->GetName());
+        }
+        
+        
 
     }
     ImGui::SetWindowFontScale(1.f);
@@ -107,7 +126,24 @@ void HertzEditor::EditorUI(GLFWwindow* window)
 
     if (ImGui::Button("E >", buttonSize))
     {
+        
+        auto itt = m_EntityManager->FindByName(currentname);
+        std::vector<std::shared_ptr<Entity>> list = m_EntityManager->m_entityList;
 
+
+        if (itt == list.end() || *itt == nullptr)
+        {
+            return;
+        }
+        else
+        {
+            itt++;
+
+            std::shared_ptr<Entity> en = *itt;
+
+            m_camRef->SetOrbitalTarget(en->GetTransform(), 20.f, *en->GetName());
+        }
+        
     }
     ImGui::SetWindowFontScale(1.f);
 

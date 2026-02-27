@@ -74,23 +74,25 @@ bool EntityManager::RemoveComponent(Component* to_remove)
 }
 
 
-std::shared_ptr<Entity> EntityManager::FindByName(std::string name)
+std::vector<EntityManager::EntityPtr>::iterator EntityManager::FindByName(std::string name)
 {
+	std::vector<EntityManager::EntityPtr>::iterator it;
 
-	for (auto it = m_entityList.begin(); it != m_entityList.end(); it++)
+	for (it = m_entityList.begin(); it != m_entityList.end(); it++)
 	{
 		if (*it->get()->GetName() == name)
 		{
 
 			EntityPtr en = *it;
-			return en;
-		}
-		else
-		{
-			std::cout << "[EntityManager::FindByName]  Entity by Name Not found";
+			std::cout << "Found Entity: " << *en->GetName() << std::endl;
+			return it;
 		}
 
+
+
 	}
+
+	std::cout << "FOUND JACK FUCKING SHIT FINDBYNAME ENTITY MANAGER!!!!!!" << std::endl;
 
 }
 
