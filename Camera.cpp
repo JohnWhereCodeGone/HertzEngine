@@ -95,11 +95,18 @@ void Camera::CameraScroll(float value)
 void Camera::SetOrbitalTarget(std::shared_ptr<Transform> target, float distance, std::string name)
 {
 
-	
 
 	m_distance = distance;
-	m_LookAt = target;
+	if (target)
+	{
+		m_LookAt = target;
+	}
+	
 	m_LookAtName = name;
+
+	//transition
+
+
 }
 
 glm::mat4 Camera::GetProjection() const

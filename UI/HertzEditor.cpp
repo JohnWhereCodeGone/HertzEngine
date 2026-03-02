@@ -72,8 +72,15 @@ void HertzEditor::EditorUI(GLFWwindow* window)
 
     ImVec2 buttonSize = ImVec2(100.f, 35.f);
     
-
-    const char* currentname = m_camRef->m_LookAtName.c_str();
+    const char* currentname;
+    if (m_camRef->m_LookAt)
+    {
+        currentname = m_camRef->m_LookAtName.c_str();
+    }
+    else
+    {
+        currentname = "NULL";
+    }
 
     
     ImVec2 CameraLockerSize = ImVec2(300.f, 200.f);
@@ -90,27 +97,43 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     {
         
     }
-    if (ImGui::Button("< Q", buttonSize))
+    if (ImGui::Button("< Q", buttonSize) || ImGui::IsKeyPressed(ImGuiKey_Q))
     {
         
-        auto itt =  m_EntityManager->FindByName(currentname);
-
-
-        if (itt ==  m_EntityManager->m_entityList.begin() || *itt == nullptr)
-            
+        if (m_EntityManager->m_entityList.empty())
         {
             return;
         }
-        else
+        
+
+        auto itt = m_EntityManager->FindByName(currentname);
+
+        if (itt != m_EntityManager->m_entityList.begin())
         {
             itt--;
-            
-            std::shared_ptr<Entity> en = *itt;
-
-            m_camRef->SetOrbitalTarget(en->GetTransform(), 20.f, *en->GetName());
         }
-        
-        
+        else
+        {
+            itt = std::prev(m_EntityManager->m_entityList.end());
+        }
+
+        auto isValid = [&itt]() -> std::shared_ptr<Entity> {std::shared_ptr<Entity> en = *itt; if (en) { return en; } else { return nullptr; } };
+
+        if (itt != m_EntityManager->m_entityList.end())
+        {
+            std::shared_ptr<Entity> en = isValid();
+            m_camRef->SetOrbitalTarget(en->GetTransform(), 40.f, *en->GetName());
+
+        }
+        else
+        {
+
+
+            itt = m_EntityManager->m_entityList.begin();
+            std::shared_ptr<Entity> en = isValid();
+            m_camRef->SetOrbitalTarget(en->GetTransform(), 40.f, *en->GetName());
+
+        }
 
     }
     ImGui::SetWindowFontScale(1.f);
@@ -124,25 +147,35 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     ImGui::SetWindowFontScale(1.4f);
 
 
-    if (ImGui::Button("E >", buttonSize))
+    if (ImGui::Button("E >", buttonSize) || ImGui::IsKeyPressed(ImGuiKey_E))
     {
+        //TODO: Make better.
         
-        auto itt = m_EntityManager->FindByName(currentname);
-        std::vector<std::shared_ptr<Entity>> list = m_EntityManager->m_entityList;
-
-
-        if (itt == list.end() || *itt == nullptr)
+        if (m_EntityManager->m_entityList.empty())
         {
             return;
         }
+
+        auto itt = m_EntityManager->FindByName(currentname);
+        itt++;
+        auto isValid = [&itt]() -> std::shared_ptr<Entity> {std::shared_ptr<Entity> en = *itt; if (en) { return en; } else { return nullptr; } };
+
+        if (itt != m_EntityManager->m_entityList.end())
+        {
+            std::shared_ptr<Entity> en = isValid();
+            m_camRef->SetOrbitalTarget(en->GetTransform(), 40.f, *en->GetName());
+            
+        }
         else
         {
-            itt++;
 
-            std::shared_ptr<Entity> en = *itt;
+            
+            itt = m_EntityManager->m_entityList.begin();
+            std::shared_ptr<Entity> en = isValid();
+            m_camRef->SetOrbitalTarget(en->GetTransform(), 40.f, *en->GetName());
 
-            m_camRef->SetOrbitalTarget(en->GetTransform(), 20.f, *en->GetName());
         }
+
         
     }
     ImGui::SetWindowFontScale(1.f);
