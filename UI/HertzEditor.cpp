@@ -83,13 +83,15 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     }
 
     
-    ImVec2 CameraLockerSize = ImVec2(300.f, 200.f);
+    ImVec2 CameraLockerSize = ImVec2(300.f, 105.f);
     ImGui::SetNextWindowSize(CameraLockerSize);
     ImGui::SetNextWindowPos(ImVec2((ImGui::GetIO().DisplaySize.x / 2) - (CameraLockerSize.x / 2), 10));
     
     ImGui::Begin("Camera Locker", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
     
-    ImGui::Text("Highlighted Object");
+    ImGui::AlignTextToFramePadding();
+    ImGui::Text("          Highlighted Object");
+
     ImGui::Separator();
     
     ImGui::SetWindowFontScale(1.4f);
@@ -97,7 +99,7 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     {
         
     }
-    if (ImGui::Button("< Q", buttonSize) || ImGui::IsKeyPressed(ImGuiKey_Q))
+    if (ImGui::Button("<- Q", buttonSize) || ImGui::IsKeyPressed(ImGuiKey_Q))
     {
         
         if (m_EntityManager->m_entityList.empty())
@@ -147,7 +149,7 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     ImGui::SetWindowFontScale(1.4f);
 
 
-    if (ImGui::Button("E >", buttonSize) || ImGui::IsKeyPressed(ImGuiKey_E))
+    if (ImGui::Button("E ->", buttonSize) || ImGui::IsKeyPressed(ImGuiKey_E))
     {
         //TODO: Make better.
         
@@ -196,7 +198,6 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     ImGui::DragFloat("Time Scale", &m_physicsEngine->m_TimeScale, 5.f, 1.f, 2000.f);
 
 
-    ImGui::BeginMenu("test", true);
          
     //When you continue tomorrow -> Continue rename -> cam rotation -> select mesh / shader for entity -> v nice
 
@@ -739,6 +740,12 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     }
     ImGui::SameLine();
     ImGui::Text("counter = %d", counter);
+    ImGui::Separator();
+    ImGui::TextWrapped("Hello and welcome to this humble newtonian simulator of the earth, moon, and sun.");
+    ImGui::Separator();
+    ImGui::SetWindowFontScale(1.4f);
+    ImGui::TextWrapped("Controlls: \n [ W/S - keys to adjust camera zoom.] \n [F1 - to toggle mouse visibility] \n [Q/E - to change orbital camera target] \n [Mouse - rotate camera around target planet] \n  [ESC - Shut down engine & simulation] ");
+    ImGui::SetWindowFontScale(1.0f);
 
     
     ImGui::End();

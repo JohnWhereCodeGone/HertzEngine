@@ -168,6 +168,7 @@ int main()
 	prop.Quadratic = 0.0;
 	prop.Linear = 0.0;
 	prop.Diffuse = glm::vec3(3, 3, 3);
+	prop.Ambient = glm::vec3(0.1f);
 
 
 	//lightman->CreateLight(DiffuseLighter);
