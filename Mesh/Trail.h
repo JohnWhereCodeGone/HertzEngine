@@ -38,7 +38,7 @@ public:
 	std::shared_ptr<Transform> m_trans;
 	
 
-	void glfwInit();
+	void InitBuffers();
 	void Update(double dT);
 	void UpdateBuffer();
 	void Draw();

@@ -188,6 +188,10 @@ int main()
 
 	Sun->SetDiffuseMap(engine.GetTextureManager()->LoadTexture(".\\Texture\\8k_sun.jpg", Diffuse));
 	Sun->SetSpecularMap(engine.GetTextureManager()->LoadTexture(".\\Texture\\8k_sun.jpg", Specular));
+
+
+	Sun->SetShader(engine.GetShaderManager()->MakeShader(".\\Shaders\\unlitFragment.glsl"));
+
 	//radius
 
 	glm::dvec3 scale = glm::dvec3(c_sunRadius);
@@ -303,7 +307,7 @@ int main()
 	mC->m_velocity -= velocityCorrection;
 
 
-
+	
 	
 	//engine.GetCam()->SetOrbitalTarget(mC->m_transform, 100);
 

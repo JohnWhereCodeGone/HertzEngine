@@ -85,6 +85,7 @@ public:
 	void							WorkerThreadOBJ(); //delete
 	std::shared_ptr<EntityManager>	GetEntityManager();
 	std::shared_ptr<PhysicsEngine2> GetPhysicsEngine();
+	std::shared_ptr<ShaderManager>	GetShaderManager();
 
 
 	bool bShouldClose;

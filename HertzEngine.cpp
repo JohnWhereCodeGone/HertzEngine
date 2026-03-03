@@ -167,6 +167,7 @@ std::shared_ptr<Shader> HertzEngine::GetDefaultShader()
 	}
 	ShaderInstance->setFloat("material.shine", 264.f);
 	DefaultShader = ShaderInstance;
+	ShaderInstance->debugName = std::to_string(reinterpret_cast<uintptr_t>(ShaderInstance.get()));
 	return ShaderInstance;
 	/*
 	if (DefaultShader)
@@ -290,7 +291,7 @@ void HertzEngine::Update()
 		//del me
 		if (!cam->m_LookAt)
 		{
-			cam->SetOrbitalTarget(entityTest->GetTransform(), 3.f, entityTest->GetName()->c_str());
+			cam->SetOrbitalTarget(entityTest->GetTransform(), 3, entityTest->GetName()->c_str());
 		}
 
 		m_EntityManager->Update(HertzEngine::DeltaTime(), cam);
@@ -468,6 +469,11 @@ std::shared_ptr<EntityManager> HertzEngine::GetEntityManager()
 std::shared_ptr<PhysicsEngine2> HertzEngine::GetPhysicsEngine()
 {
 	return this->m_PhysicsEngine;
+}
+
+std::shared_ptr<ShaderManager> HertzEngine::GetShaderManager()
+{
+	return this->m_shaderManager;
 }
 
 

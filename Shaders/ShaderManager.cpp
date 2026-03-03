@@ -65,16 +65,27 @@ void ShaderManager::UpdateShaders(glm::mat4 projectionMat, glm::mat4 view, glm::
             
 
         shad->Use();
-
+        if (shad->isUnlit)
+        {
+             shad->setBool("isSun", true);
+        }
+        else
+        {
+            shad->setBool("isSun", false);
+        }
 
         if (lightman)
         {
             lightman->ApplyLights(shad);
         }
+
+        
         shad->setFloat("material.shine", 32.0f); //specifically, this one needs to be fixed/updated.
         shad->setMat4("projection", projectionMat);
         shad->setMat4("view", view);
         shad->setVec3("viewPos", camPos);
+
+
         /*
         shad->setVec3("lightPos", 1.2f, 1.0f, 2.0f);
         shad->setVec3("dirlight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));

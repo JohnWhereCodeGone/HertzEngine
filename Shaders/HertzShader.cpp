@@ -10,6 +10,11 @@ const char* Shader::GetFragmentPath() const
 	return this->m_fragmentPath;
 }
 
+void Shader::setIsUnlit(bool val)
+{
+	this->isUnlit = val;
+}
+
 void Shader::setBool(const std::string& name, bool value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
@@ -173,7 +178,8 @@ Shader::Shader(const char* fragmentPath, const char* vertexPath)
 
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
-
+	this->debugName = " ";
+	this->isUnlit = false;
 
 }
 

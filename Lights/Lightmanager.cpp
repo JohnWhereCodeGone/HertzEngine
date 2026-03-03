@@ -81,6 +81,8 @@ void Lightmanager::ApplyLights(std::shared_ptr<Shader> shad)
 
 	for (auto& light : m_lightlist)
 	{
+		if (shad->isUnlit)
+			continue;
 		switch (light->GetLightType())
 		{
 		case(DiffuseLighter):

@@ -83,6 +83,8 @@ Camera::Camera(std::shared_ptr<Spotlight> light, glm::vec3 position, glm::vec3 u
 }
 void Camera::CameraScroll(float value)
 {
+
+	// Currently Disabled
 	if (m_LookAt && m_LookAt->m_stellartype != 0)
 	{
 		m_distance += value * 10000000;
@@ -96,16 +98,19 @@ void Camera::SetOrbitalTarget(std::shared_ptr<Transform> target, float distance,
 {
 
 
-	m_distance = distance;
 	if (target)
 	{
 		m_LookAt = target;
 	}
+	float initdist = glm::length(m_LookAt->GetScale()) * m_LookAt->GetRenderScale();
+	m_minDist = initdist * 3.141f; //diameter = 2x r, + offset;
+	m_distance = initdist * 10.5f;
 	
 	m_LookAtName = name;
 
 	//transition
 
+	//TODO fix zooming +
 
 }
 
@@ -157,14 +162,40 @@ void Camera::CameraInput(CameraMove dir, float deltaTime)
 	*/
 
 	
-	
-	if (dir == FORWARD)
+	if (m_LookAt)
 	{
-		vPos += vFront * displacement;
+		
+		if (dir == FORWARD)
+		{
+			if (m_distance >= m_minDist)
+			{
+				float Delta = 100 * deltaTime;
+
+				m_distance -= Delta;
+			}
+		}
+		if (dir == BACK)
+		{
+			if (m_distance <= 1000)
+			{
+				float Delta = 100 * deltaTime;
+
+				m_distance += Delta;
+			}
+		}
+
 	}
-	if (dir == BACK)
+	else
 	{
-		vPos -= vFront * displacement;
+		if (dir == FORWARD)
+		{
+			vPos += vFront * displacement;
+		}
+		if (dir == BACK)
+		{
+			vPos -= vFront * displacement;
+		}
+
 	}
 	if (dir == LEFT)
 	{

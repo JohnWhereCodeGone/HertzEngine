@@ -104,12 +104,14 @@ vec3 SpotLighter(SpotLight light, vec3 normal, vec3 viewDir);
 
 uniform Material material;
 uniform Light light;
+uniform bool isSun;
 
 void main()
 {
-    if (isLight)
+    if (isSun)
     {
-        FragColor = vec4(1.0);
+		vec3 debugtex = vec3(texture(material.diffuse1, TexCoord));
+		FragColor = vec4(debugtex, 1.0);
     }
     else
     {
@@ -146,7 +148,13 @@ void main()
 		
 		
 		
+		
+		
 		FragColor = vec4(result, 1.0); //REAL ONE TO USE
+		
+		
+		
+		
         // this is the old -- FragColor = vec4(debugtexture, result);
 		//FragColor = vec4(texture(material.specular1, TexCoord).rgb, 1.0); //debug for specular map
         //FragColor = vec4(TexCoord, 0.0, 1.0);

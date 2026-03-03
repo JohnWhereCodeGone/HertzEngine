@@ -62,6 +62,7 @@ public:
 	float m_distance	= 0;
 	float m_longitude	= 0;
 	float m_latitude	= 0;
+	float m_minDist		= 0;
 
 
 	std::string m_LookAtName;

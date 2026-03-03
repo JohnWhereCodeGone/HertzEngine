@@ -22,6 +22,10 @@ private:
 	const char* m_fragmentPath;
 public:
 	
+
+	std::string debugName;
+	bool isUnlit;
+
 	unsigned int getShader();
 
 	Shader(const char* fragmentPath = ".\\Shaders\\fragmentShader.glsl",
@@ -31,6 +35,8 @@ public:
 	
 
 	const char* GetFragmentPath() const;
+	void setIsUnlit(bool val);
+
 
 	void setBool(const std::string& name, bool value) const;
 	void setInt(const std::string& name, int value) const;

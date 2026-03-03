@@ -5,11 +5,12 @@
 
 
 
+
 Trail::Trail(std::shared_ptr<Transform> t, std::shared_ptr<Shader> shad)
 {
 	if (!shad)
 	{
-		this->m_shad = std::make_unique<Shader>(".\Shaders\fragmentLineShader.glsl");
+		this->m_shad = std::make_unique<Shader>(".\\Shaders\\fragmentLineShader.glsl");
 
 	}
 	else
@@ -28,14 +29,16 @@ Trail::Trail(std::shared_ptr<Transform> t, std::shared_ptr<Shader> shad)
 	{
 		this->m_vertices.push_back(glm::vec3(0));
 		this->m_vertices.push_back(glm::vec3(1));
+
+		UpdateBuffer();
 	}
 
-	glfwInit();
+	InitBuffers();
 
 
 }
 
-void Trail::glfwInit()
+void Trail::InitBuffers()
 {
 
 	glGenVertexArrays(1, &VAO);
