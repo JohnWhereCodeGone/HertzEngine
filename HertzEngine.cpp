@@ -72,7 +72,7 @@ HertzEngine::HertzEngine()
 
 	
 
-	trailTest = std::make_unique<Trail>(entityTest->GetTransform(), ShaderManager::MakeShader(".\\Shaders\\fragmentLineShader.glsl"));
+	trailTest = std::make_unique<Trail>(entityTest->GetTransform());
 
 	//initialize view
 	
@@ -120,13 +120,14 @@ GLFWwindow* HertzEngine::GameInit()
 
 	glEnable(GL_DEPTH_TEST);
 
-
+	// UI;
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
+	io.Fonts->AddFontFromFileTTF(".\\Resources\\Fonts\\skygraze.ttf", 12.f);
 	ImGui_ImplGlfw_InitForOpenGL(GameWindow, true);
 	ImGui_ImplOpenGL3_Init();
 
@@ -292,7 +293,26 @@ void HertzEngine::Update()
 		if (!cam->m_LookAt)
 		{
 			cam->SetOrbitalTarget(entityTest->GetTransform(), 3, entityTest->GetName()->c_str());
+			
 		}
+
+		trailTest->Update(fDeltaTime);
+		for (auto& col : m_PhysicsEngine->m_colliderList)
+		{
+			if (col->m_type == Sphere)
+			{
+				std::shared_ptr<SphereCollider> sphere = std::static_pointer_cast<SphereCollider>(col);
+				if (sphere->m_trail->isUpdating)
+				{
+					sphere->m_trail->Draw();
+
+				}
+			}
+		}
+
+
+		entityTest->GetTransform()->GetPos() += 0.01f;
+
 
 		m_EntityManager->Update(HertzEngine::DeltaTime(), cam);
 		//Render
@@ -302,8 +322,6 @@ void HertzEngine::Update()
 		m_shaderManager->UpdateShaders(cam->GetProjection(), view, cam->vPos, cam, m_lightManager);
 
 
-		//trailTest->Update(fDeltaTime);
-		entityTest->GetTransform()->GetPos() += 0.01f;
 		
 		/*
 		DefaultShader->Use();

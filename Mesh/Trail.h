@@ -4,13 +4,14 @@
 #include "../glm/glm.hpp"
 #include "../Shaders/HertzShader.h"
 #include "../Transform.h"
+#include "../Physics/Physics2/SphereCollider.h"
 
 // Get Shader Set up
 // Get Rendering Set up
 // Render before physics loop and after entities/meshes
 
 constexpr int MAX_POINTS = 2000;
-
+class SphereCollider;
 
 class Trail
 {
@@ -18,13 +19,15 @@ class Trail
 
 
 public:
-	Trail(std::shared_ptr<Transform> t, std::shared_ptr<Shader> shad = nullptr);
+	Trail(std::shared_ptr<Transform> t, SphereCollider* col = nullptr, std::shared_ptr<Shader> shad = nullptr);
 
 	std::deque<glm::dvec3>	m_points;
 	std::shared_ptr<Shader> m_shad;
 
 	int		m_maxPoints		= 2000;
 	double	m_Accumulator	= 0;
+	bool	isUpdating		= false;
+
 
 	//rendering
 	std::vector<glm::vec3> m_vertices;
@@ -36,7 +39,7 @@ public:
 
 
 	std::shared_ptr<Transform> m_trans;
-	
+	SphereCollider* m_col;
 
 	void InitBuffers();
 	void Update(double dT);

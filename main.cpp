@@ -40,7 +40,11 @@ std::string sphere = ".\\Mesh\\sphere2.obj";
 #define GLM_ENABLE_EXPERIMENTAL
 #include "../glm/gtx/string_cast.hpp"
 
-
+//TODO:
+// FIXED - TUTORIAL, FIXED SUN SHADER
+// Create and fix Orbital Trail
+// Create and fix Astronomy Data & Window per camera planet view
+// Create and fix ...
 
 
 double ijrtdh = glm::two_pi<double>();
@@ -83,17 +87,14 @@ glm::dvec3 vDir = glm::normalize(glm::cross(orbitNormal, glm::normalize(c_EarthS
 //ROTATIONS
 
 RotationState stateEarth;
-
-
 RotationState stateMoon;
 
 
 //MOON ORBIT
 
 glm::dvec3 distMoon = c_MoonStartPos - c_EarthStartPos;
-double moonIncline = glm::radians(5.145);
+double		moonIncline = glm::radians(5.145);
 glm::dvec3 tempp = glm::normalize(glm::cross(orbitNormal, distMoon));
-
 glm::dquat q = glm::angleAxis(moonIncline, tempp);
 
 glm::dvec3 lunarNormal = glm::normalize(q * orbitNormal);
@@ -212,6 +213,7 @@ int main()
 	earth->GetTransform()->m_stellartype = PLANET;
 	earth->GetTransform()->SetPos(c_EarthStartPos);
 
+
 	
 
 	
@@ -235,7 +237,6 @@ int main()
 	eC->m_mass = c_EarthMass;
 	eC->m_velocity = CircularOrbitVelocity(Sun, AU, c_SunMass) * vDir;
 	eC->m_rotationState = stateEarth;
-
 
 
 
@@ -263,6 +264,8 @@ int main()
 	//mass
 	std::shared_ptr<SphereCollider> mC = std::static_pointer_cast<SphereCollider>(moon->GetCollider());
 	mC->m_mass = c_MoonMass;
+	mC->m_trail->isUpdating = true;
+	eC->m_trail->isUpdating = true;
 
 
 	//two-body initialization MOON + EARTH BARYCENTRIC ORBIT
@@ -370,7 +373,7 @@ int main()
 	//engine.GetMeshMangr()->AddMesh(crate.c_str(), HertzEngine::DefaultShader);
 	//engine.GetMeshMangr()->AddMesh(monky.c_str(), HertzEngine::DefaultShader);
 	
-
+	bool hasFlipped = false;
 	float time = 0;
 
 	std::shared_ptr<Camera> camref = engine.GetCam();
@@ -442,7 +445,15 @@ int main()
 		time = 0;
 		}
 
+		if (hasFlipped == false && time >= 3)
+		{
+			mC->m_trail->isUpdating = true;
+			eC->m_trail->isUpdating = true;
+			mC->m_trail->m_col = mC.get();
+			eC->m_trail->m_col = eC.get();
 
+			hasFlipped = true;
+		}
 
 		/*
 		if (time >= 2.0f && test->GetMesh() == nullptr)

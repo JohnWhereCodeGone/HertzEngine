@@ -1,16 +1,16 @@
 #include "Trail.h"
 #include "ShaderManager.h"
+#include "../Physics/Physics2/SphereCollider.h"
 
 
 
 
 
-
-Trail::Trail(std::shared_ptr<Transform> t, std::shared_ptr<Shader> shad)
+Trail::Trail(std::shared_ptr<Transform> t, SphereCollider* col, std::shared_ptr<Shader> shad)
 {
 	if (!shad)
 	{
-		this->m_shad = std::make_unique<Shader>(".\\Shaders\\fragmentLineShader.glsl");
+		this->m_shad = ShaderManager::MakeShader(".\\Shaders\\fragmentLineShader.glsl"); //awful. Need shadermanager or camera view won't be passed to vertex shader.
 
 	}
 	else
@@ -19,6 +19,7 @@ Trail::Trail(std::shared_ptr<Transform> t, std::shared_ptr<Shader> shad)
 	}
 
 	this->m_trans = t;
+	this->m_col = col;
 
 	t->SetPos(glm::vec3(0.0f));
 	t->SetScale(glm::vec3(1.0f));
@@ -81,7 +82,21 @@ void Trail::Update(double dT)
 				m_points.pop_front();
 			}
 
-			m_points.push_back(m_trans->GetPos()); //change this to visual pos later
+			glm::dvec3 nextPos = m_trans->GetVisualPos();
+			if (m_col && m_trans->m_stellartype != UNSPECIFIED)
+			{
+
+				glm::dvec3 offsetDir = glm::normalize(m_col->m_velocity) * -1.0;
+
+				glm::dvec3 offsetVector = offsetDir * (m_trans->GetRenderScale() * m_trans->GetScale().x);
+
+				nextPos = offsetVector;
+
+			}
+
+
+
+			m_points.push_back(nextPos); //change this to visual pos later
 
 			UpdateBuffer();
 
@@ -90,7 +105,7 @@ void Trail::Update(double dT)
 		}
 	}
 
-	Draw();
+	//Draw();
 
 
 
@@ -114,13 +129,16 @@ void Trail::UpdateBuffer()
 void Trail::Draw()
 {
 
-	glLineWidth(1.0f);
+	glLineWidth(5.0f);
 	if (!m_shad)
 	{
 		return;
 	}
+
+
+	glm::mat4 model = glm::mat4(1.f);
 	m_shad->Use();
-	m_trans->UpdateModel(m_shad);
+	m_shad->setMat4("model", model);
 	
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_LINE_STRIP, 0, m_vertices.size());

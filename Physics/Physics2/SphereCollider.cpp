@@ -32,6 +32,13 @@ SphereCollider::SphereCollider(std::shared_ptr<Entity> parent)
 	this->m_bHasGravity = true;
 	this->m_type = ColliderType::Sphere;
 	this->m_isKinematic = false;
+	this->m_trail = std::make_unique<Trail>(m_transform);
+
+	//next -> Fix Trail Class -> Add a position update to the physics loo0p. Then, create a function in the physics engine that simply renders. Call that function after position updates in the hertz engine.
+	// Finally, in main, check the bool to enable updating for the trails. Add a simple per/entity color thingie. Look into basic trail styles.
+	
+	// Then, finish off the report, hand in the assignment before 1pm meeting with Sergei.
+	
 
 
 

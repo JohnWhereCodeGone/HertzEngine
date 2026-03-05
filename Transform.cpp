@@ -108,8 +108,8 @@ void Transform::UpdateModel(std::shared_ptr<Shader> shader)
 	if (!shader)
 		return;
 	
-	glm::mat4 transmat = glm::mat4(1.0f);
 	
+	glm::mat4 transmat = glm::mat4(1.0f);
 
 	// use quaternions for rotation to avoid 'gimbal lock' - lest you be branded a heretic.
 	transmat = glm::translate(transmat, (glm::vec3)m_vPos);
