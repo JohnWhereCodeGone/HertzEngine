@@ -31,8 +31,8 @@ public:
 	
 	glm::dvec3& GetPos();
 	glm::dvec3& GetScale();
-	glm::vec3& GetRot();
-	glm::vec3& GetVelocity();
+	glm::vec3&	GetRot();
+	glm::vec3&	GetVelocity();
 
 
 	void SetPos(const glm::dvec3& newPos);
@@ -41,21 +41,21 @@ public:
 	void AddVelocity(const glm::vec3& addedVelocity);
 	void AddVelocity(float x = 0, float y = 0, float z = 0); //I don't work, lol.
 	
-	void UpdateModel(std::shared_ptr<Shader> shader);
-	void UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared_ptr<Camera> cam);
-	glm::vec3& GetVisualPos();
-	double GetRenderScale();
-	void Move(float DeltaTime);
+	void		UpdateModel(std::shared_ptr<Shader> shader);
+	void		UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared_ptr<Camera> cam);
+	glm::vec3&	GetVisualPos();
+	double		GetRenderScale();
+	void		Move(float DeltaTime);
 
 	const glm::mat4& GetModel();
 	
 	StellarType m_stellartype;
-	glm::dquat m_rotationQuat = glm::dquat(1, 0, 0, 0);
+	glm::dquat	m_rotationQuat = glm::dquat(1, 0, 0, 0);
 
 
 private:
 	
-	glm::mat4 m_model;
+	glm::mat4				m_model;
 	std::shared_ptr<Shader> m_shader;
 
 	
@@ -63,10 +63,10 @@ private:
 
 	
 
-	glm::vec3 m_visualPos;
-	glm::vec3 m_vVelocity;
-	glm::dvec3 m_vPos;
-	glm::vec3 m_vRotation;
-	glm::dvec3 m_vScale;
+	glm::vec3	m_visualPos;
+	glm::vec3	m_vVelocity;
+	glm::dvec3	m_vPos;
+	glm::vec3	m_vRotation;
+	glm::dvec3	m_vScale;
 };
 

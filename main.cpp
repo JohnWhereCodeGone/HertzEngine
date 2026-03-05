@@ -445,6 +445,7 @@ int main()
 		time = 0;
 		}
 
+		/*
 		if (hasFlipped == false && time >= 3)
 		{
 			mC->m_trail->isUpdating = true;
@@ -454,6 +455,7 @@ int main()
 
 			hasFlipped = true;
 		}
+		*/
 
 		/*
 		if (time >= 2.0f && test->GetMesh() == nullptr)

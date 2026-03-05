@@ -21,9 +21,12 @@ Trail::Trail(std::shared_ptr<Transform> t, SphereCollider* col, std::shared_ptr<
 	this->m_trans = t;
 	this->m_col = col;
 
+	/*
 	t->SetPos(glm::vec3(0.0f));
+	
 	t->SetScale(glm::vec3(1.0f));
 	t->SetScale(glm::vec3(1.0f));
+	*/
 
 
 	if (debug)
@@ -79,10 +82,11 @@ void Trail::Update(double dT)
 
 			if (m_points.size() >= MAX_POINTS)
 			{
-				m_points.pop_front();
+				m_points.pop_front(); 
 			}
 
 			glm::dvec3 nextPos = m_trans->GetVisualPos();
+			/*
 			if (m_col && m_trans->m_stellartype != UNSPECIFIED)
 			{
 
@@ -90,9 +94,13 @@ void Trail::Update(double dT)
 
 				glm::dvec3 offsetVector = offsetDir * (m_trans->GetRenderScale() * m_trans->GetScale().x);
 
-				nextPos = offsetVector;
+				if (glm::abs(glm::length(offsetVector)) <= 10000000.f)
+				{
+					nextPos = offsetVector;
+				}
 
 			}
+			*/
 
 
 
@@ -117,6 +125,8 @@ void Trail::UpdateBuffer()
 {
 	m_vertices.clear();
 	m_vertices.reserve(m_points.size());
+
+
 	for (const auto& point : m_points)
 	{
 		m_vertices.push_back((glm::vec3)point);
