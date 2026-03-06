@@ -45,7 +45,6 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 
 		col->m_force = glm::dvec3(0);
 
-		/*
 		if (col->m_type == Sphere)
 		{
 			std::shared_ptr<SphereCollider> sphere = std::static_pointer_cast<SphereCollider>(col);
@@ -56,7 +55,6 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 
 			}
 		}
-		*/
 	}
 
 

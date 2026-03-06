@@ -66,6 +66,7 @@ HertzEngine::HertzEngine()
 	
 	
 	//DELETE ME
+	/*
 	entityTest = m_EntityManager->CreateEntity();
 	entityTest->GetTransform()->SetPos(glm::dvec3(0));
 
@@ -73,6 +74,7 @@ HertzEngine::HertzEngine()
 	
 
 	trailTest = std::make_unique<Trail>(entityTest->GetTransform());
+	*/
 
 	//initialize view
 	
@@ -116,18 +118,28 @@ GLFWwindow* HertzEngine::GameInit()
 
 	glfwSetInputMode(GameWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetKeyCallback(GameWindow, HertzInput::iKeyCallbackImproved);
-	glfwSetWindowOpacity(GameWindow, 0.8f);
+	glfwSetWindowOpacity(GameWindow, 1.0f);
 
 	glEnable(GL_DEPTH_TEST);
 
-	// UI;
+	// UI init;
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
-	io.Fonts->AddFontFromFileTTF(".\\Resources\\Fonts\\skygraze.ttf", 12.f);
+	ImFontConfig conf;
+
+
+	conf.OversampleH = 3.f;
+	conf.OversampleV = 1.f;
+	conf.RasterizerMultiply = 1.5f;
+	conf.GlyphExtraSpacing.x = 1.0f;
+
+	io.Fonts->AddFontFromFileTTF(".\\Resources\\Fonts\\Montserrat-Italic-VariableFont_wght.ttf", 18.f, &conf);
+
+
 	ImGui_ImplGlfw_InitForOpenGL(GameWindow, true);
 	ImGui_ImplOpenGL3_Init();
 
@@ -253,7 +265,7 @@ void HertzEngine::Update()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		int physicsIterations = 0;
-		while (m_PhysicsEngine->m_isSimulating && m_PhysicsEngine->m_FastForward || m_SimulationAccumulator >= m_SimulationTimeStep )
+		while (m_PhysicsEngine->m_isSimulating && (m_PhysicsEngine->m_FastForward || m_SimulationAccumulator >= m_SimulationTimeStep) )
 		{
 			m_PhysicsEngine->Simulate(m_SimulationTimeStep);
 
@@ -290,13 +302,15 @@ void HertzEngine::Update()
 
 		m_editor->EditorUI(GameWindow);
 		//del me
+		/*
 		if (!cam->m_LookAt)
 		{
 			cam->SetOrbitalTarget(entityTest->GetTransform(), 3, entityTest->GetName()->c_str());
 			
 		}
+		*/
 
-		trailTest->Update(fDeltaTime);
+		//trailTest->Update(fDeltaTime);
 		for (auto& col : m_PhysicsEngine->m_colliderList)
 		{
 			if (col->m_type == Sphere)
@@ -311,7 +325,7 @@ void HertzEngine::Update()
 		}
 
 
-		entityTest->GetTransform()->GetPos() += 0.01f;
+		//entityTest->GetTransform()->GetPos() += 0.01f;
 
 
 		m_EntityManager->Update(HertzEngine::DeltaTime(), cam);

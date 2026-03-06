@@ -18,15 +18,17 @@ class Trail
 	
 
 
+
 public:
 	Trail(std::shared_ptr<Transform> t, SphereCollider* col = nullptr, std::shared_ptr<Shader> shad = nullptr);
 
 	std::deque<glm::dvec3>	m_points;
 	std::shared_ptr<Shader> m_shad;
 
-	int		m_maxPoints		= 2000;
-	double	m_Accumulator	= 0;
-	bool	isUpdating		= false;
+	int			m_maxPoints		= 2000;
+	double		m_Accumulator	= 0;
+	bool		isUpdating		= false;
+	glm::vec3	m_color			= glm::vec3(0.368f, 0.607f, 1.0f);
 
 
 	//rendering

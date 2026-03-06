@@ -7,9 +7,10 @@ in vec3 FragPos;
 out vec4 FragColor;
 
 uniform vec3 viewPos;
+uniform vec3 trailColor;
 
 void main()
 
 {
-	FragColor = vec4(1, 0, 1, 1);
+	FragColor = vec4(trailColor, 1);
 }

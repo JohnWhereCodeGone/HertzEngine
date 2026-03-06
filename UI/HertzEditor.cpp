@@ -159,19 +159,28 @@ void HertzEditor::EditorUI(GLFWwindow* window)
         }
 
         auto itt = m_EntityManager->FindByName(currentname);
-        itt++;
+
+        if (itt != m_EntityManager->m_entityList.end())
+        {
+            itt++;
+        }
+        else
+        {
+            itt = m_EntityManager->m_entityList.begin();
+        }
+
         auto isValid = [&itt]() -> std::shared_ptr<Entity> {std::shared_ptr<Entity> en = *itt; if (en) { return en; } else { return nullptr; } };
 
         if (itt != m_EntityManager->m_entityList.end())
         {
             std::shared_ptr<Entity> en = isValid();
             m_camRef->SetOrbitalTarget(en->GetTransform(), 40.f, *en->GetName());
-            
+
         }
         else
         {
 
-            
+
             itt = m_EntityManager->m_entityList.begin();
             std::shared_ptr<Entity> en = isValid();
             m_camRef->SetOrbitalTarget(en->GetTransform(), 40.f, *en->GetName());
@@ -204,7 +213,9 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     
     if (ImGui::TreeNodeEx("Astronomy"))
     {
-        ImGui::InputDouble("Time Skip Days:", &days);
+        ImGui::InputDouble("##TimeSkipper", &days);
+        ImGui::SameLine();
+        ImGui::TextWrapped("Time Skip Days");
 
         if (ImGui::Button("Skip Time"))
         {

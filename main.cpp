@@ -101,7 +101,7 @@ glm::dvec3 lunarNormal = glm::normalize(q * orbitNormal);
 glm::dvec3 lunarDir = glm::normalize(glm::cross(lunarNormal, glm::normalize(distMoon)));
 
 
-
+//BUG: Changing mesh overwrites entity shader.
 
 
 // have the main thread check its own list for pushed data from other threads.
@@ -224,6 +224,7 @@ int main()
 	earth->SetDiffuseMap(engine.GetTextureManager()->LoadTexture(".\\Texture\\8k_earth_daymap.jpg", Diffuse));
 	earth->SetSpecularMap(engine.GetTextureManager()->LoadTexture(".\\Texture\\8k_earth_specular_map.jpg", Specular));
 	earth->SetMesh(engine.GetMeshMangr()->GetMeshByName("sphere2"));
+	
 
 
 	//radius
@@ -238,7 +239,7 @@ int main()
 	eC->m_velocity = CircularOrbitVelocity(Sun, AU, c_SunMass) * vDir;
 	eC->m_rotationState = stateEarth;
 
-
+	eC->m_trail->m_color = glm::vec3(0.43f, 0.63f, 0.18f);
 
 	////////////////////////////////////////////////////////
 
@@ -264,8 +265,8 @@ int main()
 	//mass
 	std::shared_ptr<SphereCollider> mC = std::static_pointer_cast<SphereCollider>(moon->GetCollider());
 	mC->m_mass = c_MoonMass;
-	mC->m_trail->isUpdating = true;
-	eC->m_trail->isUpdating = true;
+	mC->m_trail->m_color = glm::vec3(0.7f, 0.7f, 0.7f);
+	
 
 
 	//two-body initialization MOON + EARTH BARYCENTRIC ORBIT
@@ -289,6 +290,7 @@ int main()
 	stateMoon.axis = lunarNormal;
 
 	mC->m_rotationState = stateMoon;
+	sC->m_rotationState = stateMoon;
 
 
 
@@ -313,7 +315,7 @@ int main()
 
 	
 	
-	//engine.GetCam()->SetOrbitalTarget(mC->m_transform, 100);
+	engine.GetCam()->SetOrbitalTarget(eC->m_transform, 200, earth->GetName()->c_str());
 
 
 
@@ -373,7 +375,7 @@ int main()
 	//engine.GetMeshMangr()->AddMesh(crate.c_str(), HertzEngine::DefaultShader);
 	//engine.GetMeshMangr()->AddMesh(monky.c_str(), HertzEngine::DefaultShader);
 	
-	bool hasFlipped = false;
+	bool hasEnabledTrails = false;
 	float time = 0;
 
 	std::shared_ptr<Camera> camref = engine.GetCam();
@@ -445,17 +447,15 @@ int main()
 		time = 0;
 		}
 
-		/*
-		if (hasFlipped == false && time >= 3)
+		if (!hasEnabledTrails && time >= 6)
 		{
 			mC->m_trail->isUpdating = true;
 			eC->m_trail->isUpdating = true;
 			mC->m_trail->m_col = mC.get();
 			eC->m_trail->m_col = eC.get();
 
-			hasFlipped = true;
+			hasEnabledTrails = true;
 		}
-		*/
 
 		/*
 		if (time >= 2.0f && test->GetMesh() == nullptr)

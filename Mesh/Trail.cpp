@@ -70,7 +70,7 @@ void Trail::Update(double dT)
 		return;
 	}
 
-	constexpr float defaultTime = 0.5f;
+	constexpr float defaultTime = 10.f;
 
 
 	if (m_trans)
@@ -86,21 +86,21 @@ void Trail::Update(double dT)
 			}
 
 			glm::dvec3 nextPos = m_trans->GetVisualPos();
-			/*
+			
 			if (m_col && m_trans->m_stellartype != UNSPECIFIED)
 			{
 
 				glm::dvec3 offsetDir = glm::normalize(m_col->m_velocity) * -1.0;
 
-				glm::dvec3 offsetVector = offsetDir * (m_trans->GetRenderScale() * m_trans->GetScale().x);
+				glm::dvec3 offsetVector = offsetDir * (m_trans->GetRenderScale() * m_trans->GetScale());
 
 				if (glm::abs(glm::length(offsetVector)) <= 10000000.f)
 				{
-					nextPos = offsetVector;
+					nextPos += 5.0 * offsetVector;
 				}
 
 			}
-			*/
+			
 
 
 
@@ -129,7 +129,8 @@ void Trail::UpdateBuffer()
 
 	for (const auto& point : m_points)
 	{
-		m_vertices.push_back((glm::vec3)point);
+		
+			m_vertices.push_back((glm::vec3)point);
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -138,8 +139,9 @@ void Trail::UpdateBuffer()
 
 void Trail::Draw()
 {
-
 	glLineWidth(5.0f);
+	glEnable(GL_LINE_SMOOTH);
+
 	if (!m_shad)
 	{
 		return;
@@ -149,6 +151,7 @@ void Trail::Draw()
 	glm::mat4 model = glm::mat4(1.f);
 	m_shad->Use();
 	m_shad->setMat4("model", model);
+	m_shad->setVec3("trailColor", m_color);
 	
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_LINE_STRIP, 0, m_vertices.size());
