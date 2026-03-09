@@ -7,8 +7,12 @@
 
 class vec3;
 class Camera;
+class Entity;
 
 constexpr double RENDER_SCALE = 1.0 / 1000000.0; //Rendering at one millionth the scale, 1 unit = 1000 km.
+
+
+
 
 
 enum StellarType
@@ -32,14 +36,11 @@ public:
 	glm::dvec3& GetPos();
 	glm::dvec3& GetScale();
 	glm::vec3&	GetRot();
-	glm::vec3&	GetVelocity();
 
 
 	void SetPos(const glm::dvec3& newPos);
 	void SetRot(const glm::vec3& newRot);
 	void SetScale(const glm::vec3& newScale);
-	void AddVelocity(const glm::vec3& addedVelocity);
-	void AddVelocity(float x = 0, float y = 0, float z = 0); //I don't work, lol.
 	
 	void		UpdateModel(std::shared_ptr<Shader> shader);
 	void		UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared_ptr<Camera> cam);
@@ -48,9 +49,18 @@ public:
 	void		Move(float DeltaTime);
 
 	const glm::mat4& GetModel();
+
+	void AddPosKahan(const glm::dvec3& offset);
 	
 	StellarType m_stellartype;
 	glm::dquat	m_rotationQuat = glm::dquat(1, 0, 0, 0);
+
+	//floating point origin
+	std::shared_ptr<Entity> m_parent;
+	glm::dvec3 m_localPos;
+
+	glm::dvec3 GetWorldPos() const;
+	glm::dvec3 GetLocalPos() const;
 
 
 private:
@@ -62,9 +72,8 @@ private:
 	float m_VelocityDecayRate;
 
 	
-
+	glm::dvec3	m_vPosError;
 	glm::vec3	m_visualPos;
-	glm::vec3	m_vVelocity;
 	glm::dvec3	m_vPos;
 	glm::vec3	m_vRotation;
 	glm::dvec3	m_vScale;

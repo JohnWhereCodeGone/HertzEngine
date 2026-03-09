@@ -16,7 +16,7 @@ void Camera::CameraUpdate()
 			tarPos = m_LookAt->GetVisualPos();
 		}
 
-		constexpr float limit = glm::radians(89.9f);
+		constexpr double limit = glm::radians(89.9f);
 		m_latitude = glm::clamp(m_latitude, -limit, limit);
 			
 		
@@ -32,6 +32,7 @@ void Camera::CameraUpdate()
 
 	else
 	{
+
 		front.x = cos(glm::radians(fYaw)) * cos(glm::radians(fPitch));
 		front.y = sin(glm::radians(fPitch));
 		front.z = sin(glm::radians(fYaw)) * cos(glm::radians(fPitch));
@@ -43,9 +44,11 @@ void Camera::CameraUpdate()
 
 	if (m_cameralight)
 	{
+		/*
 		m_cameralight->GetProperties().LightDir = vFront;
 		m_cameralight->GetTrans()->SetPos(vPos);
 		m_cameralight->GetShouldLight() = m_lightIsOn;
+		*/
 
 	}
 
@@ -94,7 +97,7 @@ void Camera::CameraScroll(float value)
 	
 }
 
-void Camera::SetOrbitalTarget(std::shared_ptr<Transform> target, float distance, std::string name)
+void Camera::SetOrbitalTarget(std::shared_ptr<Transform> target, double distance, std::string name)
 {
 
 
@@ -102,7 +105,7 @@ void Camera::SetOrbitalTarget(std::shared_ptr<Transform> target, float distance,
 	{
 		m_LookAt = target;
 	}
-	float initdist = glm::length(m_LookAt->GetScale()) * m_LookAt->GetRenderScale();
+	double initdist = glm::length(m_LookAt->GetScale()) * m_LookAt->GetRenderScale();
 	m_minDist = initdist * 3.141f; //diameter = 2x r, + offset;
 	m_distance = initdist * 10.5f;
 	

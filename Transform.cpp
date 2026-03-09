@@ -1,7 +1,7 @@
 #include "Transform.h"
 #include "../glm/glm.hpp"
 #include "Camera.h"
-
+#include "Entity/Entity.h"
 
 
 
@@ -9,13 +9,13 @@
 
 Transform::Transform()
 {
-	this->m_vPos = glm::vec3(0.0f, 0.0f, 0.0f);
-	this->m_vRotation = glm::vec3(0.0f, 0.0f, 0.0f);
-	this->m_vScale = glm::vec3(1.0f, 1.0f, 1.0f);
-	this->m_model = glm::mat4(1.0f);
-	this->m_VelocityDecayRate = 0.95f;
-	this->m_vVelocity = glm::vec3(0.0f);
+	this->m_vPos				= glm::dvec3(0.0f, 0.0f, 0.0f);
+	this->m_vRotation			= glm::vec3(0.0f, 0.0f, 0.0f);
+	this->m_vScale				= glm::dvec3(1.0f, 1.0f, 1.0f);
+	this->m_model				= glm::mat4(1.0f);
+	this->m_VelocityDecayRate	= 0.95f;
 	this->m_shader = {};
+	this->m_vPosError = glm::dvec3(0.0);
 
 	this->m_stellartype = UNSPECIFIED;
 }
@@ -27,9 +27,9 @@ Transform::Transform(glm::vec3 pos, glm::vec3 rotation, glm::vec3 scale, std::sh
 	this->m_vScale = scale;
 	this->m_model = glm::mat4(1.f);
 	this->m_VelocityDecayRate = 0.99f;
-	this->m_vVelocity = glm::vec3(0.0f);
 	this->m_visualPos = glm::vec3(0.0f);
-	
+	this->m_vPosError = glm::dvec3(0.0);
+
 	if (shader)
 	{
 		this->m_shader = shader;
@@ -38,10 +38,7 @@ Transform::Transform(glm::vec3 pos, glm::vec3 rotation, glm::vec3 scale, std::sh
 		this->m_shader = nullptr;
 	
 }
-glm::dvec3& Transform::GetPos()
-{
-	return this->m_vPos;
-}
+
 
 glm::dvec3& Transform::GetScale()
 {
@@ -58,19 +55,18 @@ glm::vec3& Transform::GetRot()
 	return this->m_vRotation;
 }
 
-glm::vec3& Transform::GetVelocity()
-{
-	return this->m_vVelocity;
-}
+
 
 // 3 types of light, point point light, dir light, spotlight <- structure this into a class that handles all shaders.
 // then mip settings, UI add functions from Transform to update pos, rotation, scale.
 void Transform::SetPos(const glm::dvec3& newPos)
 {
-	
+	if (glm::any(glm::isnan(newPos)) || glm::any(glm::isinf(newPos))) {
 
+		__debugbreak();
+	}
 
-	this->m_vPos = newPos;
+	this->m_localPos = newPos;
 }
 
 void Transform::SetRot(const glm::vec3& newRot)
@@ -89,19 +85,8 @@ void Transform::SetScale(const glm::vec3& newScale)
 	this->m_vScale = newScale;
 }
 
-void Transform::AddVelocity(const glm::vec3& addedVelocity)
-{
-	this->m_vVelocity += addedVelocity;
-}
 
-void Transform::AddVelocity(float x, float y, float z)
-{
 
-	this->m_vVelocity.x += x;
-	this->m_vVelocity.y += y;
-	this->m_vVelocity.z += z;
-
-}
 
 void Transform::UpdateModel(std::shared_ptr<Shader> shader)
 {
@@ -112,7 +97,7 @@ void Transform::UpdateModel(std::shared_ptr<Shader> shader)
 	glm::mat4 transmat = glm::mat4(1.0f);
 
 	// use quaternions for rotation to avoid 'gimbal lock' - lest you be branded a heretic.
-	transmat = glm::translate(transmat, (glm::vec3)m_vPos);
+	transmat = glm::translate(transmat, (glm::vec3)m_localPos);
 	transmat = glm::rotate(transmat, glm::radians(m_vRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	transmat = glm::rotate(transmat, glm::radians(m_vRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -131,51 +116,40 @@ void Transform::UpdateModel(std::shared_ptr<Shader> shader)
 
 void Transform::UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared_ptr<Camera> cam)
 {
+	
 
-	if (!shader)
-		return;
-
-	glm::dvec3 floatingOriginPos = glm::dvec3(0);
+	if (!shader) return;
 
 	glm::mat4 transmat = glm::mat4(1.0f);
-	glm::dvec3 appliedPosition = m_vPos;
+	glm::dvec3 appliedPosition = m_localPos;
+
+	constexpr double RENDER_SCALE = 1e-6;
 	glm::vec3 renderScale = m_vScale * RENDER_SCALE;
-	
+
 	switch (m_stellartype)
 	{
-	case(UNSPECIFIED):
-		renderScale *= 1.0f;
+	case(UNSPECIFIED): renderScale *= 1.0f; 
 		break;
-
-	case(STAR):
-		renderScale *= 1.0f;   //sun is size 10.
+	case(STAR):        renderScale *= 1.0f; 
 		break;
-
-	case(PLANET):
-		renderScale *= 5.0f;
-		break;
-
-
+	case(PLANET):      renderScale *= 1.0f; 
+		break; 
 	}
-
-
-
 
 	if (cam)
 	{
-		appliedPosition = (m_vPos - cam->vPos) * RENDER_SCALE;
+		appliedPosition = (GetWorldPos() - cam->vPos) * RENDER_SCALE;
 	}
 	else
 	{
-		appliedPosition = m_vPos * RENDER_SCALE;
+		appliedPosition = GetWorldPos() * RENDER_SCALE;
 	}
 
+	// Now it is safe to cast to a 32-bit float!
 	transmat = glm::translate(transmat, (glm::vec3)appliedPosition);
 	glm::mat4 rotMat = glm::mat4_cast(m_rotationQuat);
 	transmat *= rotMat;
 	transmat = glm::scale(transmat, renderScale);
-
-
 
 	shader->Use();
 	shader->setMat4("model", transmat);
@@ -194,13 +168,51 @@ double Transform::GetRenderScale()
 	return RENDER_SCALE;
 }
 
-void Transform::Move(float deltaTime)
-{
-	this->m_vPos += this->m_vVelocity * deltaTime;
-	this->m_vVelocity *= m_VelocityDecayRate;
-}
+
 
 const glm::mat4& Transform::GetModel()
-{
+{ 
 	return this->m_model;
+}
+
+void Transform::AddPosKahan(const glm::dvec3& offset)
+{
+	if (glm::any(glm::isnan(offset)) || glm::any(glm::isinf(offset))) {
+		return;
+	}
+	glm::dvec3 y = offset - m_vPosError; //where error is corrected
+	
+	
+
+	glm::dvec3 t = m_vPos + y; //where error is created
+
+	m_vPosError = (t - m_vPos) - y; //where error is recovered
+
+	m_vPos = t;
+
+	
+
+}
+
+glm::dvec3 Transform::GetWorldPos() const
+{
+	if (m_parent)
+	{
+		return this->m_localPos + m_parent->GetTransform()->GetWorldPos();
+	}
+	else
+	{
+		return this->m_localPos;
+
+	}
+}
+
+glm::dvec3 Transform::GetLocalPos() const
+{
+	return this->m_localPos;
+}
+
+glm::dvec3& Transform::GetPos()
+{
+	return this->m_localPos;
 }

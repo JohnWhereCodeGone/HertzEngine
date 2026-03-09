@@ -96,7 +96,7 @@ void Trail::Update(double dT)
 
 				if (glm::abs(glm::length(offsetVector)) <= 10000000.f)
 				{
-					nextPos += 5.0 * offsetVector;
+					nextPos += offsetVector;
 				}
 
 			}
@@ -106,9 +106,9 @@ void Trail::Update(double dT)
 
 			m_points.push_back(nextPos); //change this to visual pos later
 
-			UpdateBuffer();
+			
 
-			m_Accumulator -= defaultTime;
+			m_Accumulator = 0.0;
 
 		}
 	}
@@ -147,6 +147,7 @@ void Trail::Draw()
 		return;
 	}
 
+	UpdateBuffer();
 
 	glm::mat4 model = glm::mat4(1.f);
 	m_shad->Use();

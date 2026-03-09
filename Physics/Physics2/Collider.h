@@ -34,7 +34,6 @@ public:
 	glm::vec3						m_center;
 									
 	bool							m_bHasGravity;
-	glm::dvec3						m_velocity;
 	ColliderType					m_type;
 	std::shared_ptr<Entity>			m_parent;
 	bool							m_isKinematic;
@@ -47,8 +46,19 @@ public:
 	double							m_mass;
 	bool							m_isSatellite;
 	
+	glm::dvec3						m_velocity;
 	glm::dvec3						m_acceleration;
 	glm::dvec3						m_nextAcceleration;
+
+
+	glm::dvec3						m_velocity_error;
+	glm::dvec3						m_accelerationError;
+	glm::dvec3						m_nAccelerationErrror;
+
+	void AddAccelerationKhan();
+	void AddVelocityKahan();
+	void AddForceKhan();
+
 
 	RotationState					m_rotationState;
 

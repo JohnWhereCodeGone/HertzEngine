@@ -204,7 +204,7 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     ImGui::Separator();
 
     ImGui::Checkbox("Simulate Physics", &m_physicsEngine->m_isSimulating);
-    ImGui::DragFloat("Time Scale", &m_physicsEngine->m_TimeScale, 5.f, 1.f, 2000.f);
+    ImGui::InputDouble("Time Scale", &m_physicsEngine->m_TimeScale, 5.f);
 
 
          

@@ -173,10 +173,14 @@ void VirtualObject::ClearMesh()
 {
 	if (m_mesh)
 	{
+		m_mesh = nullptr;
+
+		/*
 		m_mesh->transform = std::make_shared<Transform>();
 		m_mesh->parent = nullptr;
 		this->m_shader = nullptr;
 		this->m_mesh = nullptr;
+		*/
 	}
 }
 

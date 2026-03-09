@@ -59,10 +59,10 @@ public:
 
 	//orital camera
 
-	float m_distance	= 0;
-	float m_longitude	= 0;
-	float m_latitude	= 0;
-	float m_minDist		= 0;
+	double m_distance	= 0;
+	double m_longitude	= 0;
+	double m_latitude	= 0;
+	double m_minDist		= 0;
 
 
 	std::string m_LookAtName;
@@ -76,7 +76,7 @@ public:
 	void CameraUpdate();
 	void MouseMovement(float xOffset, float yOffset);
 	void CameraScroll(float value);
-	void SetOrbitalTarget(std::shared_ptr<Transform> target, float distance = 0, std::string name = " ");
+	void SetOrbitalTarget(std::shared_ptr<Transform> target, double distance = 0, std::string name = " ");
 
 	
 

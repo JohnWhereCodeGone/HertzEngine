@@ -37,8 +37,9 @@ public:
 	using ColliderPtr = std::shared_ptr<Collider>;
 
 
+
 	void						timeSkip(double days);
-	PhysicsEngine2				(HertzEngine& engineRef) : m_engineRef(engineRef), m_isSimulating(true), m_GravitationalConstant(6.67 * 10e-11f) {};
+	PhysicsEngine2				(HertzEngine& engineRef) : m_engineRef(engineRef), m_isSimulating(true), m_GravitationalConstant(6.67430e-11) {};
 	void Simulate				(double DeltaTime);
 
 	void ApplyVelocity			(std::vector<ColliderPtr> colliders, const float& deltaTime);
@@ -71,12 +72,13 @@ public:
 
 	bool m_isSimulating;
 	
-	
+	bool m_hasStarted = false;
 	// Simulation methods & variables 
 	void		ApplyNewtonianGravity();
+	void		ApplyNewtonianGravity2Body();
 	void		SatelliteMotion(double deltatime);
 	double		m_GravitationalConstant;
-	float		m_TimeScale = 150.0;
+	double		m_TimeScale = 1.0;
 	bool		m_FastForward = false;
 	double		m_FastForwardDuration;
 

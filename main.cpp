@@ -62,7 +62,6 @@ constexpr double c_EarthMass = 5.9722e24;
 constexpr double c_MoonMass = 7.35e22;
 constexpr double c_SunMass = 1.989e30;
 
-constexpr double c_EarthDistance = 1.989;
 
 constexpr double G = 6.67430e-11;
 
@@ -81,7 +80,7 @@ constexpr glm::dvec3 c_MoonStartPos = c_EarthStartPos + glm::dvec3(c_MoonsOffset
 // EARTH ORBIT, 23.5 deg, perpendicular perfectly circular.
 double rad = glm::radians(23.5);
 
-glm::dvec3 orbitNormal = glm::normalize(glm::dvec3(0.0, cos(rad), sin(rad)));
+glm::dvec3 orbitNormal = glm::normalize(glm::dvec3(0.0, 1.0, 0.0));
 glm::dvec3 vDir = glm::normalize(glm::cross(orbitNormal, glm::normalize(c_EarthStartPos))); // earth orbits 23.5 deg of barycenter.
 
 //ROTATIONS
@@ -137,7 +136,7 @@ int main()
 
 	/*  Rotation States for Moon and the Earth  */
 
-	stateEarth.orientation = glm::dquat(1, 0, 0, 0);
+	stateEarth.orientation = glm::angleAxis(glm::radians(23.5), glm::dvec3(1, 0, 0));
 	stateEarth.angularSpeed = earthOmega;
 	stateEarth.axis = orbitNormal;
 
@@ -170,7 +169,7 @@ int main()
 	prop.Linear = 0.0;
 	prop.Diffuse = glm::vec3(3, 3, 3);
 	prop.Ambient = glm::vec3(0.1f);
-
+	sunlight->GetTransform()->SetPos(glm::dvec3(0.0));
 
 	//lightman->CreateLight(DiffuseLighter);
 	
@@ -183,7 +182,7 @@ int main()
 	/* S U N */
 	std::shared_ptr<Entity> Sun = EntityManager->CreateEntity();
 	Sun->m_isSatellite = true;
-	Sun->GetTransform()->SetPos(glm::vec3(0.0, 0.0, 0.0));
+	Sun->GetTransform()->m_localPos = (glm::dvec3(0.0, 0.0, 0.0));
 	Sun->GetTransform()->m_stellartype = STAR;
 	Sun->SetName("Sol");
 	Sun->SetMesh(engine.GetMeshMangr()->GetMeshByName("sphere2"));
@@ -207,11 +206,12 @@ int main()
 	
 	/* E A R T H */
 	std::shared_ptr<Entity> earth = EntityManager->CreateEntity();
+	earth->GetTransform()->m_parent = nullptr;
+	earth->GetTransform()->m_localPos = c_EarthStartPos;
 	earth->m_isSatellite = true;
 	earth->SetCollider(physics->CreateCollider(Sphere, earth));
 	earth->SetName("Tellus");
 	earth->GetTransform()->m_stellartype = PLANET;
-	earth->GetTransform()->SetPos(c_EarthStartPos);
 
 
 	
@@ -246,14 +246,16 @@ int main()
 
 	/* M O O N */
 	std::shared_ptr<Entity> moon = EntityManager->CreateEntity();
+	moon->GetTransform()->m_parent = nullptr;
+	moon->GetTransform()->m_localPos = c_MoonStartPos;
 	moon->m_isSatellite = true;
 
 	moon->SetCollider(physics->CreateCollider(Sphere, moon));
-	moon->GetTransform()->SetPos(glm::vec3(3.0f, 0.f, 0.0f));
+	//moon->GetTransform()->SetPos(glm::vec3(3.0f, 0.f, 0.0f));
 	moon->SetName("Luna");
 	
 	moon->GetTransform()->m_stellartype = PLANET;
-	moon->GetTransform()->SetPos(c_MoonStartPos);
+	//moon->GetTransform()->SetPos(c_MoonStartPos);
 
 	moon->SetDiffuseMap(engine.GetTextureManager()->LoadTexture(".\\Texture\\8k_moon.jpg", Diffuse));
 	moon->SetMesh(engine.GetMeshMangr()->GetMeshByName("sphere2"));
@@ -276,8 +278,28 @@ int main()
 	glm::dvec3 veltest = ahhhh * lunarDir;
 
 
-	mC->m_velocity = veltest +  eC->m_velocity; //earth's velocity + the moon's.
-	eC->m_velocity -= veltest * (c_MoonMass / c_EarthMass);
+	double massTotal = c_EarthMass + c_MoonMass;
+	double v_rel_mag = glm::sqrt(G * massTotal / glm::length(distMoon));
+	double v_moon_orb = v_rel_mag * (c_EarthMass / massTotal);
+	double v_earth_orb = v_rel_mag * (c_MoonMass / massTotal);
+
+	// 2. Calculate the velocity of the BARYCENTER around the Sun
+	// The barycenter is slightly further out than the Earth's center
+	double r_bary = AU + c_MoonsOffset * (c_MoonMass / massTotal);
+	double sunAngularVel = CircularOrbitVelocity(Sun, r_bary, c_SunMass) / r_bary;
+
+	// Notice we use the SAME barycenter velocity for both bodies!
+	glm::dvec3 barycenterVel = (sunAngularVel * r_bary) * vDir;
+
+	// 3. Apply the combined velocities
+	eC->m_velocity = barycenterVel - (v_earth_orb * lunarDir);
+	mC->m_velocity = barycenterVel + (v_moon_orb * lunarDir);
+
+	// Earth is relative to the Sun, so its local velocity is just its orbit around the Sun:
+	//eC->m_velocity = CircularOrbitVelocity(Sun, AU, c_SunMass) * vDir;
+
+	// Moon is relative to Earth, so its local velocity is just its orbit around the Earth:
+	//mC->m_velocity = CircularOrbitVelocity(earth, c_MoonsOffset, c_EarthMass) * lunarDir;
 	std::cout << ahhhh << " <- moon velocity" << std::endl;
 	////////////////////////////////////////////////////////
 
@@ -302,6 +324,7 @@ int main()
 
 	// P = M * V
 
+	
 	glm::dvec3 P = c_SunMass * sC->m_velocity + c_EarthMass * eC->m_velocity + c_MoonMass * mC->m_velocity; // total momentum of system kg*m/s
 
 	double mAll = c_SunMass + c_EarthMass + c_MoonMass; //total mass
@@ -311,6 +334,7 @@ int main()
 	sC->m_velocity -= velocityCorrection;
 	eC->m_velocity -= velocityCorrection;
 	mC->m_velocity -= velocityCorrection;
+	
 
 
 	
@@ -380,7 +404,7 @@ int main()
 
 	std::shared_ptr<Camera> camref = engine.GetCam();
 	camref->fCamSpeed = 200.0;
-	camref->vPos.x = 150000;
+	//camref->vPos.x = 150000;
 
 	/* */
 	bool debugInitialized = false;
@@ -398,61 +422,52 @@ int main()
 		//physics->RayCast(camref->vPos, camref->vFront);
 
 
+		
+
+			if (time >= 7)
+			{
+				glm::dvec3 posE = earth->GetTransform()->GetWorldPos();
+				glm::dvec3 posM = moon->GetTransform()->GetWorldPos();
+
+				glm::dvec3 velE = eC->m_velocity;
+				glm::dvec3 velM = mC->m_velocity;
+
+				double distEM = glm::distance(posE, posM);
+				glm::dvec3 relVel = velM - velE;
+				double specificEnergy = (0.5 * glm::dot(relVel, relVel)) - (G * c_EarthMass / distEM);
+
+				static double maxOffset = -1e30;
+				static double minOffset = 1e30;
+
+				double currentOffset = distEM - c_MoonsOffset;
+
+				if (currentOffset > maxOffset) maxOffset = currentOffset;
+				if (currentOffset < minOffset) minOffset = currentOffset;
+
+				std::cout << "\n--- LUNAR OSCILLATION DEBUG ---" << std::endl;
+				std::cout << "Specific Energy: " << std::scientific << std::setprecision(4) << specificEnergy << " J/kg" << std::endl;
+				std::cout << "Current Offset:  " << std::fixed << std::setprecision(2) << currentOffset << " m" << std::endl;
+				std::cout << "Orbit Bounds:    [" << minOffset << " m <---> " << maxOffset << " m]" << std::endl;
+				std::cout << "-------------------------------" << std::endl;
+
+				time = 0;
+			}
+
+
 		if (time >= 10 && debugInitialized)
 		{
 
-		glm::dvec3 sunPos = Sun->GetTransform()->GetPos();
-		glm::dvec3 earthPos = earth->GetTransform()->GetPos();
-		glm::dvec3 moonPos = moon->GetTransform()->GetPos();
-
-		//earth year, rotation.
-		double earthDay = RotationalPeriod(stateEarth.angularSpeed);
-		double moonDay	= RotationalPeriod(stateMoon.angularSpeed);
-
-		double earthYear = OrbitalPeriod(AU, c_SunMass, c_EarthMass);
-		double moonYear = OrbitalPeriod(c_MoonsOffset, c_EarthMass, c_MoonMass);
-
-
-		// dist
-		double dES = glm::distance(earthPos, sunPos);   // Earth–Sun
-		double dEM = glm::distance(moonPos, earthPos);  // Moon–Earth
-
-		//momentun
-		glm::dvec3 P =
-			c_SunMass * sC->m_velocity +
-			c_EarthMass * eC->m_velocity +
-			c_MoonMass * mC->m_velocity;
-
 		
-
-		// set defaults
-		if (!debugInitialized)
-		{
-			P0 = P;
-			
-			debugInitialized = true;
-		}
-
-		// --- DEBUG OUTPUT ---
-		std::cout << std::endl;
-		std::cout << "Moon-Earth Distance: " << (dEM - c_MoonsOffset) << " m\n";
-		std::cout << "Earth-Sun Distance:  " << (dES - AU) << " m\n";
-		std::cout << "Momentum : " << glm::length(P - P0) << " kg·m/s\n";
-		std::cout << "Earth Day : " << earthDay/3600 << " hours \n";
-		std::cout << "Earth Orbit Completion : " << earthYear/86400.0 << " days\n";
-		std::cout << "Moon Day: " << moonDay/86400.0 << " days\n";
-		std::cout << "Moon Orbit Completion: " << moonYear/86400.0 << " days\n";
-		std::cout << std::endl;
-		
-		time = 0;
 		}
 
 		if (!hasEnabledTrails && time >= 6)
 		{
+			
 			mC->m_trail->isUpdating = true;
 			eC->m_trail->isUpdating = true;
 			mC->m_trail->m_col = mC.get();
 			eC->m_trail->m_col = eC.get();
+			
 
 			hasEnabledTrails = true;
 		}

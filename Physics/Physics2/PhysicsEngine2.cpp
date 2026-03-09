@@ -24,6 +24,19 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 	{
 		return;
 	}
+	if (!m_hasStarted)
+	{
+		ApplyNewtonianGravity();
+
+		for (ColliderPtr col : m_colliderList)
+		{
+			col->m_acceleration = col->m_force / col->m_mass;
+		}
+		m_hasStarted = true;
+	}
+	glm::dvec3 totalL(0);
+
+
 
 	// UPDATE POS, CLEAR FORCES & RECOMPUTE ACCELERATION, UPDATE VELOCITY (V += 0.5 * (acceleration * newacceleration * dt), STORE NEW ACCELERATION) 
 	//clear forces after each step or F will accumulate and break everything.
@@ -35,13 +48,21 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 	{
 		if (!col->m_isSatellite)
 			continue;
-		glm::dvec3 pos = col->m_transform->GetPos();
+
+		
+		glm::dvec3 pos = col->m_transform->GetLocalPos();
+
 
 		glm::dvec3 nPos = col->m_velocity * DeltaTime + 0.5 * col->m_acceleration * DeltaTime * DeltaTime;
 		
-		glm::dvec3 resault = nPos + pos;
+		glm::dvec3 result = nPos + pos;
 
-		col->m_transform->SetPos(resault);
+		if (glm::any(glm::isnan(result)) || glm::any(glm::isinf(result))) {
+			
+			__debugbreak();
+		}
+
+		col->m_transform->m_localPos = result;
 
 		col->m_force = glm::dvec3(0);
 
@@ -57,13 +78,11 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 		}
 	}
 
-
-	//checking for any collisions based on the shape ie Sphere-Sphere, Box-Box, Box-Sphere, 
-
-
-
-	//ApplyGravity(DeltaTime);
+	
 	ApplyNewtonianGravity();
+	
+	
+	
 
 
 	for (ColliderPtr col : m_colliderList)
@@ -81,25 +100,109 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 		col->m_acceleration = col->m_nextAcceleration;
 	}
 
-	//When Collided, what should happen?
-	//HandleCollisions(collisions);
-
-
-
-
-	//Gravivty for now.
-	//SatelliteMotion(DeltaTime);
-	//ApplyVelocity(m_colliderList, DeltaTime);
 
 	PlanetRotation(DeltaTime);
 
 	//Update Visuals //BUG: SPHERE DOESN'T WORK
 	UpdateVisuals(m_colliderList, DeltaTime);
 
+}
+
+void PhysicsEngine2::ApplyNewtonianGravity()
+{
+	for (int i = 0; i < m_colliderList.size(); i++)
+	{
+
+
+		for (int j = i + 1; j < m_colliderList.size(); j++)
+		{
+			// F = G * (m1 * m2 / r^2)
+			ColliderPtr col1 = m_colliderList[i];
+			ColliderPtr col2 = m_colliderList[j];
+			
+
+
+			glm::dvec3 r = col2->m_transform->m_localPos - col1->m_transform->m_localPos;
+
+			//r^2
+			double distSqr = glm::dot(r, r);
+
+			// m1 * m2
+			double massProduct = col1->m_mass * col2->m_mass;
+
+
+			if (distSqr < OFFSET * OFFSET)
+			{
+				continue; // prevent NaN if they get too close - skip gravity.
+			}
+			
+
+			double invDist = 1.0 / sqrt(distSqr);
+			double invDist3 = invDist * invDist * invDist;
+
+			glm::dvec3 force = m_GravitationalConstant * col1->m_mass * col2->m_mass * r * invDist3;
+
+			if (col1->m_isSatellite)
+			{
+				col1->m_force += force;
+
+			}
+			if (col2->m_isSatellite)
+			{
+				col2->m_force -= force;
+			}
+
+
+			
 
 
 
 
+		}
+
+
+	}
+
+}
+
+void PhysicsEngine2::ApplyNewtonianGravity2Body()
+{
+	for (ColliderPtr col : m_colliderList)
+	{
+		if (!col->m_isSatellite || !col->m_transform->m_parent)
+		{
+			continue;
+		}
+
+		ColliderPtr ParentCol = col->m_parent->GetTransform()->m_parent->GetCollider();
+
+
+
+
+		glm::dvec3 r = col->m_transform->m_localPos;
+
+		//r^2
+		double distSqr = glm::dot(r, r);
+
+		// m1 * m2
+
+
+		if (distSqr < OFFSET * OFFSET)
+		{
+			continue; // prevent NaN if they get too close - skip gravity.
+		}
+
+
+		double invDist = 1.0 / sqrt(distSqr);
+		double invDist3 = invDist * invDist * invDist;
+
+		glm::dvec3 force = -m_GravitationalConstant * col->m_mass * ParentCol->m_mass * r * invDist3;
+
+		col->m_force = force;
+		//ParentCol->m_force -= force;
+		
+
+	}
 }
 
 
@@ -193,8 +296,8 @@ void PhysicsEngine2::ApplyVelocity(std::vector<ColliderPtr> colliders, const flo
 		if (col->m_bHasGravity)
 		{
 
-			glm::vec3 pos = col->m_transform->GetPos();
-			pos += col->m_transform->GetVelocity() * deltaTime;
+			glm::dvec3 pos = col->m_transform->GetPos();
+			//pos += col->m_transform->GetVelocity() * deltaTime;
 			col->m_transform->SetPos(pos);
 			
 
@@ -287,13 +390,13 @@ void PhysicsEngine2::HandleCollisions(std::vector<Collision> cols)
 
 		if (!a->m_isKinematic)
 		{
-			a->m_transform->GetVelocity() *= -1;
+			//a->m_transform->GetVelocity() *= -1;
 			//a->m_transform->SetPos(a->m_transform->GetPos() + normal * push);
 
 		}
 		if (!b->m_isKinematic)
 		{
-			b->m_transform->GetVelocity() *= -1;
+			//b->m_transform->GetVelocity() *= -1;
 			//b->m_transform->SetPos(a->m_transform->GetPos() - normal * push);
 		}
 	}
@@ -628,6 +731,7 @@ Collision PhysicsEngine2::CubeSphereIntersect(const CubeCollider& cube, const Sp
 		col.m_point = glm::vec3(cube.m_transform->GetModel() * glm::vec4(closestPoint, 1.0f));
 
 		col.m_hasCollided = true;
+
 		return col;
 	}
 	else
@@ -745,66 +849,6 @@ void PhysicsEngine2::DeleteCollider(ColliderPtr toDelete)
 	m_colliderList.erase(it);
 }
 
-void PhysicsEngine2::ApplyNewtonianGravity()
-{
-	for (int i = 0; i < m_colliderList.size(); i++)
-	{
-
-
-		for (int j = i + 1; j < m_colliderList.size(); j++)
-		{
-			// F = G * (m1 * m2 / r^2)
-			ColliderPtr col1 = m_colliderList[i];
-			ColliderPtr col2 = m_colliderList[j];
-			if (!col1->m_isSatellite || !col2->m_isSatellite)
-			{
-				continue;
-			}
-
-
-			glm::dvec3 distance = col2->m_transform->GetPos() - col1->m_transform->GetPos();
-
-			//r^2
-			double distSqr = glm::length2(distance) + OFFSET;
-
-			// m1 * m2
-			double massProduct = col1->m_mass * col2->m_mass;
-			
-
-			double ddist = glm::length(distance);
-			if (ddist < OFFSET)
-			{
-				continue; // prevent NaN if they get too close - skip gravity.
-			}
-			glm::dvec3 distanceNorm = distance / ddist;
-
-			double GravForce = m_GravitationalConstant * (massProduct / distSqr);
-
-
-			glm::dvec3 result = distanceNorm * GravForce;
-
-			if (col1->m_isSatellite)
-			{
-				col1->m_force += result;
-
-			}
-			if (col2->m_isSatellite)
-			{
-				col2->m_force -= result;
-			}
-
-
-			
-
-
-			
-
-		}
-
-
-	}
-
-}
 
 void PhysicsEngine2::SatelliteMotion(double deltaTime)
 {
@@ -837,10 +881,12 @@ void PhysicsEngine2::ApplyGravity(float deltaTime)
 	{
 		if (col->m_bHasGravity && !col->m_isKinematic)
 		{
-			glm::vec3& velocity = col->m_transform->GetVelocity();
+			/*
+			glm::dvec3& velocity = col->m_transform->GetVelocity();
 			float Gravity = 0.2f;
 
 			velocity += glm::vec3(0.0f, -Gravity, 0.0f);
+			*/
 		}
 
 	}

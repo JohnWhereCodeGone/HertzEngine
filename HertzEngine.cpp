@@ -42,7 +42,7 @@ HertzEngine::HertzEngine()
 	m_EntityManager = std::make_shared<EntityManager>();
 	
 	//simulation
-	m_SimulationTimeStep = 1.f / 120.f;
+	m_SimulationTimeStep = 1000;
 	m_SimulationAccumulator = 0;
 
 
@@ -265,13 +265,16 @@ void HertzEngine::Update()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		int physicsIterations = 0;
+
 		while (m_PhysicsEngine->m_isSimulating && (m_PhysicsEngine->m_FastForward || m_SimulationAccumulator >= m_SimulationTimeStep) )
 		{
+			double ahh = 10.0;
+
 			m_PhysicsEngine->Simulate(m_SimulationTimeStep);
 
 			if (!m_PhysicsEngine->m_FastForward)
 			{
-				m_SimulationAccumulator -= m_SimulationTimeStep; //ensures the simulation steps are proportional to frame rate, allowing accumulation for discrepencies
+				m_SimulationAccumulator -= m_SimulationTimeStep; 
 			}
 
 			else
@@ -309,6 +312,7 @@ void HertzEngine::Update()
 			
 		}
 		*/
+		glm::mat4 view = cam->GetViewMat4();
 
 		//trailTest->Update(fDeltaTime);
 		for (auto& col : m_PhysicsEngine->m_colliderList)
@@ -328,13 +332,14 @@ void HertzEngine::Update()
 		//entityTest->GetTransform()->GetPos() += 0.01f;
 
 
-		m_EntityManager->Update(HertzEngine::DeltaTime(), cam);
+		cam->CameraUpdate();
 		//Render
 
-		glm::mat4 view = cam->GetViewMat4();
 		
-		m_shaderManager->UpdateShaders(cam->GetProjection(), view, cam->vPos, cam, m_lightManager);
+		m_shaderManager->UpdateShaders(cam->GetProjection(), view, cam->
+			vPos, cam, m_lightManager);
 
+		m_EntityManager->Update(HertzEngine::DeltaTime(), cam);
 
 		
 		/*
@@ -347,7 +352,6 @@ void HertzEngine::Update()
 
 		manager->Render(); //does nothing atm.
 
-		/* PLANET TRAILS */
 
 
 
@@ -492,6 +496,8 @@ void HertzEngine::WorkerThreadOBJ()
 	}
 	*/
 }
+
+// Note. The DeltaTime multiplier starts off at 150 time scale. 
 
 std::shared_ptr<EntityManager> HertzEngine::GetEntityManager()
 {
