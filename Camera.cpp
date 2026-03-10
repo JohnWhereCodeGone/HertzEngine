@@ -13,7 +13,9 @@ void Camera::CameraUpdate()
 		glm::dvec3 tarPos = m_LookAt->GetPos();
 		if (m_LookAt->m_stellartype != 0)
 		{
-			tarPos = m_LookAt->GetVisualPos();
+
+
+			tarPos = glm::mix(vPos, m_LookAt->GetVisualPos(), 0.7);
 		}
 
 		constexpr double limit = glm::radians(89.9f);

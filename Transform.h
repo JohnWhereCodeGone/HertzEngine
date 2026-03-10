@@ -44,20 +44,23 @@ public:
 	
 	void		UpdateModel(std::shared_ptr<Shader> shader);
 	void		UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared_ptr<Camera> cam);
-	glm::vec3&	GetVisualPos();
+	glm::dvec3&	GetVisualPos();
 	double		GetRenderScale();
-	void		Move(float DeltaTime);
 
 	const glm::mat4& GetModel();
 
-	void AddPosKahan(const glm::dvec3& offset);
+	void AddPosKahan(const glm::dvec3& offset); //this doesn't work for some fucking reason.
 	
 	StellarType m_stellartype;
 	glm::dquat	m_rotationQuat = glm::dquat(1, 0, 0, 0);
 
 	//floating point origin
 	std::shared_ptr<Entity> m_parent;
+
+
 	glm::dvec3 m_localPos;
+	glm::dvec3 m_prevLocalPos;
+	glm::dvec3 m_interpolatedLocalPos;
 
 	glm::dvec3 GetWorldPos() const;
 	glm::dvec3 GetLocalPos() const;
@@ -73,8 +76,8 @@ private:
 
 	
 	glm::dvec3	m_vPosError;
-	glm::vec3	m_visualPos;
-	glm::dvec3	m_vPos;
+	glm::dvec3	m_visualPos;
+	glm::dvec3	m_vPos; //depricated, see m_localPos.
 	glm::vec3	m_vRotation;
 	glm::dvec3	m_vScale;
 };

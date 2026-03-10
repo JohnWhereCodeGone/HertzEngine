@@ -15,20 +15,28 @@ Transform::Transform()
 	this->m_model				= glm::mat4(1.0f);
 	this->m_VelocityDecayRate	= 0.95f;
 	this->m_shader = {};
-	this->m_vPosError = glm::dvec3(0.0);
+	this->m_vPosError			= glm::dvec3(0.0);
+	this->m_prevLocalPos		= glm::dvec3(0.0);
+	this->m_interpolatedLocalPos = glm::dvec3(0.0);
+	this->m_localPos		= glm::dvec3(0.0);
 
 	this->m_stellartype = UNSPECIFIED;
 }
 
 Transform::Transform(glm::vec3 pos, glm::vec3 rotation, glm::vec3 scale, std::shared_ptr<Shader> shader)
 {
-	this->m_vPos = pos;
-	this->m_vRotation = rotation;
-	this->m_vScale = scale;
-	this->m_model = glm::mat4(1.f);
-	this->m_VelocityDecayRate = 0.99f;
-	this->m_visualPos = glm::vec3(0.0f);
-	this->m_vPosError = glm::dvec3(0.0);
+	this->m_vPos				= glm::dvec3(0.0f, 0.0f, 0.0f);
+	this->m_vRotation			= glm::vec3(0.0f, 0.0f, 0.0f);
+	this->m_vScale				= glm::dvec3(1.0f, 1.0f, 1.0f);
+	this->m_model				= glm::mat4(1.0f);
+	this->m_VelocityDecayRate	= 0.95f;
+	this->m_shader = {};
+	this->m_vPosError			= glm::dvec3(0.0);
+	this->m_prevLocalPos		= glm::dvec3(0.0);
+	this->m_interpolatedLocalPos = glm::dvec3(0.0);
+	this->m_localPos		= glm::dvec3(0.0);
+
+	this->m_stellartype = UNSPECIFIED;
 
 	if (shader)
 	{
@@ -66,6 +74,7 @@ void Transform::SetPos(const glm::dvec3& newPos)
 		__debugbreak();
 	}
 
+	this->m_prevLocalPos = m_localPos;
 	this->m_localPos = newPos;
 }
 
@@ -123,26 +132,25 @@ void Transform::UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared
 	glm::mat4 transmat = glm::mat4(1.0f);
 	glm::dvec3 appliedPosition = m_localPos;
 
-	constexpr double RENDER_SCALE = 1e-6;
 	glm::vec3 renderScale = m_vScale * RENDER_SCALE;
 
 	switch (m_stellartype)
 	{
 	case(UNSPECIFIED): renderScale *= 1.0f; 
 		break;
-	case(STAR):        renderScale *= 1.0f; 
+	case(STAR):        renderScale *= 2.0f; 
 		break;
-	case(PLANET):      renderScale *= 1.0f; 
+	case(PLANET):      renderScale *= 2.0f; 
 		break; 
 	}
 
 	if (cam)
 	{
-		appliedPosition = (GetWorldPos() - cam->vPos) * RENDER_SCALE;
+		appliedPosition = (m_interpolatedLocalPos - cam->vPos) * RENDER_SCALE;
 	}
 	else
 	{
-		appliedPosition = GetWorldPos() * RENDER_SCALE;
+		appliedPosition = m_interpolatedLocalPos * RENDER_SCALE;
 	}
 
 	// Now it is safe to cast to a 32-bit float!
@@ -155,10 +163,11 @@ void Transform::UpdateModelPlanetary(std::shared_ptr<Shader> shader, std::shared
 	shader->setMat4("model", transmat);
 	this->m_visualPos = appliedPosition;
 	this->m_model = transmat;
+	cam->CameraUpdate();
 
 }
 
-glm::vec3& Transform::GetVisualPos()
+glm::dvec3& Transform::GetVisualPos()
 {
 	return this->m_visualPos;
 }
@@ -184,11 +193,11 @@ void Transform::AddPosKahan(const glm::dvec3& offset)
 	
 	
 
-	glm::dvec3 t = m_vPos + y; //where error is created
+	glm::dvec3 t = m_localPos + y; //where error is created
 
-	m_vPosError = (t - m_vPos) - y; //where error is recovered
+	m_vPosError = (t - m_localPos) - y; //where error is recovered
 
-	m_vPos = t;
+	m_localPos = t;
 
 	
 

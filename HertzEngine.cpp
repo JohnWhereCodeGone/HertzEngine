@@ -153,7 +153,7 @@ GLFWwindow* HertzEngine::GameInit()
 	return GameWindow;
 }
 
-const float HertzEngine::DeltaTime()
+const double HertzEngine::DeltaTime()
 {
 	return fDeltaTime;
 }
@@ -300,6 +300,23 @@ void HertzEngine::Update()
 
 		}
 
+		
+		double alpha =  (m_SimulationAccumulator / m_SimulationTimeStep);
+		if (alpha < 0.0)
+			alpha = 0.0;
+		if (alpha > 1.0)
+			alpha = 1.0;
+
+
+		for (auto en : m_EntityManager->m_entityList)
+		{
+			
+			std::shared_ptr<Transform> trans = en->GetTransform();
+			
+			trans->m_interpolatedLocalPos = glm::mix(trans->m_prevLocalPos, trans->m_localPos, alpha);
+
+
+		}
 		
 
 

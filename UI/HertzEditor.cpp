@@ -507,9 +507,9 @@ void HertzEditor::EditorUI(GLFWwindow* window)
 
 
                 ImGui::SeparatorText("Visual Position");
-                ImGui::InputFloat("Visual Pos X", &en->GetTransform()->GetVisualPos().x);
-                ImGui::InputFloat("Visual Pos Y", &en->GetTransform()->GetVisualPos().y);
-                ImGui::InputFloat("Visual Pos Z", &en->GetTransform()->GetVisualPos().z);
+                ImGui::InputDouble("Visual Pos X", &en->GetTransform()->GetVisualPos().x);
+                ImGui::InputDouble("Visual Pos Y", &en->GetTransform()->GetVisualPos().y);
+                ImGui::InputDouble("Visual Pos Z", &en->GetTransform()->GetVisualPos().z);
 
                 ImGui::Separator();
 

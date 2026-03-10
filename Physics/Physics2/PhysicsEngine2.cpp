@@ -31,6 +31,8 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 		for (ColliderPtr col : m_colliderList)
 		{
 			col->m_acceleration = col->m_force / col->m_mass;
+			col->m_transform->m_prevLocalPos = col->m_transform->m_localPos;
+			col->m_transform->m_interpolatedLocalPos = col->m_transform->m_localPos;
 		}
 		m_hasStarted = true;
 	}
@@ -51,6 +53,7 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 
 		
 		glm::dvec3 pos = col->m_transform->GetLocalPos();
+		col->m_transform->m_prevLocalPos = pos;
 
 
 		glm::dvec3 nPos = col->m_velocity * DeltaTime + 0.5 * col->m_acceleration * DeltaTime * DeltaTime;

@@ -12,7 +12,7 @@ public:
 
 	Entity();
 
-	void Update(float DeltaTime, std::shared_ptr<Camera> m_origin);
+	void Update(double DeltaTime, std::shared_ptr<Camera> m_origin);
 	float GetVelocity();
 
 	bool m_isSatellite = false;

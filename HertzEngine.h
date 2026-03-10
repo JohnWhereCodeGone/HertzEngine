@@ -50,7 +50,7 @@ public:
 	static std::shared_ptr<Shader>	DefaultShader;
 
 	//returns Hertz::deltatime.
-	static const float DeltaTime();
+	static const double DeltaTime();
 	GLFWwindow* GetWindow() //must be inline or there'll be a linker error.
 	{
 		if (GameWindow)

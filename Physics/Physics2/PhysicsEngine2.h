@@ -78,7 +78,7 @@ public:
 	void		ApplyNewtonianGravity2Body();
 	void		SatelliteMotion(double deltatime);
 	double		m_GravitationalConstant;
-	double		m_TimeScale = 1.0;
+	double		m_TimeScale = 21000.0;
 	bool		m_FastForward = false;
 	double		m_FastForwardDuration;
 

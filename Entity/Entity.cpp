@@ -11,7 +11,7 @@ Entity::Entity() : VirtualObject()
 
 
 
-void Entity::Update(float Deltatime, std::shared_ptr<Camera> cam)
+void Entity::Update(double Deltatime, std::shared_ptr<Camera> cam)
 {
 	//update model with pos.
 	ShaderPtr shad = GetShader();
@@ -22,6 +22,7 @@ void Entity::Update(float Deltatime, std::shared_ptr<Camera> cam)
 
 		if (m_isSatellite && cam)
 		{
+			
 			trans->UpdateModelPlanetary(shad, cam);
 
 		}
