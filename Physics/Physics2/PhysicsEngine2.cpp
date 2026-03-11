@@ -51,11 +51,8 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 		if (!col->m_isSatellite)
 			continue;
 
-		
 		glm::dvec3 pos = col->m_transform->GetLocalPos();
 		col->m_transform->m_prevLocalPos = pos;
-
-
 		glm::dvec3 nPos = col->m_velocity * DeltaTime + 0.5 * col->m_acceleration * DeltaTime * DeltaTime;
 		
 		glm::dvec3 result = nPos + pos;
@@ -64,9 +61,7 @@ void PhysicsEngine2::Simulate(double DeltaTime)
 			
 			__debugbreak();
 		}
-
 		col->m_transform->m_localPos = result;
-
 		col->m_force = glm::dvec3(0);
 
 		if (col->m_type == Sphere)

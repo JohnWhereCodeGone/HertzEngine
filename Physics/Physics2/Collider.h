@@ -18,6 +18,7 @@ struct RotationState
 	glm::dvec3 axis;
 	double angularSpeed;
 	glm::dquat orientation; //fuck me.
+	glm::dquat prev_orientation;
 
 };
 

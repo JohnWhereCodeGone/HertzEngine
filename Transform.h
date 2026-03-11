@@ -9,7 +9,7 @@ class vec3;
 class Camera;
 class Entity;
 
-constexpr double RENDER_SCALE = 1.0 / 1000000.0; //Rendering at one millionth the scale, 1 unit = 1000 km.
+constexpr double RENDER_SCALE = 1.0 / 10000000.0; //Rendering at one millionth the scale, 1 unit = 10000 km.
 
 
 
