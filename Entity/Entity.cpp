@@ -22,7 +22,6 @@ void Entity::Update(double Deltatime, std::shared_ptr<Camera> cam)
 
 		if (m_isSatellite && cam)
 		{
-			
 			trans->UpdateModelPlanetary(shad, cam);
 
 		}

@@ -4,6 +4,9 @@
 
 
 class Camera;
+
+
+
 class Entity : public VirtualObject
 {
 	using TexturePtr = std::shared_ptr<HertzTexture>;

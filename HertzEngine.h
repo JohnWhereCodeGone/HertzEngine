@@ -86,7 +86,7 @@ public:
 	std::shared_ptr<EntityManager>	GetEntityManager();
 	std::shared_ptr<PhysicsEngine2> GetPhysicsEngine();
 	std::shared_ptr<ShaderManager>	GetShaderManager();
-
+	std::shared_ptr<HertzEditor>	GetEditor();
 
 	bool bShouldClose;
 	MessagingQueue messagequeue;

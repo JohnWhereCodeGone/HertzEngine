@@ -2,7 +2,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-
+#include "../Physics/Physics2/AstronomicalData.h"
 #include "../Threading/MessagingQueue.h"
 
 
@@ -22,6 +22,7 @@ public:
 	void EditorUI(GLFWwindow* window);
 	void InitUI(std::shared_ptr<Camera> cam);
 
+	std::vector<AstronomicalData> data;
 private:
 
 	char* m_charBuffer[256];
@@ -39,7 +40,6 @@ private:
 	
 	
 	std::shared_ptr<PhysicsEngine2> m_physicsEngine;
-
 
 
 	//Selectables.

@@ -32,6 +32,9 @@ static std::shared_ptr<Entity> entityToRename;
 
 void HertzEditor::EditorUI(GLFWwindow* window)
 {
+
+
+
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("MipMap"))
@@ -70,7 +73,12 @@ void HertzEditor::EditorUI(GLFWwindow* window)
 
     
 
-    ImVec2 buttonSize = ImVec2(100.f, 35.f);
+
+
+    float buttonHeight = 100.f;
+    float buttonWidth = 35.f;
+    float cameraLockTopPadding = 10.f;
+    ImVec2 buttonSize = ImVec2(buttonHeight, buttonWidth);
     
     const char* currentname;
     if (m_camRef->m_LookAt)
@@ -83,9 +91,9 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     }
 
     
-    ImVec2 CameraLockerSize = ImVec2(300.f, 105.f);
-    ImGui::SetNextWindowSize(CameraLockerSize);
-    ImGui::SetNextWindowPos(ImVec2((ImGui::GetIO().DisplaySize.x / 2) - (CameraLockerSize.x / 2), 10));
+    ImVec2 cameraLockWinSize = ImVec2(300.f, 105.f);
+    ImGui::SetNextWindowSize(cameraLockWinSize);
+    ImGui::SetNextWindowPos(ImVec2((ImGui::GetIO().DisplaySize.x / 2) - (cameraLockWinSize.x / 2), cameraLockTopPadding));
     
     ImGui::Begin("Camera Locker", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
     
@@ -211,23 +219,48 @@ void HertzEditor::EditorUI(GLFWwindow* window)
     //When you continue tomorrow -> Continue rename -> cam rotation -> select mesh / shader for entity -> v nice
 
     
-    if (ImGui::TreeNodeEx("Astronomy"))
+    if (ImGui::TreeNodeEx("Astronomy", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        ImGui::InputDouble("##TimeSkipper", &days);
-        ImGui::SameLine();
-        ImGui::TextWrapped("Time Skip Days");
-
-        if (ImGui::Button("Skip Time"))
+        int i = 0;
+        for (auto &astro : data)
         {
-            m_physicsEngine->timeSkip(days);
+            ImGuiTreeNodeFlags flag = (i == 0) ? ImGuiTreeNodeFlags_DefaultOpen : 0;
+            astro.UpdateData();
+            ImGui::PushID(&astro);
+            if (ImGui::TreeNodeEx(astro.m_name.c_str(), flag))
+            {
+
+                ImGui::TextWrapped("Mass");
+                ImGui::InputDouble("##massIn", astro.m_liveMass);
+
+
+                ImGui::Text("Distance From Parent (m)");
+                ImGui::InputDouble("##parDist", &astro.m_distanceFromParent);
+
+
+                ImGui::TextWrapped("Relative Speed from Parent (m/s)");
+                ImGui::InputDouble("##relSpeed", &astro.m_relativeSpeed);
+
+                ImGui::TextWrapped("Specific Energy (J/kg)");
+                ImGui::InputDouble("##specEnergy", &astro.m_specificEnergy);
+
+                ImGui::TextWrapped("Orbital Period (days)");
+                ImGui::InputDouble("##orbPeriod", &astro.m_orbitalPeriodDays);
+
+                ImGui::TextWrapped("Day Length (hours)");
+                ImGui::InputDouble("##dayLength", &astro.m_dayLengthHours);
+
+                ImGui::TreePop();
+            }
+            ImGui::Spacing();
+            ImGui::PopID();
+            i++;
         }
-
         ImGui::TreePop();
-
     }
 
 
-    if (ImGui::TreeNodeEx("Camera Settings", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::TreeNodeEx("Camera Settings"))
     {
         //CAMERA SPEED
         
@@ -439,7 +472,7 @@ void HertzEditor::EditorUI(GLFWwindow* window)
 
 
     /// ENTITIES ///
-    if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::TreeNodeEx("Entities"))
     {
             
             std::shared_ptr<Entity> entityToDelete;

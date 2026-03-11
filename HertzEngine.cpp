@@ -531,6 +531,11 @@ std::shared_ptr<ShaderManager> HertzEngine::GetShaderManager()
 	return this->m_shaderManager;
 }
 
+std::shared_ptr<HertzEditor> HertzEngine::GetEditor()
+{
+	return this->m_editor;
+}
+
 
 
 

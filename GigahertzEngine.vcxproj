@@ -224,6 +224,7 @@
     <ClInclude Include="Lights\PointLight.h" />
     <ClInclude Include="Lights\Spotlight.h" />
     <ClInclude Include="Mesh\Trail.h" />
+    <ClInclude Include="Physics\Physics2\AstronomicalData.h" />
     <ClInclude Include="Physics\Physics2\Collider.h" />
     <ClInclude Include="Physics\Physics2\Collision.h" />
     <ClInclude Include="Physics\Physics2\CubeCollider.h" />

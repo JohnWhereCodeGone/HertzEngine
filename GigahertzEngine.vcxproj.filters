@@ -317,6 +317,9 @@
     <ClInclude Include="Physics\Physics2\KahanSummarization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Physics\Physics2\AstronomicalData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <iostream>
-
+#include "../Physics/Physics2\AstronomicalData.h"
+#include "../UI/HertzEditor.h"
 //ui
 
 
@@ -344,27 +345,6 @@ int main()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/*
 	std::shared_ptr<Entity> test1 = EntityManager->CreateEntity();
 	std::shared_ptr<Entity> test12 = EntityManager->CreateEntity();
@@ -412,6 +392,21 @@ int main()
 	glm::dvec3 P0;     //init total momentum
 
 
+
+	//DATA FOR IMGUI
+
+
+	AstronomicalData earthData	= AstronomicalData(earth, Sun);
+	AstronomicalData moonData	= AstronomicalData(moon, earth);
+	AstronomicalData sunData	= AstronomicalData(Sun);
+	
+	auto UIRef = engine.GetEditor();
+
+	UIRef->data.push_back(earthData);
+	UIRef->data.push_back(moonData);
+	UIRef->data.push_back(sunData);
+
+
 	while (!engine.bShouldClose)
 	{
 		//std::cout << engine.bShouldClose << std::endl;
@@ -423,7 +418,9 @@ int main()
 
 
 		
-
+		earthData.UpdateData();
+		moonData.UpdateData();
+		sunData.UpdateData();
 			if (time >= 7)
 			{
 				glm::dvec3 posE = earth->GetTransform()->GetWorldPos();
