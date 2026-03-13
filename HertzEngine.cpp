@@ -42,7 +42,7 @@ HertzEngine::HertzEngine()
 	m_EntityManager = std::make_shared<EntityManager>();
 	
 	//simulation
-	m_SimulationTimeStep = 1000;
+	m_SimulationTimeStep = 100;
 	m_SimulationAccumulator = 0;
 
 

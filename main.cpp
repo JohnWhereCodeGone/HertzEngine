@@ -272,7 +272,7 @@ int main()
 	
 
 
-	//two-body initialization MOON + EARTH BARYCENTRIC ORBIT
+	//two-body initialization MOON + EARTH BARYCENTRIC ORBIT----------
 	double ahh = G * (c_EarthMass + c_MoonMass);
 	double ahhhh = glm::sqrt(ahh / glm::length(distMoon));
 
@@ -280,27 +280,18 @@ int main()
 
 
 	double massTotal = c_EarthMass + c_MoonMass;
-	double v_rel_mag = glm::sqrt(G * massTotal / glm::length(distMoon));
-	double v_moon_orb = v_rel_mag * (c_EarthMass / massTotal);
-	double v_earth_orb = v_rel_mag * (c_MoonMass / massTotal);
+	double relMag = glm::sqrt(G * massTotal / glm::length(distMoon));
+	double moonOrbital = relMag * (c_EarthMass / massTotal);
+	double earthOrbital = relMag * (c_MoonMass / massTotal);
 
-	// 2. Calculate the velocity of the BARYCENTER around the Sun
-	// The barycenter is slightly further out than the Earth's center
-	double r_bary = AU + c_MoonsOffset * (c_MoonMass / massTotal);
-	double sunAngularVel = CircularOrbitVelocity(Sun, r_bary, c_SunMass) / r_bary;
+	double barycenter = AU + c_MoonsOffset * (c_MoonMass / massTotal);
+	double sunAngularVel = CircularOrbitVelocity(Sun, barycenter, c_SunMass) / barycenter; 
 
-	// Notice we use the SAME barycenter velocity for both bodies!
-	glm::dvec3 barycenterVel = (sunAngularVel * r_bary) * vDir;
+	glm::dvec3 barycenterVel = (sunAngularVel * barycenter) * vDir;
 
-	// 3. Apply the combined velocities
-	eC->m_velocity = barycenterVel - (v_earth_orb * lunarDir);
-	mC->m_velocity = barycenterVel + (v_moon_orb * lunarDir);
+	eC->m_velocity = barycenterVel - (earthOrbital * lunarDir);
+	mC->m_velocity = barycenterVel + (moonOrbital * lunarDir);
 
-	// Earth is relative to the Sun, so its local velocity is just its orbit around the Sun:
-	//eC->m_velocity = CircularOrbitVelocity(Sun, AU, c_SunMass) * vDir;
-
-	// Moon is relative to Earth, so its local velocity is just its orbit around the Earth:
-	//mC->m_velocity = CircularOrbitVelocity(earth, c_MoonsOffset, c_EarthMass) * lunarDir;
 	std::cout << ahhhh << " <- moon velocity" << std::endl;
 	////////////////////////////////////////////////////////
 
@@ -409,15 +400,13 @@ int main()
 
 	while (!engine.bShouldClose)
 	{
-		//std::cout << engine.bShouldClose << std::endl;
 		engine.Update();
 
 		time += HertzEngine::DeltaTime();
 
-		//physics->RayCast(camref->vPos, camref->vFront);
 
 
-		
+		//these should probably not be here
 		earthData.UpdateData();
 		moonData.UpdateData();
 		sunData.UpdateData();
@@ -441,11 +430,7 @@ int main()
 				if (currentOffset > maxOffset) maxOffset = currentOffset;
 				if (currentOffset < minOffset) minOffset = currentOffset;
 
-				std::cout << "\n--- LUNAR OSCILLATION DEBUG ---" << std::endl;
-				std::cout << "Specific Energy: " << std::scientific << std::setprecision(4) << specificEnergy << " J/kg" << std::endl;
-				std::cout << "Current Offset:  " << std::fixed << std::setprecision(2) << currentOffset << " m" << std::endl;
-				std::cout << "Orbit Bounds:    [" << minOffset << " m <---> " << maxOffset << " m]" << std::endl;
-				std::cout << "-------------------------------" << std::endl;
+				
 
 				time = 0;
 			}
@@ -469,14 +454,6 @@ int main()
 			hasEnabledTrails = true;
 		}
 
-		/*
-		if (time >= 2.0f && test->GetMesh() == nullptr)
-		{
-			test->SetMesh(engine.manager->GetMesh(crate.c_str()));
-
-			
-		}
-		*/
 	}
 	engine.GetMeshMangr()->SaveDataMesh(nullptr);
 }
