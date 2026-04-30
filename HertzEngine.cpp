@@ -95,7 +95,7 @@ GLFWwindow* HertzEngine::GameInit()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE)
 #endif
 
-	GameWindow = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GigaHertz Engine", NULL, NULL);
+	GameWindow = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GAB GAY", NULL, NULL);
 
 	if (!GameWindow)
 	{
